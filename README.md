@@ -1,4 +1,4 @@
 plover-dojo
 ===========
 
-Learn Plover, yo!
+An engaging way to learn the basics of Plover.
