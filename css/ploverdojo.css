@@ -1,0 +1,60 @@
+._jsPlumb_connector {
+  z-index:1;
+}
+
+.topic {
+  background:rgba(255, 255, 255, 0.618); 
+  border-color:black;
+  border-style:solid;
+  border-width:2px;
+  font-size:16px;
+  padding:16px;
+  position:absolute;
+  text-align:center;
+  z-index:2;
+}
+
+#kbd_layout {
+  left:90px;
+  top:215px;
+}
+
+#alph {
+  left:140px;
+  top:125px;
+}
+
+#ec {
+  left:325px;
+  top:105px;
+}
+
+#cust {
+  left:565px;
+  top:175px;
+}
+
+#core {
+  left:665px;
+  top:295px;
+}
+
+#except {
+  left:570px;
+  top:500px;
+}
+
+#phon_to_chords {
+  left:325px;
+  top:490px;
+}
+
+#read {
+  left:85px;
+  top:480px;
+}
+
+#there_are_phonemes {
+  left:45px;
+  top:315px;
+}
