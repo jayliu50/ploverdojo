@@ -14,6 +14,12 @@ jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(template_directory), autoescape=True)
 
 
+hmac_message = os.path.join(os.path.dirname(__file__), 'secret/message')
+f = open(hmac_message, 'r')
+SECRET = f.read().strip()
+f.close()
+
+
 def render_template(template, **template_values):
     """Renders the given template with the given template_values"""
     # retrieve the html template

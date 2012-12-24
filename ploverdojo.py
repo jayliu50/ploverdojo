@@ -13,6 +13,12 @@ template_directory = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(template_directory), autoescape=True)
 
+    
+hmac_message = os.path.join(os.path.dirname(__file__), 'secret/message')
+f = open(hmac_message, 'r')
+SECRET = f.read().strip()
+f.close()
+
 
 def render_template(template, **template_values):
     """Renders the given template with the given template_values"""
@@ -83,6 +89,7 @@ class MainPage(BaseHandler):
         user = users.get_current_user()
 
         if user:
+            self.response.out.write(SECRET)
             self.set_cookie("testdata", '{"256":"binary","512":"binary","768":"binary","2048":"binary","4096":"binary","6144":"binary"}')
             self.write_template('ploverdojo.html', **{'user': user})
         else:
