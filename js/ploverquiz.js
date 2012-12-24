@@ -1,4 +1,7 @@
-﻿// DECLARE GLOBAL VARIABLES
+﻿$(document).ready(function() {
+
+
+// DECLARE GLOBAL VARIABLES
 
 /** This object will store the key codes of the keys that are currently being pressed down. Used an object to store the list since we will be removing items by value frequently. */
 var downKeys = {};
@@ -24,6 +27,23 @@ var translatedString = '';
 
 // IMPORT OUTSIDE DATA
 
+// show loading message while files are retrieved
+var loadingDiv = document.createElement("div");
+loadingDiv.setAttribute('id', 'loading');
+loadingDiv.style.position = "fixed";
+loadingDiv.style.top = "0px";
+loadingDiv.style.left = "0px";
+loadingDiv.style.height = "100%";
+loadingDiv.style.width = "100%";
+loadingDiv.style.background = "rgba(255, 255, 255, 0.618)";
+loadingDiv.style.fontSize="128px";
+loadingDiv.style.textAlign="center";
+loadingDiv.style.lineHeight="2";
+loadingDiv.style.color = "black";
+loadingDiv.style.zIndex = "99999"; //set to a big number just to make sure it's above all other page content
+loadingDiv.innerHTML = "loading...";
+document.body.appendChild(loadingDiv);
+
 /**
  * This object will store the mapping between binary numbers and steno flags with data imported from an external json file. There is a problem where chrome won't load local json files, so the files must be hosted for the data to be imported in chrome.
  * @see jQuery's <a href="http://api.jquery.com/jQuery.getJSON/">getJSON documentaion</a>.
@@ -31,8 +51,19 @@ var translatedString = '';
  * @see The <a href="http://code.google.com/p/chromium/issues/detail?id=40787">chrome bug report</a>.
  */
 var binaryToSteno = {};
+/*
 $.getJSON('assets/binaryToSteno.json', function (data) {
-	binaryToSteno = data;
+  binaryToSteno = data;
+  nextQuizQuestion();
+});
+*/
+$.ajax({
+  url: 'assets/binaryToSteno.json',
+  async: false,
+  dataType: 'json',
+  success: function (data) {
+             binaryToSteno = data;
+           }
 });
 
 /**
@@ -41,8 +72,18 @@ $.getJSON('assets/binaryToSteno.json', function (data) {
  * @see The <a href="http://code.google.com/p/chromium/issues/detail?id=40787">chrome bug report</a>.
  */
 var dictionary = {};
+/*
 $.getJSON('assets/dict.json', function (data) {
-	dictionary = data;
+  dictionary = data;
+});
+*/
+$.ajax({
+  url: 'assets/dict.json',
+  async: false,
+  dataType: 'json',
+  success: function (data) {
+             dictionary = data;
+           }
 });
 
 /**
@@ -51,8 +92,18 @@ $.getJSON('assets/dict.json', function (data) {
  * @see The <a href="http://code.google.com/p/chromium/issues/detail?id=40787">chrome bug report</a>.
  */
 var keyCodeToQwerty = {};
+/*
 $.getJSON('assets/keyCodeToQwerty.json', function (data) {
-	keyCodeToQwerty = data;
+  keyCodeToQwerty = data;
+});
+*/
+$.ajax({
+  url: 'assets/keyCodeToQwerty.json',
+  async: false,
+  dataType: 'json',
+  success: function (data) {
+             keyCodeToQwerty = data;
+           }
 });
 
 /**
@@ -61,8 +112,18 @@ $.getJSON('assets/keyCodeToQwerty.json', function (data) {
  * @see The <a href="http://code.google.com/p/chromium/issues/detail?id=40787">chrome bug report</a>.
  */
 var keyCodeToSteno = {};
+/*
 $.getJSON('assets/keyCodeToSteno.json', function (data) {
-	keyCodeToSteno = data;
+  keyCodeToSteno = data;
+});
+*/
+$.ajax({
+  url: 'assets/keyCodeToSteno.json',
+  async: false,
+  dataType: 'json',
+  success: function (data) {
+             keyCodeToSteno = data;
+           }
 });
 
 /**
@@ -71,8 +132,18 @@ $.getJSON('assets/keyCodeToSteno.json', function (data) {
  * @see The <a href="http://code.google.com/p/chromium/issues/detail?id=40787">chrome bug report</a>.
  */
 var stenoKeyNumbers = {};
+/*
 $.getJSON('assets/stenoKeyNumbers.json', function (data) {
-	stenoKeyNumbers = data;
+  stenoKeyNumbers = data;
+});
+*/
+$.ajax({
+  url: 'assets/stenoKeyNumbers.json',
+  async: false,
+  dataType: 'json',
+  success: function (data) {
+             stenoKeyNumbers = data;
+           }
 });
 
 // grab cookies
@@ -85,6 +156,9 @@ for (var i = 0; i < cookies.length; i++) {
     testdata = JSON.parse(cookieValue);
   }
 }
+
+// remove loading div
+document.getElementById('loading').parentNode.removeChild(document.getElementById('loading'));
 
 // put test data into an array for easier random fetching
 var tdArray = [];
@@ -105,279 +179,278 @@ for (var key in testdata) {
  * @see Key class.
  */
 function colorCode(keys) {
-	// Make a list of steno keys from the list of Key objects.
-	var stenoKeys = {};
-	for (var i in keys) {
-		stenoKeys[keys[i].toSteno()] = true; // use the conversion function in the Key class to get a steno representation of the Key.
-	}
+  // Make a list of steno keys from the list of Key objects.
+  var stenoKeys = {};
+  for (var i in keys) {
+    stenoKeys[keys[i].toSteno()] = true; // use the conversion function in the Key class to get a steno representation of the Key.
+  }
 
-	// Color code the letters that use only 1 steno key.
+  // Color code the letters that use only 1 steno key.
 
-	// #
-	if ('#' in stenoKeys) {
-		$('#stenoKeyNumberBar').css('background-color', '#822259');
-	}
+  // #
+  if ('#' in stenoKeys) {
+    $('#stenoKeyNumberBar').css('background-color', '#822259');
+  }
 
-	// *
-	if ('*' in stenoKeys) {
-		$('#stenoKeyAsterisk1').css('background-color', '#822259');
-		$('#stenoKeyAsterisk2').css('background-color', '#822259');
-	}
+  // *
+  if ('*' in stenoKeys) {
+    $('#stenoKeyAsterisk1').css('background-color', '#822259');
+    $('#stenoKeyAsterisk2').css('background-color', '#822259');
+  }
 
-	// Initial S
-	if ('S-' in stenoKeys) {
-		$('#stenoKeyS-1').css('background-color', '#00ff00');
-		$('#stenoKeyS-2').css('background-color', '#00ff00');
-	}
+  // Initial S
+  if ('S-' in stenoKeys) {
+    $('#stenoKeyS-1').css('background-color', '#00ff00');
+    $('#stenoKeyS-2').css('background-color', '#00ff00');
+  }
 
-	// Final S
-	if ('-S' in stenoKeys) {
-		$('#stenoKey-S').css('background-color', '#00ff00');
-	}
+  // Final S
+  if ('-S' in stenoKeys) {
+    $('#stenoKey-S').css('background-color', '#00ff00');
+  }
 
-	// Initial T
-	if ('T-' in stenoKeys) {
-		$('#stenoKeyT-').css('background-color', '#8000ff');
-	}
+  // Initial T
+  if ('T-' in stenoKeys) {
+    $('#stenoKeyT-').css('background-color', '#8000ff');
+  }
 
-	// Final T
-	if ('-T' in stenoKeys) {
-		$('#stenoKey-T').css('background-color', '#8000ff');
-	}
+  // Final T
+  if ('-T' in stenoKeys) {
+    $('#stenoKey-T').css('background-color', '#8000ff');
+  }
 
-	// Initial P
-	if ('P-' in stenoKeys) {
-		$('#stenoKeyP-').css('background-color', '#0080ff');
-	}
+  // Initial P
+  if ('P-' in stenoKeys) {
+    $('#stenoKeyP-').css('background-color', '#0080ff');
+  }
 
-	// Final P
-	if ('-P' in stenoKeys) {
-		$('#stenoKey-P').css('background-color', '#0080ff');
-	}
+  // Final P
+  if ('-P' in stenoKeys) {
+    $('#stenoKey-P').css('background-color', '#0080ff');
+  }
 
-	// Initial R
-	if ('R-' in stenoKeys) {
-		$('#stenoKeyR-').css('background-color', '#00ff80');
-	}
+  // Initial R
+  if ('R-' in stenoKeys) {
+    $('#stenoKeyR-').css('background-color', '#00ff80');
+  }
 
-	// Final R
-	if ('-R' in stenoKeys) {
-		$('#stenoKey-R').css('background-color', '#00ff80');
-	}
+  // Final R
+  if ('-R' in stenoKeys) {
+    $('#stenoKey-R').css('background-color', '#00ff80');
+  }
 
-	// Final B
-	if ('-B' in stenoKeys) {
-		$('#stenoKey-B').css('background-color', '#800000');
-	}
+  // Final B
+  if ('-B' in stenoKeys) {
+    $('#stenoKey-B').css('background-color', '#800000');
+  }
 
-	// Final D
-	if ('-D' in stenoKeys) {
-		$('#stenoKey-D').css('background-color', '#808000');
-	}
+  // Final D
+  if ('-D' in stenoKeys) {
+    $('#stenoKey-D').css('background-color', '#808000');
+  }
 
-	// Final F
-	if ('-F' in stenoKeys) {
-		$('#stenoKey-F').css('background-color', '#008000');
-	}
+  // Final F
+  if ('-F' in stenoKeys) {
+    $('#stenoKey-F').css('background-color', '#008000');
+  }
 
-	// Final G
-	if ('-G' in stenoKeys) {
-		$('#stenoKey-G').css('background-color', '#008080');
-	}
+  // Final G
+  if ('-G' in stenoKeys) {
+    $('#stenoKey-G').css('background-color', '#008080');
+  }
 
-	// Initial K
-	if ('K-' in stenoKeys) {
-		$('#stenoKeyK-').css('background-color', '#800080');
-	}
+  // Initial K
+  if ('K-' in stenoKeys) {
+    $('#stenoKeyK-').css('background-color', '#800080');
+  }
 
-	// Final L
-	if ('-L' in stenoKeys) {
-		$('#stenoKey-L').css('background-color', '#80ffff');
-	}
+  // Final L
+  if ('-L' in stenoKeys) {
+    $('#stenoKey-L').css('background-color', '#80ffff');
+  }
 
-	// Final V
-	if ('-F' in stenoKeys) {
-		$('#stenoKey-F').css('background-color', '#808080');
-	}
+  // Final V
+  if ('-F' in stenoKeys) {
+    $('#stenoKey-F').css('background-color', '#808080');
+  }
 
-	// Final Z
-	if ('-Z' in stenoKeys) {
-		$('#stenoKey-Z').css('background-color', '#ff0000');
-	}
+  // Final Z
+  if ('-Z' in stenoKeys) {
+    $('#stenoKey-Z').css('background-color', '#ff0000');
+  }
 
-	// Initial A
-	if ('A-' in stenoKeys) {
-		$('#stenoKeyA-').css('background-color', '#9df347');
-	}
+  // Initial A
+  if ('A-' in stenoKeys) {
+    $('#stenoKeyA-').css('background-color', '#9df347');
+  }
 
-	// Final E
-	if ('-E' in stenoKeys) {
-		$('#stenoKey-E').css('background-color', '#f0a637');
-	}
+  // Final E
+  if ('-E' in stenoKeys) {
+    $('#stenoKey-E').css('background-color', '#f0a637');
+  }
 
-	// Initial H
-	if ('H-' in stenoKeys) {
-		$('#stenoKeyH-').css('background-color', '#c558d3');
-	}
+  // Initial H
+  if ('H-' in stenoKeys) {
+    $('#stenoKeyH-').css('background-color', '#c558d3');
+  }
 
-	// Initial O
-	if ('O-' in stenoKeys) {
-		$('#stenoKeyO-').css('background-color', '#485771');
-	}
+  // Initial O
+  if ('O-' in stenoKeys) {
+    $('#stenoKeyO-').css('background-color', '#485771');
+  }
 
-	// Final U
-	if ('-U' in stenoKeys) {
-		$('#stenoKey-U').css('background-color', '#bcf3ed');
-	}
+  // Final U
+  if ('-U' in stenoKeys) {
+    $('#stenoKey-U').css('background-color', '#bcf3ed');
+  }
 
-	// Initial W
-	if ('W-' in stenoKeys) {
-		$('#stenoKeyW-').css('background-color', '#f26abf');
-	}
+  // Initial W
+  if ('W-' in stenoKeys) {
+    $('#stenoKeyW-').css('background-color', '#f26abf');
+  }
 
-	// Color code the letters that use 2 Steno Keys.
+  // Color code the letters that use 2 Steno Keys.
 
-	// Initial B
-	if ('P-' in stenoKeys && 'W-' in stenoKeys) {
-		$('#stenoKeyP-').css('background-color', '#800000');
-		$('#stenoKeyW-').css('background-color', '#800000');
-	}
+  // Initial B
+  if ('P-' in stenoKeys && 'W-' in stenoKeys) {
+    $('#stenoKeyP-').css('background-color', '#800000');
+    $('#stenoKeyW-').css('background-color', '#800000');
+  }
 
-	// Initial D
-	if ('T-' in stenoKeys && 'K-' in stenoKeys) {
-		$('#stenoKeyT-').css('background-color', '#808000');
-		$('#stenoKeyK-').css('background-color', '#808000');
-	}
+  // Initial D
+  if ('T-' in stenoKeys && 'K-' in stenoKeys) {
+    $('#stenoKeyT-').css('background-color', '#808000');
+    $('#stenoKeyK-').css('background-color', '#808000');
+  }
 
-	// Initial F
-	if ('T-' in stenoKeys && 'P-' in stenoKeys) {
-		$('#stenoKeyT-').css('background-color', '#008000');
-		$('#stenoKeyP-').css('background-color', '#008000');
-	}
+  // Initial F
+  if ('T-' in stenoKeys && 'P-' in stenoKeys) {
+    $('#stenoKeyT-').css('background-color', '#008000');
+    $('#stenoKeyP-').css('background-color', '#008000');
+  }
 
-	// Final K
-	if ('-B' in stenoKeys && '-G' in stenoKeys) {
-		$('#stenoKey-B').css('background-color', '#800080');
-		$('#stenoKey-G').css('background-color', '#800080');
-	}
+  // Final K
+  if ('-B' in stenoKeys && '-G' in stenoKeys) {
+    $('#stenoKey-B').css('background-color', '#800080');
+    $('#stenoKey-G').css('background-color', '#800080');
+  }
 
-	// Initial L
-	if ('H-' in stenoKeys && 'R-' in stenoKeys) {
-		$('#stenoKeyH-').css('background-color', '#80ffff');
-		$('#stenoKeyR-').css('background-color', '#80ffff');
-	}
+  // Initial L
+  if ('H-' in stenoKeys && 'R-' in stenoKeys) {
+    $('#stenoKeyH-').css('background-color', '#80ffff');
+    $('#stenoKeyR-').css('background-color', '#80ffff');
+  }
 
-	// Initial M
-	if ('P-' in stenoKeys && 'H-' in stenoKeys) {
-		$('#stenoKeyP-').css('background-color', '#804000');
-		$('#stenoKeyH-').css('background-color', '#804000');
-	}
+  // Initial M
+  if ('P-' in stenoKeys && 'H-' in stenoKeys) {
+    $('#stenoKeyP-').css('background-color', '#804000');
+    $('#stenoKeyH-').css('background-color', '#804000');
+  }
 
-	// Final M
-	if ('-P' in stenoKeys && '-L' in stenoKeys) {
-		$('#stenoKey-P').css('background-color', '#804000');
-		$('#stenoKey-L').css('background-color', '#804000');
-	}
+  // Final M
+  if ('-P' in stenoKeys && '-L' in stenoKeys) {
+    $('#stenoKey-P').css('background-color', '#804000');
+    $('#stenoKey-L').css('background-color', '#804000');
+  }
 
-	// Final N
-	if ('-P' in stenoKeys && '-B' in stenoKeys) {
-		$('#stenoKey-P').css('background-color', '#ff0080');
-		$('#stenoKey-B').css('background-color', '#ff0080');
-	}
+  // Final N
+  if ('-P' in stenoKeys && '-B' in stenoKeys) {
+    $('#stenoKey-P').css('background-color', '#ff0080');
+    $('#stenoKey-B').css('background-color', '#ff0080');
+  }
 
-	// Initial V
-	if ('S-' in stenoKeys && 'R-' in stenoKeys) {
-		$('#stenoKeyS-1').css('background-color', '#808080');
-		$('#stenoKeyS-2').css('background-color', '#808080');
-		$('#stenoKeyR-').css('background-color', '#808080');
-	}
+  // Initial V
+  if ('S-' in stenoKeys && 'R-' in stenoKeys) {
+    $('#stenoKeyS-1').css('background-color', '#808080');
+    $('#stenoKeyS-2').css('background-color', '#808080');
+    $('#stenoKeyR-').css('background-color', '#808080');
+  }
 
-	// Initial X
-	if ('K-' in stenoKeys && 'P-' in stenoKeys) {
-		$('#stenoKeyK-').css('background-color', '#ffff00');
-		$('#stenoKeyP-').css('background-color', '#ffff00');
-	}
+  // Initial X
+  if ('K-' in stenoKeys && 'P-' in stenoKeys) {
+    $('#stenoKeyK-').css('background-color', '#ffff00');
+    $('#stenoKeyP-').css('background-color', '#ffff00');
+  }
 
-	// Initial C
-	if ('K-' in stenoKeys && 'R-' in stenoKeys) {
-		$('#stenoKeyK-').css('background-color', '#af3630');
-		$('#stenoKeyR-').css('background-color', '#af3630');
-	}
+  // Initial C
+  if ('K-' in stenoKeys && 'R-' in stenoKeys) {
+    $('#stenoKeyK-').css('background-color', '#af3630');
+    $('#stenoKeyR-').css('background-color', '#af3630');
+  }
 
-	// I
-	if ('-E' in stenoKeys && '-U' in stenoKeys) {
-		$('#stenoKey-E').css('background-color', '#575a14');
-		$('#stenoKey-U').css('background-color', '#575a14');
-	}
+  // I
+  if ('-E' in stenoKeys && '-U' in stenoKeys) {
+    $('#stenoKey-E').css('background-color', '#575a14');
+    $('#stenoKey-U').css('background-color', '#575a14');
+  }
 
-	// Initial Q
-	if ('K-' in stenoKeys && 'W-' in stenoKeys) {
-		$('#stenoKeyK-').css('background-color', '#511151');
-		$('#stenoKeyW-').css('background-color', '#511151');
-	}
+  // Initial Q
+  if ('K-' in stenoKeys && 'W-' in stenoKeys) {
+    $('#stenoKeyK-').css('background-color', '#511151');
+    $('#stenoKeyW-').css('background-color', '#511151');
+  }
 
-	// Color code the letters that use 3 Steno Keys.
+  // Color code the letters that use 3 Steno Keys.
 
-	// Initial N
-	if ('T-' in stenoKeys && 'P-' in stenoKeys && 'H-' in stenoKeys) {
-		$('#stenoKeyT-').css('background-color', '#ff0080');
-		$('#stenoKeyP-').css('background-color', '#ff0080');
-		$('#stenoKeyH-').css('background-color', '#ff0080');
-	}
+  // Initial N
+  if ('T-' in stenoKeys && 'P-' in stenoKeys && 'H-' in stenoKeys) {
+    $('#stenoKeyT-').css('background-color', '#ff0080');
+    $('#stenoKeyP-').css('background-color', '#ff0080');
+    $('#stenoKeyH-').css('background-color', '#ff0080');
+  }
 
-	// Final X
-	if ('-B' in stenoKeys && '-G' in stenoKeys && '-S' in stenoKeys) {
-		$('#stenoKey-B').css('background-color', '#ffff00');
-		$('#stenoKey-G').css('background-color', '#ffff00');
-		$('#stenoKey-S').css('background-color', '#ffff00');
-	}
+  // Final X
+  if ('-B' in stenoKeys && '-G' in stenoKeys && '-S' in stenoKeys) {
+    $('#stenoKey-B').css('background-color', '#ffff00');
+    $('#stenoKey-G').css('background-color', '#ffff00');
+    $('#stenoKey-S').css('background-color', '#ffff00');
+  }
 
-	// Initial Y
-	if ('K-' in stenoKeys && 'W-' in stenoKeys && 'R-' in stenoKeys) {
-		$('#stenoKeyK-').css('background-color', '#732cad');
-		$('#stenoKeyW-').css('background-color', '#732cad');
-		$('#stenoKeyR-').css('background-color', '#732cad');
-	}
+  // Initial Y
+  if ('K-' in stenoKeys && 'W-' in stenoKeys && 'R-' in stenoKeys) {
+    $('#stenoKeyK-').css('background-color', '#732cad');
+    $('#stenoKeyW-').css('background-color', '#732cad');
+    $('#stenoKeyR-').css('background-color', '#732cad');
+  }
 
-	// Color code the letters that contain 4 Steno Keys.
+  // Color code the letters that contain 4 Steno Keys.
 
-	// Initial G
-	if ('T-' in stenoKeys && 'K-' in stenoKeys && 'P-' in stenoKeys && 'W-' in stenoKeys) {
-		$('#stenoKeyT-').css('background-color', '#008080');
-		$('#stenoKeyK-').css('background-color', '#008080');
-		$('#stenoKeyP-').css('background-color', '#008080');
-		$('#stenoKeyW-').css('background-color', '#008080');
-	}
+  // Initial G
+  if ('T-' in stenoKeys && 'K-' in stenoKeys && 'P-' in stenoKeys && 'W-' in stenoKeys) {
+    $('#stenoKeyT-').css('background-color', '#008080');
+    $('#stenoKeyK-').css('background-color', '#008080');
+    $('#stenoKeyP-').css('background-color', '#008080');
+    $('#stenoKeyW-').css('background-color', '#008080');
+  }
 
-	// Initial J
-	if ('S-' in stenoKeys && 'K-' in stenoKeys && 'W-' in stenoKeys && 'R-' in stenoKeys) {
-		$('#stenoKeyS-1').css('background-color', '#000080');
-		$('#stenoKeyS-2').css('background-color', '#000080');
-		$('#stenoKeyK-').css('background-color', '#000080');
-		$('#stenoKeyW-').css('background-color', '#000080');
-		$('#stenoKeyR-').css('background-color', '#000080');
-	}
+  // Initial J
+  if ('S-' in stenoKeys && 'K-' in stenoKeys && 'W-' in stenoKeys && 'R-' in stenoKeys) {
+    $('#stenoKeyS-1').css('background-color', '#000080');
+    $('#stenoKeyS-2').css('background-color', '#000080');
+    $('#stenoKeyK-').css('background-color', '#000080');
+    $('#stenoKeyW-').css('background-color', '#000080');
+    $('#stenoKeyR-').css('background-color', '#000080');
+  }
 
-	// Final J
-	if ('-P' in stenoKeys && '-B' in stenoKeys && '-L' in stenoKeys && '-G' in stenoKeys) {
-		$('#stenoKey-P').css('background-color', '#000080');
-		$('#stenoKey-B').css('background-color', '#000080');
-		$('#stenoKey-L').css('background-color', '#000080');
-		$('#stenoKey-G').css('background-color', '#000080');
-	}
+  // Final J
+  if ('-P' in stenoKeys && '-B' in stenoKeys && '-L' in stenoKeys && '-G' in stenoKeys) {
+    $('#stenoKey-P').css('background-color', '#000080');
+    $('#stenoKey-B').css('background-color', '#000080');
+    $('#stenoKey-L').css('background-color', '#000080');
+    $('#stenoKey-G').css('background-color', '#000080');
+  }
 
-	// Color code the letters that contain use 5 Steno Keys.
+  // Color code the letters that contain use 5 Steno Keys.
 
-	// Final J
-	if ('S-' in stenoKeys && 'T-' in stenoKeys && 'K-' in stenoKeys && 'P-' in stenoKeys && 'W-' in stenoKeys) {
-		$('#stenoKeyS-1').css('background-color', '#ff0000');
-		$('#stenoKeyS-2').css('background-color', '#ff0000');
-		$('#stenoKeyT-').css('background-color', '#ff0000');
-		$('#stenoKeyK-').css('background-color', '#ff0000');
-		$('#stenoKeyP-').css('background-color', '#ff0000');
-		$('#stenoKeyW-').css('background-color', '#ff0000');
-	}
-
+  // Final J
+  if ('S-' in stenoKeys && 'T-' in stenoKeys && 'K-' in stenoKeys && 'P-' in stenoKeys && 'W-' in stenoKeys) {
+    $('#stenoKeyS-1').css('background-color', '#ff0000');
+    $('#stenoKeyS-2').css('background-color', '#ff0000');
+    $('#stenoKeyT-').css('background-color', '#ff0000');
+    $('#stenoKeyK-').css('background-color', '#ff0000');
+    $('#stenoKeyP-').css('background-color', '#ff0000');
+    $('#stenoKeyW-').css('background-color', '#ff0000');
+  }
 }
 
 /**
@@ -388,126 +461,126 @@ function colorCode(keys) {
  * @see Josh's <a href="http://launchpadlibrarian.net/81275523/plover_guide.pdf">plover guide</a>.
  */
 function demetafy(translationString) {
-	// Sentence stops
-	translationString = translationString.replace(/\s*{(\.|!|\?)}\s*(\w?)/g, function (matchString, punctuationMark, nextLetter) {return punctuationMark + ' ' + nextLetter.toUpperCase();});
-	
-	// Sentence breaks
-	translationString = translationString.replace(/\s*{(,|:|;)}\s*/g, function (matchString, punctuationMark) {return punctuationMark + ' ';});
+  // Sentence stops
+  translationString = translationString.replace(/\s*{(\.|!|\?)}\s*(\w?)/g, function (matchString, punctuationMark, nextLetter) {return punctuationMark + ' ' + nextLetter.toUpperCase();});
 
-	// Simple suffixes (pure javascript translation from the Python code base)
-	translationString = translationString.replace(/(\w*)\s*{(\^ed|\^ing|\^er|\^s)}/g, simpleSuffix);
-	function simpleSuffix() {
-		var matchString = arguments[0];
-		var prevWord = arguments[1];
-		var suffix = arguments[2];
-		var returnString = '';
+  // Sentence breaks
+  translationString = translationString.replace(/\s*{(,|:|;)}\s*/g, function (matchString, punctuationMark) {return punctuationMark + ' ';});
 
-		var CONSONANTS = {'b': true, 'c': true, 'd': true, 'f': true, 'g': true, 'h': true, 'j': true, 'k': true, 'l': true, 'm': true, 'n': true, 'p': true, 'q': true, 'r': true, 's': true, 't': true, 'v': true, 'w': true, 'x': true, 'z': true, 'B': true, 'C': true, 'D': true, 'F': true, 'G': true, 'H': true, 'J': true, 'K': true, 'L': true, 'M': true, 'N': true, 'P': true, 'Q': true, 'R': true, 'S': true, 'T': true, 'V': true, 'W': true, 'X': true, 'Z': true};
-		var VOWELS = {'a': true, 'e': true, 'i': true, 'o': true, 'u': true, 'A': true, 'E': true, 'I': true, 'O': true, 'U': true};
-		var W = {'w': true, 'W': true};
-		var Y = {'y': true, 'Y': true};
-		var PLURAL_SPECIAL = {'s': true, 'x': true, 'z': true, 'S': true, 'X': true, 'Z': true};
-		prepForSimpleSuffix = function (wordParam) {
-			var numChars = wordParam.length;
-			if (numChars < 2) {
-				return wordParam;
-			}
-			if (numChars >= 3) {
-				thirdToLast = wordParam.slice(-3, -2);
-			} else {
-				thirdToLast = '';
-			}
-			secondToLast = wordParam.slice(-2, -1);
-			last = wordParam.slice(-1);
-			if (secondToLast in VOWELS || secondToLast in CONSONANTS) {
-				if (last in VOWELS) {
-					if (thirdToLast && (thirdToLast in VOWELS || thirdToLast in CONSONANTS)) {
-						return wordParam.slice(0, -1);
-					}
-				} else if (last in CONSONANTS && !(last in W) && secondToLast in VOWELS && thirdToLast && !(thirdToLast in VOWELS)) {
-					return wordParam + last;
-				} else if (last in Y && secondToLast in CONSONANTS) {
-					return wordParam.slice(0, -1) + 'i';
-				}
-			}
-		return wordParam;
-		}
+  // Simple suffixes (pure javascript translation from the Python code base)
+  translationString = translationString.replace(/(\w*)\s*{(\^ed|\^ing|\^er|\^s)}/g, simpleSuffix);
+  function simpleSuffix() {
+    var matchString = arguments[0];
+    var prevWord = arguments[1];
+    var suffix = arguments[2];
+    var returnString = '';
 
-		if (suffix === '^s') {
-			if (prevWord.length < 2) {
-				return prevWord + 's';
-			}
-			var a = prevWord.slice(-2, -1);
-			var b = prevWord.slice(-1);
+    var CONSONANTS = {'b': true, 'c': true, 'd': true, 'f': true, 'g': true, 'h': true, 'j': true, 'k': true, 'l': true, 'm': true, 'n': true, 'p': true, 'q': true, 'r': true, 's': true, 't': true, 'v': true, 'w': true, 'x': true, 'z': true, 'B': true, 'C': true, 'D': true, 'F': true, 'G': true, 'H': true, 'J': true, 'K': true, 'L': true, 'M': true, 'N': true, 'P': true, 'Q': true, 'R': true, 'S': true, 'T': true, 'V': true, 'W': true, 'X': true, 'Z': true};
+    var VOWELS = {'a': true, 'e': true, 'i': true, 'o': true, 'u': true, 'A': true, 'E': true, 'I': true, 'O': true, 'U': true};
+    var W = {'w': true, 'W': true};
+    var Y = {'y': true, 'Y': true};
+    var PLURAL_SPECIAL = {'s': true, 'x': true, 'z': true, 'S': true, 'X': true, 'Z': true};
+    prepForSimpleSuffix = function (wordParam) {
+      var numChars = wordParam.length;
+      if (numChars < 2) {
+        return wordParam;
+      }
+      if (numChars >= 3) {
+        thirdToLast = wordParam.slice(-3, -2);
+      } else {
+        thirdToLast = '';
+      }
+      secondToLast = wordParam.slice(-2, -1);
+      last = wordParam.slice(-1);
+      if (secondToLast in VOWELS || secondToLast in CONSONANTS) {
+        if (last in VOWELS) {
+          if (thirdToLast && (thirdToLast in VOWELS || thirdToLast in CONSONANTS)) {
+            return wordParam.slice(0, -1);
+          }
+        } else if (last in CONSONANTS && !(last in W) && secondToLast in VOWELS && thirdToLast && !(thirdToLast in VOWELS)) {
+          return wordParam + last;
+        } else if (last in Y && secondToLast in CONSONANTS) {
+          return wordParam.slice(0, -1) + 'i';
+        }
+      }
+    return wordParam;
+    }
 
-			if (b in PLURAL_SPECIAL) {
-				return prevWord + 'es';
-			} else if (b in Y && a in CONSONANTS) {
-				return prevWord.slice(0, -1) + 'ies';
-			}
-			return prevWord + 's';
-		}
-		if (suffix === '^ed') {
-			return prepForSimpleSuffix(prevWord) + 'ed';
-		}
-		if (suffix === '^er') {
-			return prepForSimpleSuffix(prevWord) + 'er';
-		}
-		if (suffix === '^ing') {
-			if (prevWord && prevWord.slice(-1) in Y) {
-				return prevWord + 'ing';
-			}
-			return prepForSimpleSuffix(prevWord) + 'ing';
-		}
-	}
+    if (suffix === '^s') {
+      if (prevWord.length < 2) {
+        return prevWord + 's';
+      }
+      var a = prevWord.slice(-2, -1);
+      var b = prevWord.slice(-1);
 
-	// Capitalize
-	translationString = translationString.replace(/\s*{-\|}\s*(\w?)/g, function (matchString, nextLetter) {return nextLetter.toUpperCase();});
+      if (b in PLURAL_SPECIAL) {
+        return prevWord + 'es';
+      } else if (b in Y && a in CONSONANTS) {
+        return prevWord.slice(0, -1) + 'ies';
+      }
+      return prevWord + 's';
+    }
+    if (suffix === '^ed') {
+      return prepForSimpleSuffix(prevWord) + 'ed';
+    }
+    if (suffix === '^er') {
+      return prepForSimpleSuffix(prevWord) + 'er';
+    }
+    if (suffix === '^ing') {
+      if (prevWord && prevWord.slice(-1) in Y) {
+        return prevWord + 'ing';
+      }
+      return prepForSimpleSuffix(prevWord) + 'ing';
+    }
+  }
 
-	// Glue flag
-	translationString = translationString.replace(/(\s*{&[^}]+}\s*)+/g, glue);
-	function glue() {
-		var testString = '';
-		for (i = 0; i < arguments.length; i++) {
-			testString += arguments[i] + ', ';
-		}
-		var matchString = arguments[0];
-		matchString = matchString.replace(/\s*{&([^}]+)}\s*/g, function (a, p1) {return p1;});
-		return ' ' + matchString + ' ';
-	}
+  // Capitalize
+  translationString = translationString.replace(/\s*{-\|}\s*(\w?)/g, function (matchString, nextLetter) {return nextLetter.toUpperCase();});
 
-	// Attach flag
-	translationString = translationString.replace(/\s*{\^([^}]+)\^}\s*/g, function (matchString, attachString) {return attachString;});
-	translationString = translationString.replace(/\s*{\^([^}]+)}(\s*)/g, function (matchString, attachString, whitespace) {return attachString + whitespace;});
-	translationString = translationString.replace(/(\s*){([^}]+)\^}\s*/g, function (matchString, whitespace, attachString) {return whitespace + attachString;});
+  // Glue flag
+  translationString = translationString.replace(/(\s*{&[^}]+}\s*)+/g, glue);
+  function glue() {
+    var testString = '';
+    for (i = 0; i < arguments.length; i++) {
+      testString += arguments[i] + ', ';
+    }
+    var matchString = arguments[0];
+    matchString = matchString.replace(/\s*{&([^}]+)}\s*/g, function (a, p1) {return p1;});
+    return ' ' + matchString + ' ';
+  }
 
-	// Key Combinations
-	translationString = translationString.replace(/\s*{#Return}\s*/g, '\n');
-	translationString = translationString.replace(/\s*{#Tab}\s*/g, '\t');
+  // Attach flag
+  translationString = translationString.replace(/\s*{\^([^}]+)\^}\s*/g, function (matchString, attachString) {return attachString;});
+  translationString = translationString.replace(/\s*{\^([^}]+)}(\s*)/g, function (matchString, attachString, whitespace) {return attachString + whitespace;});
+  translationString = translationString.replace(/(\s*){([^}]+)\^}\s*/g, function (matchString, whitespace, attachString) {return whitespace + attachString;});
 
-	return translationString;
+  // Key Combinations
+  translationString = translationString.replace(/\s*{#Return}\s*/g, '\n');
+  translationString = translationString.replace(/\s*{#Tab}\s*/g, '\t');
+
+  return translationString;
 }
 
 /**
  * This function resets the keys to how they were before any user interaction.
  */
 function resetKeys() {
-	// Clear the list of keys currently being pressed down.
-	for (var key in downKeys) {
-		delete downKeys[key];
-	}
+  // Clear the list of keys currently being pressed down.
+  for (var key in downKeys) {
+    delete downKeys[key];
+  }
 
-	// Clear the list of keys in the current chord.
-	for (var key in chordKeys) {
-		delete chordKeys[key];
-	}
+  // Clear the list of keys in the current chord.
+  for (var key in chordKeys) {
+    delete chordKeys[key];
+  }
 
-	// Assume the next stroke is valid steno.
-	isSteno = true;
+  // Assume the next stroke is valid steno.
+  isSteno = true;
 
-	// Clear keyboard colors
-	$('.stdKey').css('background-color', '#000000');
-	$('.stenoKey').css('background-color', '#000000');
+  // Clear keyboard colors
+  $('.stdKey').css('background-color', '#000000');
+  $('.stenoKey').css('background-color', '#000000');
 }
 
 /**
@@ -519,7 +592,7 @@ function resetAll() {
   chords.length = 0;
   words.length = 0;
   verticalNotes.length = 0;
-  
+
   translatedString = '';
 }
 
@@ -529,39 +602,10 @@ function resetAll() {
  * @see MDN's <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim">trim documentation</a>.
  */
 if (!String.prototype.trim) {
-	String.prototype.trim = function () {
-		return this.replace(/^\s+|\s+$/g, '');
-	};
+  String.prototype.trim = function () {
+    return this.replace(/^\s+|\s+$/g, '');
+  };
 }
-
-function nextQuizQuestion() {
-  var newQuestion = tdArray[Math.floor(Math.random() * tdArray.length)];  // random question
-  
-  if (testdata[newQuestion] === "binary") {
-    var quizChord = new Chord();
-    quizChord.fromBinary(newQuestion);
-    console.log("the new quizChord is " + quizChord.toBinary());
-  }
-  console.log("newQuestion is " + newQuestion);
-  $('#quizInput').html(newQuestion);
-}
-
-nextQuizQuestion();
-
-
-function match(conversion) {
-  switch(conversion) {
-    case "chord-binary":
-      if (chords[chords.length - 1].toBinary().toString() === $('#quizInput').html()) {
-        console.log("match! " + chords[chords.length - 1].toBinary() + " == " + $('#quizInput').html());
-        resetAll();
-        nextQuizQuestion();
-      }
-    default:
-      console.log("no match! " + chords[chords.length - 1].toBinary() + " != " + $('#quizInput').html());
-  }
-}
-
 
 /**
  * This function will zero-fill a number.
@@ -571,39 +615,69 @@ function match(conversion) {
  * @see The <a href="http://stackoverflow.com/questions/1267283/how-can-i-create-a-zerofilled-value-using-javascript">question on Stack Overflow</a>.
  */
 function zeroFill(number, width) {
-	width -= number.toString().length;
-	if (width > 0) {
-		return new Array(width + (/\./.test(number)?2:1)).join('0') + number;
-	}
-	return number;
+  width -= number.toString().length;
+  if (width > 0) {
+    return new Array(width + (/\./.test(number)?2:1)).join('0') + number;
+  }
+  return number;
 }
 
+function nextQuizQuestion() {
+  var newQuestion = tdArray[Math.floor(Math.random() * tdArray.length)];  // random question
+
+  if (testdata[newQuestion] === "binary") {
+    quizChord = new Chord();
+    quizChord.fromBinary(newQuestion);
+    console.log("quizChord is " + quizChord.toBinary());
+  }
+  console.log("newQuestion is " + newQuestion);
+  $('#quizInput').html(quizChord.toHTMLTable());
+}
+nextQuizQuestion();
+
+function match(conversion) {
+  switch(conversion) {
+    case "chord-binary":
+      if (chords[chords.length - 1].toBinary() === quizChord.toBinary()) {
+        console.log("match! " + chords[chords.length - 1].toBinary() + " == " + quizChord.toBinary());
+        resetAll();
+        nextQuizQuestion();
+      }
+    default:
+      if (chords.length) {
+        console.log("no match! " + chords[chords.length - 1].toBinary() + " != " + quizChord.toBinary());
+      }
+  }
+}
 
 function showUserInput() {
+  // show words
   var userInputHTML = "";
+  for (var i = 0; i < words.length; i++) {
+    userInputHTML += words[i].toHTMLTable();
+  }
+  $('#uiWords').html(userInputHTML);
+
+  // show chords
+  userInputHTML = "";
   for (var key in chordKeys) {
-		userInputHTML += chordKeys[key].toHTMLTable();
-	}
+    userInputHTML += chordKeys[key].toHTMLTable();
+  }
   $('#uiKeys').html(userInputHTML);
-  
+
+  // show keys
   userInputHTML = "";
   for (var i = 0; i < chords.length; i++) {
-		userInputHTML += chords[i].toHTMLTable();
-	}
+    userInputHTML += chords[i].toHTMLTable();
+  }
   $('#uiChords').html(userInputHTML);
-  
-  userInputHTML = "";
-  for (var i = 0; i < words.length; i++) {
-		userInputHTML += words[i].toHTMLTable();
-	}
-  $('#uiWords').html(userInputHTML);
-  
-  document.getElementById('uiWords').scrollLeft = document.getElementById('uiWords').scrollWidth; //scroll the textarea to the bottom
-	$("#uiChords").animate({scrollLeft: document.getElementById('uiChords').scrollWidth}, 80);
-  //document.getElementById('uiChords').scrollLeft = document.getElementById('uiChords').scrollWidth; //scroll the textarea to the bottom
-	document.getElementById('uiKeys').scrollLeft = document.getElementById('uiKeys').scrollWidth; //scroll the textarea to the bottom
-	
+
+  // scroll to reveal latest
+  document.getElementById('uiWords').scrollLeft = document.getElementById('uiWords').scrollWidth;
+  document.getElementById('uiChords').scrollLeft = document.getElementById('uiChords').scrollWidth;
+  document.getElementById('uiKeys').scrollLeft = document.getElementById('uiKeys').scrollWidth;
 }
+
 
 // CREATE 'CLASSES'
 
@@ -613,75 +687,75 @@ function showUserInput() {
  * @param {number} keyCodeParam The key code of the key.
  */
 function Key(keyCodeParam) {
-	/** @private */
-	var keyCode = keyCodeParam;
+  /** @private */
+  var keyCode = keyCodeParam;
 
-	/**
-	 * Custom toString function to create unique identifier.
-	 * @return {string}
-	 */
-	this.toString = function () {
-		return keyCode;
-	};
+  /**
+   * Custom toString function to create unique identifier.
+   * @return {string}
+   */
+  this.toString = function () {
+    return keyCode;
+  };
 
-	/**
-	 * Accessor that gets the key code.
-	 * @return {integer} The key code.
-	 */
-	this.getKeyCode = function () {
-		return keyCode;
-	};
+  /**
+   * Accessor that gets the key code.
+   * @return {integer} The key code.
+   */
+  this.getKeyCode = function () {
+    return keyCode;
+  };
 
-	/**
-	 * Mutator that sets the key code.
-	 * @param {integer} newKeyCode A new key code.
-	 */
-	this.setKeyCode = function (newKeyCode) {
-		keyCode = newKeyCode;
-	};
+  /**
+   * Mutator that sets the key code.
+   * @param {integer} newKeyCode A new key code.
+   */
+  this.setKeyCode = function (newKeyCode) {
+    keyCode = newKeyCode;
+  };
 
-	/**
-	 * Converts the key code to the qwerty character.
-	 * @return {string} The qwerty character.
-	 */
-	this.toQwerty = function () {
-		return keyCodeToQwerty[keyCode];
-	};
+  /**
+   * Converts the key code to the qwerty character.
+   * @return {string} The qwerty character.
+   */
+  this.toQwerty = function () {
+    return keyCodeToQwerty[keyCode];
+  };
 
-	/**
-	 * Converts the key code from a new qwerty character.
-	 * @return {string} A new qwerty character.
-	 */
-	this.fromQwerty = function (newQwerty) {
-		for (i in keyCodeToQwerty) { // go through each key code in the imported key code to qwerty mapping
-			if (keyCodeToQwerty[i] === newQwerty) { // if the qwerty mapping associated with the current key code is strictly equal to the new qwerty mapping
-				keyCode = i; // set the private keyCode property to the current key code
-				break; // and stop looping
-			}
-		}
-	};
+  /**
+   * Converts the key code from a new qwerty character.
+   * @return {string} A new qwerty character.
+   */
+  this.fromQwerty = function (newQwerty) {
+    for (i in keyCodeToQwerty) { // go through each key code in the imported key code to qwerty mapping
+      if (keyCodeToQwerty[i] === newQwerty) { // if the qwerty mapping associated with the current key code is strictly equal to the new qwerty mapping
+        keyCode = i; // set the private keyCode property to the current key code
+        break; // and stop looping
+      }
+    }
+  };
 
-	/**
-	 * Converts the key code to the steno character.
-	 * @return {string} The steno character.
-	 */
-	this.toSteno = function () {
-		return keyCodeToSteno[keyCode];
-	};
+  /**
+   * Converts the key code to the steno character.
+   * @return {string} The steno character.
+   */
+  this.toSteno = function () {
+    return keyCodeToSteno[keyCode];
+  };
 
-	/**
-	 * Converts the key code from a new steno character.
-	 * @return {string} A new steno character.
-	 */
-	this.fromSteno = function (newSteno) {
-		for (i in keyCodeToSteno) { // go through each key code in the imported key code to steno mapping
-			if (keyCodeToSteno[i] === newSteno) { // if the steno mapping associated with the current key code is strictly equal to the new steno mapping
-				keyCode = i; // set the private keyCode property to the current key code
-				break; // and stop looping
-			}
-		}
-	};
-  
+  /**
+   * Converts the key code from a new steno character.
+   * @return {string} A new steno character.
+   */
+  this.fromSteno = function (newSteno) {
+    for (i in keyCodeToSteno) { // go through each key code in the imported key code to steno mapping
+      if (keyCodeToSteno[i] === newSteno) { // if the steno mapping associated with the current key code is strictly equal to the new steno mapping
+        keyCode = i; // set the private keyCode property to the current key code
+        break; // and stop looping
+      }
+    }
+  };
+
   this.toHTMLTable = function() {
     var htmlTable = "<table class='tablekey'><thead>{{header}}</thead><tbody>{{keycodeRow}}{{qwertyRow}}{{stenoRow}}</tbody></table>";
     htmlTable = htmlTable.replace("{{header}}", "<tr><th colspan=2>key</th></tr>");
@@ -698,169 +772,160 @@ function Key(keyCodeParam) {
  * @param {Object} A list of Keys.
  */
 function Chord(keysParam) {
-	/** @private */
-	var keys = keysParam;
-
-	/**
-	 * Custom toString function to create unique identifier.
-	 * @return {string}
-	 */
-	this.toString = function () {
-		var returnString = 'A Stroke with the keys ';
-    for (key in keys) {
-			returnString += keys[key].toSteno() + ', '
-		}
-		returnString = returnString.slice(0, -2) + '.';
-		return returnString;
-	};
-
-	/**
-	 * Accessor that gets the list of Keys.
-	 * @return The list of Keys.
-	 */
-	this.getKeys = function () {
-		return keys;
-	};
-
-	/**
-	 * Mutator that sets the list of Keys.
-	 * @param newKeys A new list of Keys.
-	 */
-	this.setKeys = function (newKeys) {
-		keys = newKeys;
-	};
-
-	/**
-	 * This is a function that will take in a string and see if that string is in the key code, qwerty characters, or steno characters.
-	 * @param {string} keyParam
-	 */
-	this.contains = function (keyParam) {
-		for (var key in keys) {
-			if (keys[key].getKeyCode() === keyParam || keys[key].toQwerty() === keyParam || keys[key].toSteno() === keyParam) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Converts the list of Keys to binary.
-	 * @return {number} The binary representation of the stroke.
-	 */
-	this.toBinary = function () {
-		var flags = parseInt('00000000000000000000000000000000', 2);
-		for (var i = parseInt('00000000000000000000001', 2); i <= parseInt('10000000000000000000000', 2); i <<= 1) {
-			if (this.contains(binaryToSteno[i])) {
-				flags |= i;
-			}
-		}
-		return flags;
-	}
+  /** @private */
+  var keys = keysParam;
 
   /**
-	 * Mutator that sets the list of Keys from binary.
-	 * @param newBinary A new binary representation for list of Keys.
-	 */
-	this.fromBinary = function (newBinary) {
-		newKeys = {};
+   * Custom toString function to create unique identifier.
+   * @return {string}
+   */
+  this.toString = function () {
+    var returnString = 'A Stroke with the keys ';
+    for (key in keys) {
+      returnString += keys[key].toSteno() + ', '
+    }
+    returnString = returnString.slice(0, -2) + '.';
+    return returnString;
+  };
+
+  /**
+   * Accessor that gets the list of Keys.
+   * @return The list of Keys.
+   */
+  this.getKeys = function () {
+    return keys;
+  };
+
+  /**
+   * Mutator that sets the list of Keys.
+   * @param newKeys A new list of Keys.
+   */
+  this.setKeys = function (newKeys) {
+    keys = newKeys;
+  };
+
+  /**
+   * This is a function that will take in a string and see if that string is in the key code, qwerty characters, or steno characters.
+   * @param {string} keyParam
+   */
+  this.contains = function (keyParam) {
+    for (var key in keys) {
+      if (keys[key].getKeyCode() === keyParam || keys[key].toQwerty() === keyParam || keys[key].toSteno() === keyParam) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Converts the list of Keys to binary.
+   * @return {number} The binary representation of the stroke.
+   */
+  this.toBinary = function () {
+    var flags = parseInt('00000000000000000000000000000000', 2);
     for (var i = parseInt('00000000000000000000001', 2); i <= parseInt('10000000000000000000000', 2); i <<= 1) {
-			console.log("i & newBinary = " + (i & newBinary));
+      if (this.contains(binaryToSteno[i])) {
+        flags |= i;
+      }
+    }
+    return flags;
+  }
+
+  /**
+   * Converts the list of Keys from binary.
+   * @param newBinary A new binary representation for the list of Keys.
+   */
+  this.fromBinary = function (newBinary) {
+    newKeys = {};
+    for (var i = parseInt('00000000000000000000001', 2); i <= parseInt('10000000000000000000000', 2); i <<= 1) {
       if (i & newBinary) {
-				newkey = new Key(0);
+        newkey = new Key();
         newkey.fromSteno(binaryToSteno[i]);
         newKeys[newkey] = newkey;
-			}
-		}
-    
-    for (key in newKeys) {
-      console.log(newKeys[key].toSteno());
+      }
     }
-    
-    keys = jQuery.extend({}, newKeys); // need to clone so future changes to chordKeys won't affect chord
-		
-    for (key in keys) {
-      console.log(keys[key].toSteno());
-    }    
-	}
 
-  
-	/**
-	 * Converts the list of Keys to RTF/CRE format.
-	 * @return {string} The RTF/CRE representation of the stroke.
-	 */
-	this.toRTFCRE = function () {
-		var rtfcre = '';
-		for (var i = parseInt('00000000000000000000001', 2); i <= parseInt('10000000000000000000000', 2); i <<= 1) {
-			if (this.contains(binaryToSteno[i]) && binaryToSteno[i] != '#') {
-				if (this.contains('#') && stenoKeyNumbers[binaryToSteno[i]]) {
-					rtfcre += stenoKeyNumbers[binaryToSteno[i]];
-				} else {
-					rtfcre += binaryToSteno[i];
-				}
-			}
-		}
-		if (this.contains('A-') || this.contains('O-') || this.contains('-E') || this.contains('-U') || this.contains('*')) {
-			return rtfcre.replace(/-/g, '');
-		}
-		if (rtfcre[0] === '-') {
-			return '-' + rtfcre.replace('--', '.').replace(/-/g, '').replace('.', '-');
-		} else {
-			return rtfcre.replace('--', '.').replace(/-/g, '').replace('.', '-');
-		}
-	}
+    keys = jQuery.extend({}, newKeys);
+  }
 
-	/**
-	 * Converts the list of Keys to a list of key codes.
-	 * @return The list of key codes.
-	 */
-	this.toKeyCodes = function () {
-		var keyCodes = {};
-		for (var i in keys)	{
-			keyCodes[keys[i].getKeyCode()] = true;
-		}
-		return keyCodes;
-	}
 
-	/**
-	 * Converts the list of Keys to a list of qwerty characters.
-	 * @return The list of qwerty characters.
-	 */
-	this.toQwertyKeys = function () {
-		var qwertyKeys = {};
-		for (var i in keys)	{
-			qwertyKeys[keys[i].toQwerty()] = true;
-		}
-		return qwertyKeys;
-	}
+  /**
+   * Converts the list of Keys to RTF/CRE format.
+   * @return {string} The RTF/CRE representation of the stroke.
+   */
+  this.toRTFCRE = function () {
+    var rtfcre = '';
+    for (var i = parseInt('00000000000000000000001', 2); i <= parseInt('10000000000000000000000', 2); i <<= 1) {
+      if (this.contains(binaryToSteno[i]) && binaryToSteno[i] != '#') {
+        if (this.contains('#') && stenoKeyNumbers[binaryToSteno[i]]) {
+          rtfcre += stenoKeyNumbers[binaryToSteno[i]];
+        } else {
+          rtfcre += binaryToSteno[i];
+        }
+      }
+    }
+    if (this.contains('A-') || this.contains('O-') || this.contains('-E') || this.contains('-U') || this.contains('*')) {
+      return rtfcre.replace(/-/g, '');
+    }
+    if (rtfcre[0] === '-') {
+      return '-' + rtfcre.replace('--', '.').replace(/-/g, '').replace('.', '-');
+    } else {
+      return rtfcre.replace('--', '.').replace(/-/g, '').replace('.', '-');
+    }
+  }
 
-	/**
-	 * Converts the list of Keys to a list of steno characters.
-	 * @return The list of steno characters.
-	 */
-	this.toStenoKeys = function () {
-		var stenoKeys = {};
-		for (var i in keys)	{
-			stenoKeys[keys[i].toSteno()] = true;
-		}
-		return stenoKeys;
-	}
+  /**
+   * Converts the list of Keys to a list of key codes.
+   * @return The list of key codes.
+   */
+  this.toKeyCodes = function () {
+    var keyCodes = {};
+    for (var i in keys) {
+      keyCodes[keys[i].getKeyCode()] = true;
+    }
+    return keyCodes;
+  }
 
-	/**
-	 * Adds a key to the stroke.
-	 */
-	this.addKey = function (key) {
-		keys[key] = key;
-	}
+  /**
+   * Converts the list of Keys to a list of qwerty characters.
+   * @return The list of qwerty characters.
+   */
+  this.toQwertyKeys = function () {
+    var qwertyKeys = {};
+    for (var i in keys) {
+      qwertyKeys[keys[i].toQwerty()] = true;
+    }
+    return qwertyKeys;
+  }
 
-	/**
-	 * Removes a key from the stroke.
-	 */
-	this.removeKey = function (key) {
-		if (key in keys) {
-			delete keys[key];
-		}
-	}
-  
+  /**
+   * Converts the list of Keys to a list of steno characters.
+   * @return The list of steno characters.
+   */
+  this.toStenoKeys = function () {
+    var stenoKeys = {};
+    for (var i in keys) {
+      stenoKeys[keys[i].toSteno()] = true;
+    }
+    return stenoKeys;
+  }
+
+  /**
+   * Adds a key to the stroke.
+   */
+  this.addKey = function (key) {
+    keys[key] = key;
+  }
+
+  /**
+   * Removes a key from the stroke.
+   */
+  this.removeKey = function (key) {
+    if (key in keys) {
+      delete keys[key];
+    }
+  }
+
   this.toHTMLTable = function() {
     var htmlTable = "<table class='tablechord'><thead>{{header}}</thead><tbody>{{binaryRow}}{{rtfcreRow}}{{keycodesRow}}{{qwertysRow}}{{stenosRow}}</tbody></table>";
     htmlTable = htmlTable.replace("{{header}}", "<tr><th colspan=2>chord</th></tr>");
@@ -879,80 +944,80 @@ function Chord(keysParam) {
  * @param {Object} strokesParam A list of strokes.
  */
 function Word(strokesParam) {
-	/** @private */
-	var strokes = strokesParam;
+  /** @private */
+  var strokes = strokesParam;
 
-	var string = '';
-	if (strokes.length > 0) {
-		for (var i = 0; i < strokes.length; i++) {
-			string += strokes[i].toRTFCRE() + '/';
-		}
-		string = string.slice(0, -1);
-	}
-	
-	/**
-	 * Custom toString function to create unique identifier.
-	 * @return {string}
-	 */
-	this.toString = function () {
-		return string;
-	}
+  var string = '';
+  if (strokes.length > 0) {
+    for (var i = 0; i < strokes.length; i++) {
+      string += strokes[i].toRTFCRE() + '/';
+    }
+    string = string.slice(0, -1);
+  }
 
-	/**
-	 * Accessor that gets the list of strokes.
-	 * @return The list of strokes.
-	 */
-	this.getStrokes = function () {
-		return strokes;
-	}
+  /**
+   * Custom toString function to create unique identifier.
+   * @return {string}
+   */
+  this.toString = function () {
+    return string;
+  }
 
-	/**
-	 * Mutator that sets the list of strokes.
-	 * @param {Object} newStrokes A list of strokes.
-	 * @return The list of strokes.
-	 */
-	this.setStrokes = function (newStrokes) {
-		strokes = newStrokes;
-	}
+  /**
+   * Accessor that gets the list of strokes.
+   * @return The list of strokes.
+   */
+  this.getStrokes = function () {
+    return strokes;
+  }
 
-	/**
-	 * Adds a stroke to the word.
-	 * @param {Object} strokeParam A stroke object.
-	 */
-	this.addStroke = function (strokeParam) {
-		strokes.push(strokeParam);
-		string += '/' + strokeParam.toRTFCRE();
-	}
+  /**
+   * Mutator that sets the list of strokes.
+   * @param {Object} newStrokes A list of strokes.
+   * @return The list of strokes.
+   */
+  this.setStrokes = function (newStrokes) {
+    strokes = newStrokes;
+  }
 
-	/**
-	 * Removes a stroke from the word.
-	 */
-	this.removeStroke = function () {
-		console.log(strokes.length);
-		strokes.pop();
-		console.log(strokes.length);
-		var stringArray = string.split('/');
-		string = '';
-		if (strokes.length > 0) {
-			for (var i = 0; i < stringArray.length - 1; i++) {
-				string += stringArray[i] + '/';
-			}
-			string = string.slice(0, -1);
-		}
-	}
+  /**
+   * Adds a stroke to the word.
+   * @param {Object} strokeParam A stroke object.
+   */
+  this.addStroke = function (strokeParam) {
+    strokes.push(strokeParam);
+    string += '/' + strokeParam.toRTFCRE();
+  }
 
-	/**
-	 * Converts the strokes to English.
-	 * @return {string} The English translation.
-	 */
-	this.toEnglish = function () {
-		if (dictionary[string]) { // if there exists a translation
-			return dictionary[string];
-		} else { // else, return the RTF/CRE formatted strokes.
-			return string;
-		}
-	}
-  
+  /**
+   * Removes a stroke from the word.
+   */
+  this.removeStroke = function () {
+    //console.log(strokes.length);
+    strokes.pop();
+    //console.log(strokes.length);
+    var stringArray = string.split('/');
+    string = '';
+    if (strokes.length > 0) {
+      for (var i = 0; i < stringArray.length - 1; i++) {
+        string += stringArray[i] + '/';
+      }
+      string = string.slice(0, -1);
+    }
+  }
+
+  /**
+   * Converts the strokes to English.
+   * @return {string} The English translation.
+   */
+  this.toEnglish = function () {
+    if (dictionary[string]) { // if there exists a translation
+      return dictionary[string];
+    } else { // else, return the RTF/CRE formatted strokes.
+      return string;
+    }
+  }
+
   this.toHTMLTable = function() {
     var htmlTable = "<table class='tableword'><thead>{{header}}</thead><tbody>{{stringRow}}{{englishRow}}</tbody></table>";
     htmlTable = htmlTable.replace("{{header}}", "<tr><th colspan=2>word</th></tr>");
@@ -969,62 +1034,62 @@ function Word(strokesParam) {
  * @param {Object} strokeParam A Chord object.
  */
 function VerticalNote(timestampParam, strokeParam) {
-	/** @private */
-	var timestamp = timestampParam;
+  /** @private */
+  var timestamp = timestampParam;
 
-	/** @private */
-	var stroke = strokeParam;
+  /** @private */
+  var stroke = strokeParam;
 
-	var string = zeroFill(timestamp.getHours(), 2) + ':' + zeroFill(timestamp.getMinutes(), 2) + ':' + zeroFill(timestamp.getSeconds(), 2) + '.' + zeroFill(timestamp.getMilliseconds(), 3) + ' ';
-	for (var i = parseInt('00000000000000000000001', 2); i <= parseInt('10000000000000000000000', 2); i <<= 1) {
-		if (stroke.toBinary() & i) {
-			string += binaryToSteno[i].replace(/-/g, '');
-		} else {
-			string += ' ';
-		}
-	}
-	string = string.trim();
-	string += '\n';
+  var string = zeroFill(timestamp.getHours(), 2) + ':' + zeroFill(timestamp.getMinutes(), 2) + ':' + zeroFill(timestamp.getSeconds(), 2) + '.' + zeroFill(timestamp.getMilliseconds(), 3) + ' ';
+  for (var i = parseInt('00000000000000000000001', 2); i <= parseInt('10000000000000000000000', 2); i <<= 1) {
+    if (stroke.toBinary() & i) {
+      string += binaryToSteno[i].replace(/-/g, '');
+    } else {
+      string += ' ';
+    }
+  }
+  string = string.trim();
+  string += '\n';
 
-	/**
-	 * Custom toString function to create unique identifier.
-	 * @return {string}
-	 */
-	this.toString = function () {
-		return string;
-	}
+  /**
+   * Custom toString function to create unique identifier.
+   * @return {string}
+   */
+  this.toString = function () {
+    return string;
+  }
 
-	/**
-	 * Accessor that gets the timestamp.
-	 * @return The timestamp.
-	 */
-	this.getTimestamp = function () {
-		return timestamp;
-	}
+  /**
+   * Accessor that gets the timestamp.
+   * @return The timestamp.
+   */
+  this.getTimestamp = function () {
+    return timestamp;
+  }
 
-	/**
-	 * Accessor that gets the chord.
-	 * @return The chord.
-	 */
-	this.getStroke = function () {
-		return stroke;
-	}
+  /**
+   * Accessor that gets the chord.
+   * @return The chord.
+   */
+  this.getStroke = function () {
+    return stroke;
+  }
 
-	/**
-	 * Mutator that sets the timestamp.
-	 * @param {Object} newTimestamp A new Date object.
-	 */
-	this.setTimestamp = function (newTimestamp) {
-		timestamp = newTimestamp;
-	}
+  /**
+   * Mutator that sets the timestamp.
+   * @param {Object} newTimestamp A new Date object.
+   */
+  this.setTimestamp = function (newTimestamp) {
+    timestamp = newTimestamp;
+  }
 
-	/**
-	 * Mutator that sets the chord.
-	 * @param {Object} newStroke A new Chord object.
-	 */
-	this.setStroke = function (newStroke) {
-		stroke = newStroke;
-	}
+  /**
+   * Mutator that sets the chord.
+   * @param {Object} newStroke A new Chord object.
+   */
+  this.setStroke = function (newStroke) {
+    stroke = newStroke;
+  }
 }
 
 
@@ -1039,34 +1104,34 @@ function VerticalNote(timestampParam, strokeParam) {
  * @see jQuery.isEmptyObjecy method: http://api.jquery.com/jQuery.isEmptyObject/
  */
 $(document).keydown(function (event) {
-	// Check to see if this is the start of a new stroke.
-	if ($.isEmptyObject(downKeys)) { // if no keys were being pressed down before, this is the start of a new stroke.
-		resetKeys(); // so clear the keys before processing the event.
-	}
+  // Check to see if this is the start of a new stroke.
+  if ($.isEmptyObject(downKeys)) { // if no keys were being pressed down before, this is the start of a new stroke.
+    resetKeys(); // so clear the keys before processing the event.
+  }
 
-	// Create a new Key Object based on the event.
-	var key = new Key(event.which);
+  // Create a new Key Object based on the event.
+  var key = new Key(event.which);
 
-	// Update the appropriate lists
-	downKeys[key] = key; // add key to the list of keys currently being pressed down
-	chordKeys[key] = key; // add key to the list of keys in this stroke
+  // Update the appropriate lists
+  downKeys[key] = key; // add key to the list of keys currently being pressed down
+  chordKeys[key] = key; // add key to the list of keys in this stroke
 
-	// Update the display
-	$('.code' + key.getKeyCode()).css('background-color', '#ff0000'); // color the qwerty keyboard
-	colorCode(chordKeys); // color the steno keyboard
+  // Update the display
+  $('.code' + key.getKeyCode()).css('background-color', '#ff0000'); // color the qwerty keyboard
+  colorCode(chordKeys); // color the steno keyboard
 
-	// See if this key is a valid steno key
-	if (!keyCodeToSteno[key.getKeyCode()]) { // if the key code does not have a steno tranlation
-		isSteno = false;
-	}
+  // See if this key is a valid steno key
+  if (!keyCodeToSteno[key.getKeyCode()]) { // if the key code does not have a steno tranlation
+    isSteno = false;
+  }
 
   showUserInput();
-  
-	if (isSteno) {
-		// Handle potential conflicts
-		event.preventDefault(); // will prevent potential conflicts with browser hotkeys like firefox's hotkey for quicklinks (')
-		//event.stopPropagation();
-	}
+
+  if (isSteno) {
+    // Handle potential conflicts
+    event.preventDefault(); // will prevent potential conflicts with browser hotkeys like firefox's hotkey for quicklinks (')
+    //event.stopPropagation();
+  }
 });
 
 /**
@@ -1078,58 +1143,58 @@ $(document).keydown(function (event) {
  * @see jQuery.isEmptyObjecy method: http://api.jquery.com/jQuery.isEmptyObject/
  */
 $(document).keyup(function (event) {
-	// Create a new Key Object based on the event.
-	var key = new Key(event.which);
+  // Create a new Key Object based on the event.
+  var key = new Key(event.which);
 
-	// Update the appropriate lists
-	delete downKeys[key]; // remove key from the list of keys currently being pressed down
+  // Update the appropriate lists
+  delete downKeys[key]; // remove key from the list of keys currently being pressed down
 
-	// Update the display
-	$('.stdKey.code' + event.which).css('background-color', '#000000'); // color the qwerty keyboard
+  // Update the display
+  $('.stdKey.code' + event.which).css('background-color', '#000000'); // color the qwerty keyboard
 
-	if (isSteno) {
-		// Check to see if this is the end of the stroke.
-		if ($.isEmptyObject(downKeys)) { // if no more keys are being pressed down, this is the end of the stroke.
-			var timestamp = new Date();
+  if (isSteno) {
+    // Check to see if this is the end of the stroke.
+    if ($.isEmptyObject(downKeys)) { // if no more keys are being pressed down, this is the end of the stroke.
+      var timestamp = new Date();
       var cloneObj = jQuery.extend({}, chordKeys); // need to clone so future changes to chordKeys won't affect chord
-			var chord = new Chord(cloneObj);
-			var verticalNote = new VerticalNote(timestamp, chord);
-			var word = new Word([chord]);
+      var chord = new Chord(cloneObj);
+      var verticalNote = new VerticalNote(timestamp, chord);
+      var word = new Word([chord]);
 
-			chords.push(chord);
-			verticalNotes.push(verticalNote);
+      chords.push(chord);
+      verticalNotes.push(verticalNote);
 
-			$('#verticalNotes').append(verticalNote.toString());
-			document.getElementById('verticalNotes').scrollTop = document.getElementById('verticalNotes').scrollHeight; // scroll the textarea to the bottom
+      $('#verticalNotes').append(verticalNote.toString());
+      document.getElementById('verticalNotes').scrollTop = document.getElementById('verticalNotes').scrollHeight; // scroll the textarea to the bottom
 
-			if (words.length > 0 && chord.toRTFCRE() !== '*' && dictionary[words[words.length - 1].toString() + '/' + chord.toRTFCRE()]) {
-				words[words.length - 1].addStroke(chord);
-			} else if (words.length > 0 && chord.toRTFCRE() === '*') {
-				words[words.length - 1].removeStroke();
-				if (words[words.length - 1].toString() === '') {
-					words.pop();
-				}
-			} else {
-				words.push(word);
-			}
-			
-			translatedString = '';
-			for (i = 0; i < words.length; i++) {
-				translatedString += words[i].toEnglish() + ' ';
-			}
-			$('#output').html(demetafy(translatedString));
-			document.getElementById('output').scrollTop = document.getElementById('output').scrollHeight; //scroll the textarea to the bottom
-		
+      if (words.length > 0 && chord.toRTFCRE() !== '*' && dictionary[words[words.length - 1].toString() + '/' + chord.toRTFCRE()]) {
+        words[words.length - 1].addStroke(chord);
+      } else if (words.length > 0 && chord.toRTFCRE() === '*') {
+        words[words.length - 1].removeStroke();
+        if (words[words.length - 1].toString() === '') {
+          words.pop();
+        }
+      } else {
+        words.push(word);
+      }
+
+      translatedString = '';
+      for (i = 0; i < words.length; i++) {
+        translatedString += words[i].toEnglish() + ' ';
+      }
+      $('#output').html(demetafy(translatedString));
+      document.getElementById('output').scrollTop = document.getElementById('output').scrollHeight; //scroll the textarea to the bottom
+
       showUserInput();
-      
+
       match("chord-binary");
     }
 
-		
-	  // Handle potential conflicts
-		event.preventDefault();	// will prevent potential conflicts with browser hotkeys like firefox's hotkey for quicklinks (')
-		//event.stopPropagation();
-	}
+
+    // Handle potential conflicts
+    event.preventDefault(); // will prevent potential conflicts with browser hotkeys like firefox's hotkey for quicklinks (')
+    //event.stopPropagation();
+  }
 });
 
 /**
@@ -1138,7 +1203,7 @@ $(document).keyup(function (event) {
  * @see jQuery's <a href="http://api.jquery.com/blur/">blur method</a>
  */
 $(window).blur(function () {
-	resetKeys();
+  resetKeys();
 });
 
 /**
@@ -1147,5 +1212,8 @@ $(window).blur(function () {
  * @see jQuery's <a href="http://api.jquery.com/focus/">focus method</a>
  */
 $(window).focus(function () {
-	resetKeys();
+  resetKeys();
+});
+
+
 });
