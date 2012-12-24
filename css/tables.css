@@ -1,0 +1,92 @@
+#quizInput {
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 3px solid black;
+  text-align: center;
+  padding: 16px;
+  margin: 16px;
+  font-size: 64px;
+}
+
+#userInput {
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 3px solid black;
+  padding: 16px;
+  margin: 16px;
+}
+
+#outputContainer {
+  visibility: hidden;
+}
+
+#verticalNotesContainer {
+  visibility: hidden;
+}
+
+#stdKeyboard {
+  top: 625px;
+  left: 16px;
+}
+
+#stenoKeyboard {
+  top: 625px;
+  left: 600px;
+}
+
+table.tablekey {
+  float: left;
+  background-color: rgba(255,0,0,1);
+  margin: 4px;
+}
+
+table.tablechord {
+  display: inline-block;
+  background-color: rgba(0,255,0,1);
+  margin: 4px;
+}
+
+table.tableword {
+  display: inline-block;
+  background-color: rgba(0,0,255,1);
+  margin: 4px;
+}
+
+table.tableinput {
+  display: inline-block;
+  background-color: rgba(255,255,0,1);
+  margin: 4px;
+}
+
+
+
+th {
+  color: rgba(255,255,255,1);
+  background-color: rgba(0,0,0,0.618);
+  text-align: left;
+}
+
+td {
+  color: rgba(255,255,255,1);
+  background-color: rgba(0,0,0,0.382);
+}
+
+#uiWords {
+    width: 100%;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+#uiChords {
+    width: 100%;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+#uiKeys {
+    width: 100%;
+    overflow: auto;
+    white-space: nowrap;
+}

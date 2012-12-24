@@ -2,6 +2,18 @@
 @import url(stenoKeyboard.css);
 @import url(verticalNotes.css);
 @import url(output.css);
+@import url(tables.css);
+
+html, body, div, h1, h2, h3, h4, h5, h6, p, img, dl,
+  dt, dd, ol, ul, li, table, tr, td, form, object, embed,
+  article, aside, canvas, command, details, fieldset,
+  figcaption, figure, footer, group, header, hgroup, legend,
+  mark, menu, meter, nav, output, progress, section, summary,
+  time, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 
 #container {
 	/* Positioning */
@@ -14,6 +26,15 @@
 	border: 1px solid #000;
 	margin: 0;
 }
+
+
+#header {
+  height: 71px;
+  background: #f1f1f1;
+  border-bottom: 1px solid #e5e5e5;
+  overflow: hidden;
+}
+
 
 h1 {
 	/* Box */

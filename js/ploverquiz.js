@@ -75,6 +75,25 @@ $.getJSON('assets/stenoKeyNumbers.json', function (data) {
 	stenoKeyNumbers = data;
 });
 
+// grab cookies
+var cookies = document.cookie.split(';');
+
+for (var i = 0; i < cookies.length; i++) {
+  var cookieName = cookies[i].split('=')[0].trim();
+  var cookieValue = cookies[i].split('=')[1].trim();
+  if (cookieName === 'testdata') {
+    testdata = JSON.parse(cookieValue);
+  }
+}
+
+// put test data into an array for easier random fetching
+var tdArray = [];
+for (var key in testdata) {
+    if (testdata.hasOwnProperty(key)) {
+        tdArray.push(key);
+    }
+}
+
 
 // CREATE GLOBAL FUNCTIONS
 
@@ -492,6 +511,19 @@ function resetKeys() {
 }
 
 /**
+ * This function resets the keys and global variables to how they were before any user interaction.
+ */
+function resetAll() {
+  resetKeys();
+
+  chords.length = 0;
+  words.length = 0;
+  verticalNotes.length = 0;
+  
+  translatedString = '';
+}
+
+/**
  * This function trims a string of leading and trailing whitespace.
  * @return {String} The string stripped of whitespace from both ends.
  * @see MDN's <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String/Trim">trim documentation</a>.
@@ -501,6 +533,35 @@ if (!String.prototype.trim) {
 		return this.replace(/^\s+|\s+$/g, '');
 	};
 }
+
+function nextQuizQuestion() {
+  var newQuestion = tdArray[Math.floor(Math.random() * tdArray.length)];  // random question
+  
+  if (testdata[newQuestion] === "binary") {
+    var quizChord = new Chord();
+    quizChord.fromBinary(newQuestion);
+    console.log("the new quizChord is " + quizChord.toBinary());
+  }
+  console.log("newQuestion is " + newQuestion);
+  $('#quizInput').html(newQuestion);
+}
+
+nextQuizQuestion();
+
+
+function match(conversion) {
+  switch(conversion) {
+    case "chord-binary":
+      if (chords[chords.length - 1].toBinary().toString() === $('#quizInput').html()) {
+        console.log("match! " + chords[chords.length - 1].toBinary() + " == " + $('#quizInput').html());
+        resetAll();
+        nextQuizQuestion();
+      }
+    default:
+      console.log("no match! " + chords[chords.length - 1].toBinary() + " != " + $('#quizInput').html());
+  }
+}
+
 
 /**
  * This function will zero-fill a number.
@@ -517,6 +578,32 @@ function zeroFill(number, width) {
 	return number;
 }
 
+
+function showUserInput() {
+  var userInputHTML = "";
+  for (var key in chordKeys) {
+		userInputHTML += chordKeys[key].toHTMLTable();
+	}
+  $('#uiKeys').html(userInputHTML);
+  
+  userInputHTML = "";
+  for (var i = 0; i < chords.length; i++) {
+		userInputHTML += chords[i].toHTMLTable();
+	}
+  $('#uiChords').html(userInputHTML);
+  
+  userInputHTML = "";
+  for (var i = 0; i < words.length; i++) {
+		userInputHTML += words[i].toHTMLTable();
+	}
+  $('#uiWords').html(userInputHTML);
+  
+  document.getElementById('uiWords').scrollLeft = document.getElementById('uiWords').scrollWidth; //scroll the textarea to the bottom
+	$("#uiChords").animate({scrollLeft: document.getElementById('uiChords').scrollWidth}, 80);
+  //document.getElementById('uiChords').scrollLeft = document.getElementById('uiChords').scrollWidth; //scroll the textarea to the bottom
+	document.getElementById('uiKeys').scrollLeft = document.getElementById('uiKeys').scrollWidth; //scroll the textarea to the bottom
+	
+}
 
 // CREATE 'CLASSES'
 
@@ -594,6 +681,15 @@ function Key(keyCodeParam) {
 			}
 		}
 	};
+  
+  this.toHTMLTable = function() {
+    var htmlTable = "<table class='tablekey'><thead>{{header}}</thead><tbody>{{keycodeRow}}{{qwertyRow}}{{stenoRow}}</tbody></table>";
+    htmlTable = htmlTable.replace("{{header}}", "<tr><th colspan=2>key</th></tr>");
+    htmlTable = htmlTable.replace("{{keycodeRow}}", "<tr><th>keycode</th><td>" + keyCode + "</td></tr>");
+    htmlTable = htmlTable.replace("{{qwertyRow}}", "<tr><th>qwerty</th><td>" + this.toQwerty() + "</td></tr>");
+    htmlTable = htmlTable.replace("{{stenoRow}}", "<tr><th>steno</th><td>" + this.toSteno() + "</td></tr>");
+    return htmlTable;
+  };
 }
 
 /**
@@ -611,8 +707,8 @@ function Chord(keysParam) {
 	 */
 	this.toString = function () {
 		var returnString = 'A Stroke with the keys ';
-		for (var i = 0; i <= keysParam.length; i++) {
-			returnString += keysParam[i].toSteno() + ', '
+    for (key in keys) {
+			returnString += keys[key].toSteno() + ', '
 		}
 		returnString = returnString.slice(0, -2) + '.';
 		return returnString;
@@ -661,6 +757,33 @@ function Chord(keysParam) {
 		return flags;
 	}
 
+  /**
+	 * Mutator that sets the list of Keys from binary.
+	 * @param newBinary A new binary representation for list of Keys.
+	 */
+	this.fromBinary = function (newBinary) {
+		newKeys = {};
+    for (var i = parseInt('00000000000000000000001', 2); i <= parseInt('10000000000000000000000', 2); i <<= 1) {
+			console.log("i & newBinary = " + (i & newBinary));
+      if (i & newBinary) {
+				newkey = new Key(0);
+        newkey.fromSteno(binaryToSteno[i]);
+        newKeys[newkey] = newkey;
+			}
+		}
+    
+    for (key in newKeys) {
+      console.log(newKeys[key].toSteno());
+    }
+    
+    keys = jQuery.extend({}, newKeys); // need to clone so future changes to chordKeys won't affect chord
+		
+    for (key in keys) {
+      console.log(keys[key].toSteno());
+    }    
+	}
+
+  
 	/**
 	 * Converts the list of Keys to RTF/CRE format.
 	 * @return {string} The RTF/CRE representation of the stroke.
@@ -737,6 +860,17 @@ function Chord(keysParam) {
 			delete keys[key];
 		}
 	}
+  
+  this.toHTMLTable = function() {
+    var htmlTable = "<table class='tablechord'><thead>{{header}}</thead><tbody>{{binaryRow}}{{rtfcreRow}}{{keycodesRow}}{{qwertysRow}}{{stenosRow}}</tbody></table>";
+    htmlTable = htmlTable.replace("{{header}}", "<tr><th colspan=2>chord</th></tr>");
+    htmlTable = htmlTable.replace("{{binaryRow}}", "<tr><th>binary</th><td>" + this.toBinary() + "</td></tr>");
+    htmlTable = htmlTable.replace("{{rtfcreRow}}", "<tr><th>rtfcre</th><td>" + this.toRTFCRE() + "</td></tr>");
+    htmlTable = htmlTable.replace("{{keycodesRow}}", "<tr><th>keycodes</th><td>" + JSON.stringify(this.toKeyCodes()) + "</td></tr>");
+    htmlTable = htmlTable.replace("{{qwertysRow}}", "<tr><th>qwerty keys</th><td>" + JSON.stringify(this.toQwertyKeys()) + "</td></tr>");
+    htmlTable = htmlTable.replace("{{stenosRow}}", "<tr><th>steno keys</th><td>" + JSON.stringify(this.toStenoKeys()) + "</td></tr>");
+    return htmlTable;
+  };
 }
 
 /**
@@ -818,6 +952,14 @@ function Word(strokesParam) {
 			return string;
 		}
 	}
+  
+  this.toHTMLTable = function() {
+    var htmlTable = "<table class='tableword'><thead>{{header}}</thead><tbody>{{stringRow}}{{englishRow}}</tbody></table>";
+    htmlTable = htmlTable.replace("{{header}}", "<tr><th colspan=2>word</th></tr>");
+    htmlTable = htmlTable.replace("{{stringRow}}", "<tr><th>string</th><td>" + this.toString() + "</td></tr>");
+    htmlTable = htmlTable.replace("{{englishRow}}", "<tr><th>english</th><td>" + this.toEnglish() + "</td></tr>");
+    return htmlTable;
+  };
 }
 
 /**
@@ -918,6 +1060,8 @@ $(document).keydown(function (event) {
 		isSteno = false;
 	}
 
+  showUserInput();
+  
 	if (isSteno) {
 		// Handle potential conflicts
 		event.preventDefault(); // will prevent potential conflicts with browser hotkeys like firefox's hotkey for quicklinks (')
@@ -947,7 +1091,8 @@ $(document).keyup(function (event) {
 		// Check to see if this is the end of the stroke.
 		if ($.isEmptyObject(downKeys)) { // if no more keys are being pressed down, this is the end of the stroke.
 			var timestamp = new Date();
-			var chord = new Chord(chordKeys);
+      var cloneObj = jQuery.extend({}, chordKeys); // need to clone so future changes to chordKeys won't affect chord
+			var chord = new Chord(cloneObj);
 			var verticalNote = new VerticalNote(timestamp, chord);
 			var word = new Word([chord]);
 
@@ -974,9 +1119,14 @@ $(document).keyup(function (event) {
 			}
 			$('#output').html(demetafy(translatedString));
 			document.getElementById('output').scrollTop = document.getElementById('output').scrollHeight; //scroll the textarea to the bottom
-		}
+		
+      showUserInput();
+      
+      match("chord-binary");
+    }
 
-		// Handle potential conflicts
+		
+	  // Handle potential conflicts
 		event.preventDefault();	// will prevent potential conflicts with browser hotkeys like firefox's hotkey for quicklinks (')
 		//event.stopPropagation();
 	}
