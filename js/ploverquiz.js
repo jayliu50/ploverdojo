@@ -51,6 +51,7 @@ document.body.appendChild(loadingDiv);
  * @see The <a href="http://code.google.com/p/chromium/issues/detail?id=40787">chrome bug report</a>.
  */
 var binaryToSteno = {};
+var binaryToPseudoSteno = {};
 /*
 $.getJSON('assets/binaryToSteno.json', function (data) {
   binaryToSteno = data;
@@ -65,6 +66,15 @@ $.ajax({
              binaryToSteno = data;
            }
 });
+
+$.ajax({
+	url: 'assets/binaryToPseudoSteno.json',
+	async: false,
+	dataType: 'json',
+	success: function (data){
+		binaryToPseudoSteno = data;
+	}
+})
 
 /**
  * This object will store the mapping between rtf/cre formatted steno words and english words with data imported from an external json file. There is a problem where chrome won't load local json files, so the files must be hosted for the data to be imported in chrome.
@@ -873,6 +883,7 @@ function Chord(keysParam) {
       return rtfcre.replace('--', '.').replace(/-/g, '').replace('.', '-');
     }
   }
+  
 
   /**
    * Converts the list of Keys to a list of key codes.
@@ -909,7 +920,17 @@ function Chord(keysParam) {
     }
     return stenoKeys;
   }
-
+  
+  /**
+   * Converts from binary to pseudo steno, if applicable.
+   * Note: Not to be used for word output (since that would depend on the dictionary being used.
+   * @returns the pseudo steno letter
+   */
+  this.toPseudoSteno = function(binary){
+	var result = binaryToPseudoSteno[binary];
+	return result;
+  }
+  
   /**
    * Adds a key to the stroke.
    */
@@ -927,10 +948,12 @@ function Chord(keysParam) {
   }
 
   this.toHTMLTable = function() {
-    var htmlTable = "<table class='tablechord'><thead>{{header}}</thead><tbody>{{binaryRow}}{{rtfcreRow}}{{keycodesRow}}{{qwertysRow}}{{stenosRow}}</tbody></table>";
+	 var binary = this.toBinary();
+     var htmlTable = "<table class='tablechord'><thead>{{header}}</thead><tbody>{{binaryRow}}{{rtfcreRow}}{{pseudostenoRow}}{{keycodesRow}}{{qwertysRow}}{{stenosRow}}</tbody></table>";
     htmlTable = htmlTable.replace("{{header}}", "<tr><th colspan=2>chord</th></tr>");
-    htmlTable = htmlTable.replace("{{binaryRow}}", "<tr><th>binary</th><td>" + this.toBinary() + "</td></tr>");
+    htmlTable = htmlTable.replace("{{binaryRow}}", "<tr><th>binary</th><td>" + binary + "</td></tr>");
     htmlTable = htmlTable.replace("{{rtfcreRow}}", "<tr><th>rtfcre</th><td>" + this.toRTFCRE() + "</td></tr>");
+    htmlTable = htmlTable.replace("{{pseudostenoRow}}", "<tr><th>pseudo steno</th><td>" + this.toPseudoSteno(binary) + "</td></tr>");
     htmlTable = htmlTable.replace("{{keycodesRow}}", "<tr><th>keycodes</th><td>" + JSON.stringify(this.toKeyCodes()) + "</td></tr>");
     htmlTable = htmlTable.replace("{{qwertysRow}}", "<tr><th>qwerty keys</th><td>" + JSON.stringify(this.toQwertyKeys()) + "</td></tr>");
     htmlTable = htmlTable.replace("{{stenosRow}}", "<tr><th>steno keys</th><td>" + JSON.stringify(this.toStenoKeys()) + "</td></tr>");
