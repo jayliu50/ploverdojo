@@ -104,11 +104,11 @@ class MainPage(BaseHandler):
             self.set_cookie("testdata", json.dumps(LESSONS[quizNo - 1]["test"]))
             self.write_template('ploverquiz.html', **{
                 'user': user,
-                'quizNo':quizNo,
-                'lessonDescription':LESSONS[quizNo - 1]["description"],
-                'hasNext':((quizNo + 1) <= len(LESSONS)),
+                'quizNo': quizNo,
+                'lessonDescription': LESSONS[quizNo - 1]["description"],
+                'hasNext': ((quizNo + 1) < len(LESSONS)),
                 'hasPrevious': (quizNo > 1)
-                })
+            })
         else:
             self.redirect(users.create_login_url(self.request.uri))
 
