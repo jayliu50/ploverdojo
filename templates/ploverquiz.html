@@ -1,170 +1,19 @@
-<!doctype html>
-<html>
-	<head>
-		<title>Plover Pad</title>
+{% extends "base.html" %}
 
-		<!-- import jquery stuff -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-    
-		<!-- import style sheets -->
-		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
-		<link rel="stylesheet" type="text/css" href="css/ploverquiz.css">
-	</head>
-	<body>
-		<div id="header">
-      <p>Welcome, {{user}} </p>
-      <p>You are on quiz {{quizNo}}</p>
-      <p>{{lessonDescription}}</p>
-    </div>
-    
-    <div id="nav">
-     <ul>
-{% if hasPrevious %}
-     <li><a href="?quiz={{ quizNo - 1 }}">Previous Quiz</a></li>
-{% endif %}
-{% if hasNext %}
-     <li><a href="?quiz={{ quizNo + 1 }}">Next Quiz</a></li>
-{% endif %}
-    </ul>
-    </div>
-    
-    <div id="quizInput">
-      quizInput
-    </div>
-    
-    <div id="userInput">
-      <div id="uiWords"></div>
-      <div id="uiChords"></div>
-      <div id="uiKeys"></div>
-    </div>
-    
-    <!-- area to show output -->
-		<div id="outputContainer"><h1>Output</h1>
-			<textarea id="output" rows="10" cols="66"></textarea>
-		</div>
+{% block quiz %}
+  <div class="quiz header">
+    QUIZ
+  </div>
+  
+  <div class="typeword" id="quizInput">
+  </div>
 
-		<!-- area to show the vertical notes-->
-		<div id="verticalNotesContainer"><h1>Vertical Notes</h1>
-			<textarea id="verticalNotes" wrap="off" rows="10" cols="36"></textarea>
-		</div>
+  <div class="inputbox" id="userInput">
+  </div>
 
-		<!-- STANDARD KEYBOARD (This keyboard is based on the IBM PC Windows 104 keyboard) -->
-		<div id="stdKeyboard">
-			<div class="stdRow">
-				<div class="stdKey code192" id="stdKeyGraveAccent"><span class="upper">~</span><span class="lower">`</span></div>
-				<div class="stdKey code49" id="stdKey1"><span class="upper">!</span><span class="lower">1</span></div>
-				<div class="stdKey code50" id="stdKey2"><span class="upper">@</span><span class="lower">2</span></div>
-				<div class="stdKey code51" id="stdKey3"><span class="upper">#</span><span class="lower">3</span></div>
-				<div class="stdKey code52" id="stdKey4"><span class="upper">$</span><span class="lower">4</span></div>
-				<div class="stdKey code53" id="stdKey5"><span class="upper">%</span><span class="lower">5</span></div>
-				<div class="stdKey code54" id="stdKey6"><span class="upper">^</span><span class="lower">6</span></div>
-				<div class="stdKey code55" id="stdKey7"><span class="upper">&</span><span class="lower">7</span></div>
-				<div class="stdKey code56" id="stdKey8"><span class="upper">*</span><span class="lower">8</span></div>
-				<div class="stdKey code57" id="stdKey9"><span class="upper">(</span><span class="lower">9</span></div>
-				<div class="stdKey code48" id="stdKey0"><span class="upper">)</span><span class="lower">0</span></div>
-				<div class="stdKey code109 code189" id="stdKeyDash"><span class="upper">_</span><span class="lower">-</span></div>
-				<div class="stdKey code107 code187" id="stdKeyEqualSign"><span class="upper">+</span><span class="lower">=</span></div>
-				<div class="stdKey code8" id="stdKeyBackspace">Backspace</div>
-			</div>
-			<div class="stdRow">
-				<div class="stdKey code9" id="stdKeyTab">Tab</div>
-				<div class="stdKey code81" id="stdKeyQ">Q</div>
-				<div class="stdKey code87" id="stdKeyW">W</div>
-				<div class="stdKey code69" id="stdKeyE">E</div>
-				<div class="stdKey code82" id="stdKeyR">R</div>
-				<div class="stdKey code84" id="stdKeyT">T</div>
-				<div class="stdKey code89" id="stdKeyY">Y</div>
-				<div class="stdKey code85" id="stdKeyU">U</div>
-				<div class="stdKey code73" id="stdKeyI">I</div>
-				<div class="stdKey code79" id="stdKeyO">O</div>
-				<div class="stdKey code80" id="stdKeyP">P</div>
-				<div class="stdKey code219" id="stdKeyOpenBracket"><span class="upper">{</span><span class="lower">[</span></div>
-				<div class="stdKey code221" id="stdKeyCloseBracket"><span class="upper">}</span><span class="lower">]</span></div>
-				<div class="stdKey code220" id="stdKeyBackslash"><span class="upper">|</span><span class="lower">\</span></div>
-			</div>
-			<div class="stdRow">
-				<div class="stdKey code20" id="stdKeyCapsLock">Caps Lock</div>
-				<div class="stdKey code65" id="stdKeyA">A</div>
-				<div class="stdKey code83" id="stdKeyS">S</div>
-				<div class="stdKey code68" id="stdKeyD">D</div>
-				<div class="stdKey code70" id="stdKeyF">F</div>
-				<div class="stdKey code71" id="stdKeyG">G</div>
-				<div class="stdKey code72" id="stdKeyH">H</div>
-				<div class="stdKey code74" id="stdKeyJ">J</div>
-				<div class="stdKey code75" id="stdKeyK">K</div>
-				<div class="stdKey code76" id="stdKeyL">L</div>
-				<div class="stdKey code59 code186" id="stdKeySemicolon"><span class="upper">:</span><span class="lower">;</span></div>
-				<div class="stdKey code222" id="stdKeySingleQuote"><span class="upper">"</span><span class="lower">'</span></div>
-				<div class="stdKey code13" id="stdKeyEnter">Enter</div>
-			</div>
-			<div class="stdRow">
-				<div class="stdKey code16" id="stdKeyLeftShift">Shift</div>
-				<div class="stdKey code90" id="stdKeyZ">Z</div>
-				<div class="stdKey code88" id="stdKeyX">X</div>
-				<div class="stdKey code67" id="stdKeyC">C</div>
-				<div class="stdKey code86" id="stdKeyV">V</div>
-				<div class="stdKey code66" id="stdKeyB">B</div>
-				<div class="stdKey code78" id="stdKeyN">N</div>
-				<div class="stdKey code77" id="stdKeyM">M</div>
-				<div class="stdKey code188" id="stdKeyComma"><span class="upper"><</span><span class="lower">,</span></div>
-				<div class="stdKey code190" id="stdKeyPeriod"><span class="upper">></span><span class="lower">.</span></div>
-				<div class="stdKey code191" id="stdKeySlash"><span class="upper">?</span><span class="lower">/</span></div>
-				<div class="stdKey code16" id="stdKeyRightShift">Shift</div>
-			</div>
-			<div class="stdRow">
-				<div class="stdKey code17" id="stdKeyLeftControl">Ctrl</div>
-				<div class="stdKey code91" id="stdKeyLeftWindows">Win</div>
-				<div class="stdKey code18" id="stdKeyLeftAlt">Alt</div>
-				<div class="stdKey code32" id="stdKeySpace">Space</div>
-				<div class="stdKey code18" id="stdKeyRightAlt">Alt</div>
-				<div class="stdKey code92" id="stdKeyRightWindow">Win</div>
-				<div class="stdKey code93" id="stdKeyMenu">Menu</div>
-				<div class="stdKey code17" id="stdKeyRightControl">Ctrl</div>
-			</div>
-		</div>
-
-		<!-- STENO KEYBOARD -->
-		<div id="stenoKeyboard">
-			<div class="stenoNumberBar">
-				<div class="stenoKey numberBar code48 code49 code50 code51 code52 code53 code54 code55 code56 code57" id="stenoKeyNumberBar"></div>
-			</div>
-			<div class="stenoUpperBank">
-				<div class="stenoKey square code81 code65" id="stenoKeyS-1">S</div>
-				<div class="stenoKey square code87" id="stenoKeyT-">T</div>
-				<div class="stenoKey square code69" id="stenoKeyP-">P</div>
-				<div class="stenoKey square code82" id="stenoKeyH-">H</div>
-				<div class="stenoKey square code71 code72 code84 code89" id="stenoKeyAsterisk1">*</div>
-				<div class="stenoKey square code85" id="stenoKey-F">F</div>
-				<div class="stenoKey square code73" id="stenoKey-P">P</div>
-				<div class="stenoKey square code79" id="stenoKey-L">L</div>
-				<div class="stenoKey square code80" id="stenoKey-T">T</div>
-				<div class="stenoKey square code219" id="stenoKey-D">D</div>
-			</div>
-			<div class="stenoLowerBank">
-				<div class="stenoKey rounded code81 code65" id="stenoKeyS-2">S</div>
-				<div class="stenoKey rounded code83" id="stenoKeyK-">K</div>
-				<div class="stenoKey rounded code68" id="stenoKeyW-">W</div>
-				<div class="stenoKey rounded code70" id="stenoKeyR-">R</div>
-				<div class="stenoKey rounded code71 code72 code84 code89" id="stenoKeyAsterisk2">*</div>
-				<div class="stenoKey rounded code74" id="stenoKey-R">R</div>
-				<div class="stenoKey rounded code75" id="stenoKey-B">B</div>
-				<div class="stenoKey rounded code76" id="stenoKey-G">G</div>
-				<div class="stenoKey rounded code59 code186" id="stenoKey-S">S</div>
-				<div class="stenoKey rounded code222" id="stenoKey-Z">Z</div>
-			</div>
-			<div class="stenoVowelKeys">
-				<div class="stenoKey rounded code67" id="stenoKeyA-">A</div>
-				<div class="stenoKey rounded code86" id="stenoKeyO-">O</div>
-				<div class="stenoKey rounded code78" id="stenoKey-E">E</div>
-				<div class="stenoKey rounded code77" id="stenoKey-U">U</div>
-			</div>
-		</div>
-
-		<!-- make elements draggable and resizable -->
-		<script type="text/javascript" src="js/uiElements.js"></script>
-
-		<!-- do the steno thing! -->
-		<script type="text/javascript" src="js/ploverquiz.js"></script>
-   </body>
-</html>
+  {% block stdKeyboard %}
+  {% endblock %}
+  
+  {% block stenoKeyboard %}
+  {% endblock %}  
+{% endblock %}
