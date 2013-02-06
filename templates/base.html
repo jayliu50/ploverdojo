@@ -10,8 +10,7 @@
 		<!-- import style sheets -->
 		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
 		<link rel="stylesheet" type="text/css" href="css/ploverquiz.css">
-    <link rel="stylesheet" type="text/css" href="css/base.css">
-	</head>
+ </head>
 	<body>
 		<div id="header">
       <p>Welcome, {{user}} </p>
@@ -19,7 +18,7 @@
       <p>{{lessonDescription}}</p>
     </div>
     
-    <div class="nav">
+    <div class="nav" id="nav">
       <ul>
         {% if hasPrevious %}
           <li><a href="?quiz={{ quizNo - 1 }}">Previous Quiz</a></li>
