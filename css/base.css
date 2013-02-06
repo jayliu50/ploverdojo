@@ -1,0 +1,115 @@
+#Header {
+background: #76bbb6;
+border-bottom:6px solid white;
+}
+
+#Header .nav {
+color:white;
+font-size:13pt;
+font-family:"MuseoSlab500", arial, sans-serif;
+}
+
+#Login {
+color:white;
+font-size:10pt;
+text-transform:uppercase;
+font-family:"MuseoSlab500", arial, sans-serif;
+}
+
+.Quiz .Header {
+color:white;
+font-family:"MuseoSlab500", arial, sans-serif;
+font-size:48pt;
+}
+
+.TypeWord {
+background:#faa951;
+border:6px solid white;
+}
+
+.TypeWord .title {
+color:white;
+font-size:15pt;
+font-family:"MuseoSlab500", arial, sans-serif;
+}
+
+.TypeWord .word {
+color:white;
+font-size:46pt;
+letter-spacing:88;
+font-family:"MuseoSlab500", arial, sans-serif;
+}
+
+.InputBox {
+background:#bbbdc0;
+border:6px solid white;
+}
+
+.InputBox .inputtitle {
+color:white;
+font-size:15pt;
+text-transform:uppercase;
+font-family:"MuseoSlab500", arial, sans-serif;
+}
+
+.InputBox .search {
+background:#e6e7e8;
+border:1px solid #a7a9ab;
+}
+
+.InputBox .outputtitle {
+color:white;
+font-size:15pt;
+text-transform:uppercase;
+font-family:"MuseoSlab500", arial, sans-serif;
+}
+
+.InputBox .outputtitle {
+color:white;
+font-size:46pt;
+font-family:"MuseoSlab500", arial, sans-serif;
+}
+
+.InputBox .Correct {
+background:white;
+color:#f7931d;
+font-size:15pt;
+text-transform:uppercase;
+}
+
+.InputBox .Incorrect {
+background:white;
+color:#f7931d;
+font-size:15pt;
+text-transform:uppercase;
+}
+
+.InputBox .hintbutton {
+background:#faa951;
+border-radius:10px;
+color:white;
+font-size:15pt;
+font-family:"MuseoSlab500", arial, sans-serif;
+}
+
+keyboards {
+background:#679c9f;
+border:1px solid white;
+}
+
+.Key {
+background:#faa951;
+border-top:6px solid white;
+}
+
+.Key .Header {
+color:white;
+font-family:"MuseoSlab500", arial, sans-serif;
+font-size:48pt;
+}
+
+.KeyAlphabet {
+background:#faa951;
+}
+
+
