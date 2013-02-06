@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html>
 	<head>
 		<title>Plover Pad</title>
@@ -10,7 +11,8 @@
 		<!-- import style sheets -->
 		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
 		<link rel="stylesheet" type="text/css" href="css/ploverquiz.css">
- </head>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+	</head>
 	<body>
 		<div id="header">
       <p>Welcome, {{user}} </p>
@@ -18,7 +20,7 @@
       <p>{{lessonDescription}}</p>
     </div>
     
-    <div class="nav" id="nav">
+    <div class="nav">
       <ul>
         {% if hasPrevious %}
           <li><a href="?quiz={{ quizNo - 1 }}">Previous Quiz</a></li>
@@ -29,7 +31,8 @@
       </ul>
     </div>
     
-    {% block quiz %}{% endblock %}
+    {% block quiz %}
+    {% endblock %}
     
     <!-- make elements draggable and resizable -->
 		<script type="text/javascript" src="js/uiElements.js"></script>

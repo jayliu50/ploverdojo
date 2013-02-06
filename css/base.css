@@ -1,90 +1,91 @@
-#Header {
+#header {
 background: #76bbb6;
 border-bottom:6px solid white;
 }
 
-#Header .nav {
+
+#header .nav {
 color:white;
 font-size:13pt;
 font-family:"MuseoSlab500", arial, sans-serif;
 }
 
-#Login {
+#login {
 color:white;
 font-size:10pt;
 text-transform:uppercase;
 font-family:"MuseoSlab500", arial, sans-serif;
 }
 
-.Quiz .Header {
+.quiz .header {
 color:white;
 font-family:"MuseoSlab500", arial, sans-serif;
 font-size:48pt;
 }
 
-.TypeWord {
+.typeword {
 background:#faa951;
 border:6px solid white;
 }
 
-.TypeWord .title {
+.typeword .title {
 color:white;
 font-size:15pt;
 font-family:"MuseoSlab500", arial, sans-serif;
 }
 
-.TypeWord .word {
+.typeword .word {
 color:white;
 font-size:46pt;
 letter-spacing:88;
 font-family:"MuseoSlab500", arial, sans-serif;
 }
 
-.InputBox {
+.inputbox {
 background:#bbbdc0;
 border:6px solid white;
 }
 
-.InputBox .inputtitle {
+.inputbox .inputtitle {
 color:white;
 font-size:15pt;
 text-transform:uppercase;
 font-family:"MuseoSlab500", arial, sans-serif;
 }
 
-.InputBox .search {
+.inputbox .search {
 background:#e6e7e8;
 border:1px solid #a7a9ab;
 }
 
-.InputBox .outputtitle {
+.inputbox .outputtitle {
 color:white;
 font-size:15pt;
 text-transform:uppercase;
 font-family:"MuseoSlab500", arial, sans-serif;
 }
 
-.InputBox .outputtitle {
+.inputbox .outputtitle {
 color:white;
 font-size:46pt;
 font-family:"MuseoSlab500", arial, sans-serif;
 }
 
-.InputBox .Correct {
+.inputbox .correct {
 background:white;
 color:#f7931d;
 font-size:15pt;
 text-transform:uppercase;
 }
 
-.InputBox .Incorrect {
+.inputbox .incorrect {
 background:white;
 color:#f7931d;
 font-size:15pt;
 text-transform:uppercase;
 }
 
-.InputBox .hintbutton {
+.inputbox .hintbutton {
 background:#faa951;
 border-radius:10px;
 color:white;
@@ -97,19 +98,17 @@ background:#679c9f;
 border:1px solid white;
 }
 
-.Key {
+.key {
 background:#faa951;
 border-top:6px solid white;
 }
 
-.Key .Header {
+.key .header {
 color:white;
 font-family:"MuseoSlab500", arial, sans-serif;
 font-size:48pt;
 }
 
-.KeyAlphabet {
+.keyalphabet {
 background:#faa951;
 }
-
-
