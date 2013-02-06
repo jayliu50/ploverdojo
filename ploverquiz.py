@@ -4,6 +4,7 @@ import jinja2
 import os
 import re
 import webapp2
+import json
 
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -18,6 +19,11 @@ hmac_message = os.path.join(os.path.dirname(__file__), 'secret/message')
 f = open(hmac_message, 'r')
 SECRET = f.read().strip()
 f.close()
+
+lessons_path = os.path.join(os.path.dirname(__file__), 'lessons/keyboard.json')
+l = open(lessons_path, 'r')
+LESSONS = json.load(l)
+l.close()
 
 
 def render_template(template, **template_values):
@@ -89,7 +95,20 @@ class MainPage(BaseHandler):
         user = users.get_current_user()
 
         if user:
-            self.write_template('ploverquiz.html', **{'user': user})
+            try:
+                quizNo = int(self.request.get('quiz'))
+                if(quizNo >= len(LESSONS)):
+                    quizNo = 1
+            except:
+                quizNo = 1
+            self.set_cookie("testdata", json.dumps(LESSONS[quizNo - 1]["test"]))
+            self.write_template('ploverquiz.html', **{
+                'user': user,
+                'quizNo': quizNo,
+                'lessonDescription': LESSONS[quizNo - 1]["description"],
+                'hasNext': ((quizNo + 1) < len(LESSONS)),
+                'hasPrevious': (quizNo > 1)
+            })
         else:
             self.redirect(users.create_login_url(self.request.uri))
 

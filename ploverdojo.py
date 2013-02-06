@@ -89,10 +89,8 @@ class MainPage(BaseHandler):
         user = users.get_current_user()
 
         if user:
-            self.set_cookie("testdata", '{"256":"binary","512":"binary","768":"binary","2048":"binary","4096":"binary","6144":"binary"}')
             self.write_template('ploverdojo.html', **{'user': user})
         else:
             self.redirect(users.create_login_url(self.request.uri))
-
 
 app = webapp2.WSGIApplication([('/?', MainPage)], debug=True)
