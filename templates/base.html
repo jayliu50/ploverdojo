@@ -1,44 +1,28 @@
 <!doctype html>
-
 <html>
-	<head>
-		<title>Plover Pad</title>
-
-		<!-- import jquery stuff -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-    
-		<!-- import style sheets -->
-		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
-		<link rel="stylesheet" type="text/css" href="css/ploverquiz.css">
-    <link rel="stylesheet" type="text/css" href="css/base.css">
-	</head>
-	<body>
-		<div id="header">
-      <p>Welcome, {{user}} </p>
-      <p>You are on quiz {{quizNo}}</p>
-      <p>{{lessonDescription}}</p>
-    </div>
-    
-    <div class="nav">
-      <ul>
-        {% if hasPrevious %}
-          <li><a href="?quiz={{ quizNo - 1 }}">Previous Quiz</a></li>
-        {% endif %}
-        {% if hasNext %}
-          <li><a href="?quiz={{ quizNo + 1 }}">Next Quiz</a></li>
-        {% endif %}
-      </ul>
-    </div>
-    
-    {% block quiz %}
+  <head>
+    {% block head %}
+    <meta charset="utf-8">
+    <title>{% block title %}Plover Dojo{% endblock %}</title>
     {% endblock %}
-    
-    <!-- make elements draggable and resizable -->
-		<script type="text/javascript" src="js/uiElements.js"></script>
+  </head>
 
-		<!-- do the steno thing! -->
-		<script type="text/javascript" src="js/ploverquiz.js"></script>
- 
+  <body>
+    <div id="header">
+      {% block header %}
+      <a href="http://ploverdojo.appspot.com/" class="header-logo"><img src="assets/logo.png" alt="Plover Dojo" height="71"></a>
+      <a href="{{ login_href }}" class="header-login">{{ login_content }}</a>
+      {% endblock %}
+    </div>
+
+    <div id="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <div id="footer">
+      {% block footer %}
+      {% endblock %}
+    </div>
   </body>
 </html>
