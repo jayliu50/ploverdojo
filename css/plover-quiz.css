@@ -1,0 +1,501 @@
+html, body, div, h1, h2, h3, h4, h5, h6, p, img, dl,
+  dt, dd, ol, ul, li, table, tr, td, form, object, embed,
+  article, aside, canvas, command, details, fieldset,
+  figcaption, figure, footer, group, header, hgroup, legend,
+  mark, menu, meter, nav, output, progress, section, summary,
+  time, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#header {
+  /* Box */
+  width: 100%;
+  height: 71px;
+  border-bottom: 6px solid white;
+
+  /* Colors */
+  background-color: #76bbb6;
+}
+
+#header-logo { 
+  
+}
+
+#header-login {
+  /* Positioning */
+  float: right;
+  position: relative;
+  top: 50%;
+  
+  /* Colors */
+  color: white;
+  
+  /* Text */
+  font-size: 13pt;
+  font-family: "MuseoSlab500", arial, sans-serif;
+  text-transform: uppercase;
+}
+
+body {
+  background-color: #76bbb6;
+}
+
+#content {
+  /* todo: insert gradient */
+  background-color: #76bbb6;
+}
+
+#content-title > h1 {
+  /* Colors */
+  color: white;
+  
+  /* Text */
+  font-family: "MuseoSlab500", arial, sans-serif;
+  font-size: 48pt;
+}
+
+#quiz-prompt {
+  /* Positioning */
+  float: left;
+
+  /* Box */
+  border: 6px solid white;
+  margin: 10px auto;
+
+  /* Colors */
+  background-color: #faa951;
+}
+
+#quiz-prompt > h2 {
+  /* Colors */
+  color: white;
+  
+  /* Text */
+  font-family: "MuseoSlab500", arial, sans-serif;
+  font-size: 15pt;
+  text-align: center;
+}
+
+#quiz-prompt-text {
+  /* Colors */
+  color: white;
+  
+  /* Text */
+  font-family: "MuseoSlab500", arial, sans-serif;
+  font-size: 46pt;
+  letter-spacing: 88;
+  margin: 40px 30px;
+  
+}
+
+#user-response {
+  /* Positioning */
+  float: left;
+
+  /* Box */
+  border: 6px solid white;
+  
+  /* Colors */
+  background-color: #bbbdc0;
+}
+
+#user-response > h2 {  
+  /* Box */
+  width: 100%;
+  margin: 10px auto;
+
+  /* Colors */
+  color: white;
+
+  /* Text */
+  font-family: "MuseoSlab500", arial, sans-serif;
+  font-size: 15pt;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+#user-response-input-text {
+    
+  /* Box */
+  width: 90%;
+  margin: 0px auto;
+  border: 1px solid #a7a9ab;
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+  
+  /* Colors */
+  background-color: #e6e7e8;
+
+  /* Text */
+  font-family: "MuseoSlab500", arial, sans-serif;
+  text-align: center;
+}
+
+#user-response-output-text {
+  color: white;
+  font-size: 46pt;
+  font-family: "MuseoSlab500", arial, sans-serif;
+  margin: 40px 30px;
+}
+
+
+
+.correct {
+  background: white;
+  color: #f7931d;
+  font-size: 15pt;
+  text-transform: uppercase;
+}
+
+.incorrect {
+  background: white;
+  color: #f7931d;
+  font-size: 15pt;
+  text-transform: uppercase;
+}
+
+#standard-keyboard {
+  /* Positioning */
+  /*
+  position: absolute;
+  left: 0px;
+  top: 228px;
+  */
+  float: left;
+  
+  /* Box */
+  width: 522px; /* will fit 15 regular-sized keys horizontally */
+  height: 174px; /* will fit 5 regular-sized keys vertically */
+  padding: 10px;
+  border: 1px solid white;
+  margin: 0;
+
+  /* Colors */
+  background-color: #679c9f;
+}
+
+.standard-row {
+  /* Box */
+  width: 100%;
+  height: 20%; /* will fit 5 rows in the keyboard */
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.standard-key {
+  /* Positioning */
+  float: left;
+
+  /* Box */
+  width: 6%; /* 100% / 15 (keys) - (2 (left and right) * 0.333% (margin)) */
+  height: 90%; /* 100% - (15 (ratio across width / row height) * (2 (left and right) * 0.333% (margin))) */
+  padding: 0;
+  border: 0;
+  margin: 0.333%; /* width and height depend on this value. change accordingly */
+
+  /* Colors */
+  color: #ffffff;
+  background-color: #000000;
+
+  /* Text */
+  font-family: sans-serif;
+  font-size: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
+  font-weight: bold;
+  line-height: 31.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) */
+  text-align: center;
+
+  /* Styling */
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  border-radius: 10%;
+}
+
+#standard-key-backspace {
+  /* Box */
+  width: 12.666%;
+}
+
+#standard-key-tab{
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-backslash {
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-caps-lock {
+  /* Box */
+  width: 11%;
+}
+
+#standard-key-enter {
+  /* Box */
+  width: 14.333%;
+}
+
+#standard-key-left-shift {
+  /* Box */
+  width: 14.333%;
+}
+
+#standard-key-right-shift {
+  /* Box */
+  width: 17.666%;
+}
+
+#standard-key-left-control {
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-left-alt {
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-space {
+  /* Box */
+  width: 39.333%;
+}
+
+#standard-key-right-alt {
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-right-control {
+  /* Box */
+  width: 9.333%;
+}
+
+.upper-key-text {
+  /* Positioning */
+  float: left;
+
+  /* Box */
+  height: 50%;
+  width: 100%;
+
+  /* Text */
+  line-height: 21px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 * 2 */
+  text-align: center;
+}
+
+.lower-key-text {
+  /* Positioning */
+  float: left;
+
+  /* Box */
+  height: 50%;
+  width: 100%;
+
+  /* Text */
+  line-height: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
+  text-align: center;
+}
+
+#steno-keyboard {
+  /* Positioning */
+  /*
+  position: absolute;
+  left: 543px;
+  top: 228px;
+  */
+  float: left;
+  
+  /* Box */
+  width: 348px;
+  height: 174px;
+  padding: 10px;
+  border: 1px solid #000000;
+  margin: 0;
+
+  /* Colors */
+  background-color: #679c9f;
+}
+
+.steno-number-bar {
+  /* Box */
+  width: 100%;
+  height: 15%;
+  padding: 0;
+  border: 0;
+  margin: 0 0 0.625% 0;
+}
+
+.steno-upper-bank {
+  /* Box */
+  width: 100%;
+  height: 25%;
+  padding: 0;
+  border: 0;
+  margin: 0.625% 0 0.625% 0;
+}
+
+.steno-lower-bank {
+  /* Box */
+  width: 100%;
+  height: 25%;
+  padding: 0;
+  border: 0;
+  margin: 0.625% 0 3.75% 0;
+}
+
+.steno-vowel-keys {
+  /* Box */
+  width: 100%;
+  height: 25%;
+  padding: 0;
+  border: 0;
+  margin: 3.75% 0 0 0;
+}
+
+#steno-key-number-bar {
+  /* Positioning */
+  float: left;
+
+  /* Box */
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  margin: 0;
+
+  /* Color */  
+  color: #ffffff;
+  background-color: #000000;
+
+  /* Text */
+  font-family: sans-serif;
+  font-size: 22px;
+  text-align: center;
+  line-height: 44px;	
+
+  /* Styling */
+  -webkit-border-radius: 0.9375% / 12.5%;
+  -moz-border-radius: 0.9375% / 12.5%;
+  border-radius: 0.9375% / 12.5%;
+}
+
+.steno-key {
+  /* Positioning */
+  float: left;
+
+  /* Box */
+  width: 7.5%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  margin: 0 1.25% 0 1.25%;
+
+  /* Color */	
+  color: #ffffff;
+  background-color: #000000;
+
+  /* Text */
+  font-family: sans-serif;
+  font-size: 20px;
+  text-align: center;
+  line-height: 41px;	
+}
+
+.square {
+  /* Styling */
+  -webkit-border-radius: 12.5% / 7.5%;
+  -moz-border-radius: 12.5% / 7.5%;
+  border-radius: 12.5% / 7.5%;
+}
+
+.rounded {
+  /* Styling */
+  -webkit-border-radius: 12.5% / 7.5%;
+  -webkit-border-bottom-right-radius: 50% 30%;
+  -webkit-border-bottom-left-radius: 50% 30%;
+  -moz-border-radius: 12.5% / 7.5%;
+  -moz-border-radius-bottomright: 50% 30%;
+  -moz-border-radius-bottomleft: 50% 30%;
+  border-radius: 12.5% / 7.5%;
+  border-bottom-right-radius: 50% 30%;
+  border-bottom-left-radius: 50% 30%;
+}
+
+#steno-key-s-1, #steno-key-s-2 {
+  /* Box */
+  margin-left: 0;
+}
+
+#steno-key-h-, #steno-key-r- {
+  /* Box */
+  margin-right: 1.875%;
+}
+
+#steno-key-asterisk-1, #steno-key-asterisk-2 {
+  /* Box */
+  margin-left: 1.875%;
+  margin-right: 1.875%;
+}
+
+#steno-key--f, #steno-key--r {
+  /* Box */
+  margin-left: 1.875%;
+}
+
+#steno-key--d, #steno-key--z {
+  /* Box */
+  margin-right: 0;
+}
+
+#steno-key-a- {
+  /* Box */
+  margin-left: 27.8125%;
+  margin-right: 0.3125%;	
+}
+
+#steno-key-o- {
+  /* Box */
+  margin-left: 0.3125%;
+  margin-right: 1.5625%;	
+}
+
+#steno-key--e {
+  /* Box */
+  margin-left: 1.5625%;
+  margin-right: 0.3125%;	
+}
+
+#steno-key--u {
+  /* Box */
+  margin-left: 0.3125%;
+}
+
+
+
+
+/* @license
+ * MyFonts Webfont Build ID 2478206, 2013-02-12T23:18:43-0500
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: Museo Slab 500 by exljbris
+ * URL: http://www.myfonts.com/fonts/exljbris/museo-slab/500/
+ * Copyright: Copyright (c) 2009 by Jos Buivenga. All rights reserved.
+ * Licensed pageviews: Unlimited
+ * 
+ * 
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=2478206
+ * 
+ * Â© 2013 MyFonts Inc
+*/
+
+@font-face {font-family: 'MuseoSlab500';
+src: url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.eot');src: url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.eot?#iefix') format('embedded-opentype'),url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.woff') format('woff'),url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.ttf') format('truetype');} 
