@@ -1,0 +1,28 @@
+﻿<!doctype html>
+<html>
+  <head>
+    {% block head %}
+    <meta charset="utf-8">
+    <title>{% block title %}Plover Dojo{% endblock %}</title>
+    {% endblock %}
+  </head>
+
+  <body>
+    <div id="header">
+      {% block header %}
+      <a href="http://ploverdojo.appspot.com/" class="header-title"><img src="assets/logo.png" alt="Plover Dojo" height="71"></a>
+      <a href="{{ login_href }}" class="header-login">{{ login_content }}</a>
+      {% endblock %}
+    </div>
+
+    <div id="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <div id="footer">
+      {% block footer %}
+      {% endblock %}
+    </div>
+  </body>
+</html>

@@ -1,38 +1,30 @@
+$("#quiz-prompt").draggable({snap: true, containment: "parent"}).resizable();
+
+$("#user-response").draggable({snap: true, containment: "parent"}).resizable();
+
 // make the standard keyboard draggable and resizable. when it is dragged, let it snap to other elements. when it is resized, keep it proportional.
-$("#stdKeyboard").draggable({snap: true}).resizable({aspectRatio: 750 / 250,
+$("#standard-keyboard").draggable({snap: true, containment: "parent"}).resizable({aspectRatio: 750 / 250,
 	resize: function(event, ui) {
-		var keyHeight = parseInt($(this).children(".stdRow").css("height"));
-		$(".stdKey").css({"font-size": (keyHeight * 0.9 / 3) + "px"});
-		$(".stdKey").css({"line-height": (keyHeight * 0.9) + "px"});
-		$(".stdKey").children(".upper").css({"line-height": (keyHeight * 0.9 / 3 * 2) + "px"});
-		$(".stdKey").children(".lower").css({"line-height": (keyHeight * 0.9 / 3) + "px"});
+		var keyHeight = parseInt($(this).children(".standard-row").css("height"));
+		$(".standard-key").css({"font-size": (keyHeight * 0.9 / 3) + "px"});
+		$(".standard-key").css({"line-height": (keyHeight * 0.9) + "px"});
+		$(".standard-key").children(".upper").css({"line-height": (keyHeight * 0.9 / 3 * 2) + "px"});
+		$(".standard-key").children(".lower").css({"line-height": (keyHeight * 0.9 / 3) + "px"});
 	}
 });
 
 // make the steno keyboard draggable and resizable. when it is dragged, let it snap to other elements. when it is resized, keep it proportional.
-$("#stenoKeyboard").draggable({snap: true}).resizable({aspectRatio: 320 / 160,
+$("#steno-keyboard").draggable({snap: true, containment: "parent"}).resizable({aspectRatio: 320 / 160,
 	resize: function(event, ui) {
-		var keyHeight = parseInt($(this).children(".stenoUpperBank").css("height"));
-		$(".stenoKey").css({"font-size": (keyHeight / 2) + "px"});
-		$(".stenoKey").css({"line-height": (keyHeight) + "px"});
+		var keyHeight = parseInt($(this).children(".steno-upper-bank").css("height"));
+		$(".steno-key").css({"font-size": (keyHeight / 2) + "px"});
+		$(".steno-key").css({"line-height": (keyHeight) + "px"});
 	}
 });
 
-// make the papers draggable and resizable. when it is dragged, let it snap to other elements.
-$("#verticalNotesContainer").draggable({snap: true}).resizable({handles: 's',
-	alsoResize: "#outputContainer",
-	resize: function(event, ui) {
-		var containerHeight = parseInt($(this).css("height"));
-		$("#verticalNotes").css({"height": (containerHeight - 50) +"px"});
-		$("#output").css({"height": (containerHeight - 50) +"px"});
-	}
-});
+function resize() {
+  $("#content").height($(document).height() - ($('#header').height() + 6));  // plus 6 since there is a bottom border on the header with a width of 6
+}
 
-$("#outputContainer").draggable({snap: true}).resizable({handles: 's',
-	alsoResize: "#verticalNotesContainer",
-	resize: function(event, ui) {
-		var containerHeight = parseInt($(this).css("height"));
-		$("#verticalNotes").css({"height": (containerHeight - 50) +"px"});
-		$("#output").css({"height": (containerHeight - 50) +"px"});
-	}
-});
+window.onload = resize;
+window.onresize = resize;

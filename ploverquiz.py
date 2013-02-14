@@ -107,7 +107,10 @@ class MainPage(BaseHandler):
                 'quizNo': quizNo,
                 'lessonDescription': LESSONS[quizNo - 1]["description"],
                 'hasNext': ((quizNo + 1) < len(LESSONS)),
-                'hasPrevious': (quizNo > 1)
+                'hasPrevious': (quizNo > 1),
+                'login_href': users.create_logout_url(self.request.uri),
+                'login_content': 'Logout'
+
             })
         else:
             self.redirect(users.create_login_url(self.request.uri))

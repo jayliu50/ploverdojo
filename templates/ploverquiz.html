@@ -10,28 +10,26 @@
 
     <!-- import style sheets -->
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="css/plover-quiz.css">
+    <link rel="stylesheet" type="text/css" href="css/ploverquiz.css">
   </head>
   <body>
     <div id="header">
-      <a href="/" id="header-logo"><img src="assets/logo.png" alt="Plover Dojo" height="71"></a>
+      <a href="/" id="header-logo"><img src="assets/logo.png" alt="Plover Dojo" height="71px"></a>
       <a href="{{ login_href }}" id="header-login">{{ login_content }}</a>
     </div>
     
     <div id="content">
-      <div id="content-title">
-        <h1>QUIZ</h1>  
-      </div>
-    
+      <h1 id="content-title">Quiz</h1>  
+      
       <div id="quiz-prompt">
-        <h2>PLEASE TYPE:</h2>
+        <h2>Please Type:</h2>
         <span id="quiz-prompt-text">mocktext</span>
       </div>
 
       <div id="user-response">
-        <h2>INPUT:</h2>
+        <h2>Input:</h2>
         <span id="user-response-input-text">mocktext</span>
-        <h2>OUTPUT:</h2>
+        <h2>Output:</h2>
         <span id="user-response-output-text">mocktext</span>
       </div>
 
@@ -39,7 +37,7 @@
         <span id="feedback-text"></span>
         <span id="feedback-icon"><img src="" alt=""></span>
       </div>
-    
+      
       <!-- STANDARD KEYBOARD (This keyboard is based on the IBM PC Windows 104 keyboard) -->
       <div id="standard-keyboard">
         <div class="standard-row">
@@ -152,10 +150,11 @@
         </div>
       </div>
     </div>
+    
     <!-- make elements draggable and resizable -->
-    <script type="text/javascript" src="js/ui-elements.js"></script>
+    <script type="text/javascript" src="js/uielements.js"></script>
 
     <!-- do the steno thing! -->
-    <script type="text/javascript" src="js/plover-quiz.js"></script>
+    <script type="text/javascript" src="js/ploverquiz.js"></script>
   </body>
 </html>
