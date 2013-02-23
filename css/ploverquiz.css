@@ -180,6 +180,9 @@ progress, section, summary, time, audio, video, a {
   /* Box */
   padding: 12px;
   border: 6px solid white;
+  display: none; /* hidden until user provides input */
+  width: 350px;
+  height: 230px;
   
   /* Colors */
   background-color: #bbbdc0;  /* gray */
@@ -236,25 +239,39 @@ progress, section, summary, time, audio, video, a {
 
 
 /****** Feedback ******/
+#feedback-text {
+  /* Position */
+  display: block;
+  
+  /* Box */
+  margin: 6px auto 0px auto;  /* use standard css center block trick with auto*/
+  border: 1px solid #a7a9ab;  /* dark gray */
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  
+  /* Text */
+  font-family: "MuseoSlab500", arial, sans-serif;
+  font-size: 1em;
+  text-transform: uppercase;
+  text-align: center;
+  
+}
 
 .correct {
   /* Colors */
-  color: #f7931d;  /* orange */
+  color: #76bbb6;  /* blue-green */
   background-color: white;
-
-  /* Text */
-  font-size: 1em;
-  text-transform: uppercase;
+  background-image: url('../assets/correct.png');
+  background-repeat: no-repeat;
 }
 
 .incorrect {
   /* Colors */
-  color: #f7931d;  /* orange */
-  background-color: white;
-
-  /* Text */
-  font-size: 1em;
-  text-transform: uppercase;
+  color: white;
+  background-color: #faa951;  /* orange */
+  background-image: url('../assets/incorrect.png');
+  background-repeat: no-repeat;
 }
 
 

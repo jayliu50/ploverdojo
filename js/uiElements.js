@@ -1,6 +1,6 @@
 $("#quiz-prompt").draggable({snap: true, containment: "parent"}).resizable();
 
-$("#user-response").draggable({snap: true, containment: "parent"}).resizable();
+$("#user-response").draggable({snap: true, containment: "parent"}).resizable({handles: 'e'});
 
 // make the standard keyboard draggable and resizable. when it is dragged, let it snap to other elements. when it is resized, keep it proportional.
 $("#standard-keyboard").draggable({snap: true, containment: "parent"}).resizable({aspectRatio: 750 / 250,

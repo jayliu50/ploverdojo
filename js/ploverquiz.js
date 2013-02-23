@@ -24,6 +24,7 @@ var isSteno = true;
 /** This string will store the final translated string. */
 var translatedString = '';
 
+var currentQuizIndex = -1;
 
 // IMPORT ASSETS
 
@@ -554,6 +555,10 @@ function resetKeys() {
   // Clear keyboard colors
   $('.standard-key').css('background-color', '#FFFFFF');
   $('.steno-key').css('background-color', '#FFFFFF');
+  
+  // Clear user input
+  $('#user-response').hide();
+  
 }
 
 /**
@@ -596,7 +601,15 @@ function zeroFill(number, width) {
 }
 
 function nextQuizQuestion() {
-  var newQuestion = tdArray[Math.floor(Math.random() * tdArray.length)];  // random question
+  if(tdArray.length >= 2) {    
+    var candidateIndex = 0;
+    do {
+      candidateIndex = Math.floor(Math.random() * tdArray.length);
+    } while (candidateIndex === currentQuizIndex);
+    currentQuizIndex = candidateIndex;
+  }
+  
+  var newQuestion = tdArray[currentQuizIndex];  // random question, has to be a different one than the one before
 
   if (testdata[newQuestion] === "binary") {
     quizChord = new Chord();
@@ -614,12 +627,16 @@ function match(conversion) {
     case "chord-binary":
       if (chords[chords.length - 1].toBinary() === quizChord.toBinary()) {
         console.log("match! " + chords[chords.length - 1].toBinary() + " == " + quizChord.toBinary());
+        $('#feedback-text').html('Correct!');
+        $('#feedback-text').attr('class', 'correct');
         resetAll();
         nextQuizQuestion();
       }
     default:
       if (chords.length) {
         console.log("no match! " + chords[chords.length - 1].toBinary() + " != " + quizChord.toBinary());
+        $('#feedback-text').html('Sorry, try again');
+        $('#feedback-text').attr('class', 'incorrect');
       }
   }
 }
@@ -1238,20 +1255,40 @@ $(document).keyup(function (event) {
       for (i = 0; i < words.length; i++) {
         translatedString += words[i].toEnglish() + ' ';
       }
+      
+      $('#user-response-output-text').html(word.toEnglish());
+      
+      $('#user-response-input-text').html(chord.toRTFCRE());
+      
       //$('#output').html(demetafy(translatedString));
       //document.getElementById('output').scrollTop = document.getElementById('output').scrollHeight; //scroll the textarea to the bottom
 
       //showUserInput();
       console.log("keyup event fired!");
       match("chord-binary");
+      
     }
 
 
     // Handle potential conflicts
     event.preventDefault(); // will prevent potential conflicts with browser hotkeys like firefox's hotkey for quicklinks (')
     //event.stopPropagation();
+    
+    $('#user-response').show();
+    delay(function(){
+      $('#user-response').fadeOut();
+    }, 5000);
+    
   }
 });
+
+var delay = (function(){
+  var timer = 0;
+  return function(callback, ms){
+    clearTimeout(timer);
+    timer = setTimeout(callback, ms);
+  };
+})();
 
 /**
  * This will handle the event when the window loses focus.
