@@ -59,7 +59,7 @@ progress, section, summary, time, audio, video, a {
   border-bottom: 6px solid white;
 
   /* Colors */
-  background-color: #76bbb6;  /* blue-green */
+  background-color: #7bc1bc;  /* blue-green */
 }
 
 #header-logo { 
@@ -72,7 +72,7 @@ progress, section, summary, time, audio, video, a {
 #header-login {
   /* Position */
   position: absolute;
-  bottom: 5px;
+  bottom: 40px;
   right: 24px;
 
   /* Colors */
@@ -80,7 +80,7 @@ progress, section, summary, time, audio, video, a {
   
   /* Text */
   font-family: "MuseoSlab500", arial, sans-serif;
-  font-size: 1em;
+  font-size: 0.65em;
   text-transform: uppercase;
   text-decoration: none;
 }
@@ -110,7 +110,7 @@ progress, section, summary, time, audio, video, a {
   /* Position */
   position: absolute;
   top: 24px;
-  left: 24px;
+  left: 34px;
   
   /* Colors */
   color: white;
@@ -129,11 +129,12 @@ progress, section, summary, time, audio, video, a {
   /* Position */
   position: absolute;
   top: 120px;
-  left: 24px;
+  left: 37px;
   
   /* Box */
   padding: 12px;
   border: 6px solid white;
+  width: 250px;
   
   /* Colors */
   background-color: #faa951;  /* orange */
@@ -280,7 +281,7 @@ progress, section, summary, time, audio, video, a {
 #standard-keyboard {
   /* Position */
   position: absolute;
-  left: 24px;
+  left: 37px;
   top: 360px;
   
   /* Box */
@@ -423,7 +424,7 @@ progress, section, summary, time, audio, video, a {
 #steno-keyboard {
   /* Position */
   position: absolute;
-  left: 720px;
+  left: 640px;
   top: 360px;
   
   /* Box */
