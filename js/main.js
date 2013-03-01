@@ -1,48 +1,23 @@
-var placeCenterMiddle = function(selector) {
+var placeCenterMiddle = function (selector) {
   if ($(selector).length !== 0) {
-    if ($(selector).parent().is("body")) {
-      $(selector).css({
-        "position": "absolute",
-        "left": ($(window).width() - $(selector).outerWidth()) * 0.5,
-        "top": ($(window).height() - $(selector).outerHeight()) * 0.5
-      });
-    } else {
-      $(selector).css({
-        "position": "absolute",
-        "left": ($(selector).parent().innerWidth() - $(selector).outerWidth()) * 0.5,
-        "top": ($(selector).parent().innerHeight() - $(selector).outerHeight()) * 0.5
-      });
-    }
+    $(selector).css({
+      "position": "absolute",
+      "left": ($(selector).parent().innerWidth() - $(selector).outerWidth()) * 0.5,
+      "top": ($(selector).parent().innerHeight() - $(selector).outerHeight()) * 0.5
+    });
   } else {
     console.warn("placeCenterMiddle called with improper parameters!");
   }
-}
+};
 
 
-var fitSpanText = function(selector) {
-  if ($(selector).length !== 0 && $(selector).is("span")) {
+var fitText = function (selector) {
+  if ($(selector).length !== 0) {
     $(selector).css("white-space", "nowrap");
 
     var maxWidth = $(selector).parent().innerWidth();
     var maxHeight = $(selector).parent().innerHeight();
-    
-    /*
-    for (var fontSize = 0; fontSize < maxHeight; fontSize++) {
-      $(selector).css("font-size", fontSize);
-      alert();
-      if ($(selector).outerWidth() > maxWidth
-          || $(selector).outerWidth() < previousWidth) {
-        $(selector).css("font-size", fontSize - 1);
-        console.log("font-size = " + fontSize);
-        console.log($(selector).outerWidth() + " > " + maxWidth);
-        console.log($(selector).outerWidth() + " < " + previousWidth);
-        return;
-      }
 
-      previousWidth = $(selector).outerWidth();
-    }
-    */
-    
     for (var fontSize = maxHeight; fontSize >= 0; fontSize--) {
       $(selector).css("font-size", fontSize);
       if ($(selector).outerWidth() < maxWidth) {
@@ -50,42 +25,69 @@ var fitSpanText = function(selector) {
       }
     }
   } else {
-    console.warn("fitSpanText called with improper parameters!");
+    console.warn("fitText called with improper parameters!");
   }
 };
 
 
 var fontSizeForIdealLineLength = function (width) {
-  var testLine = "Quick hijinx swiftly revamped gazebo. ";
-  testLine += "Quick hijinx swiftly revamped gazebo.";
-
-  var body = document.body;
   var testSpan = document.createElement("span");
   testSpan.setAttribute("id", "test-span");
-  testSpan.innerHTML = testLine;
-  body.appendChild(testSpan);
-
-  var fontSize = 0;
-  var counter = 0;
-
-  do {
-    fontSize++;
+  testSpan.innerHTML = "Quick hijinx swiftly revamped gazebo. Quick hijinx swiftly revamped gazebo.";
+  document.body.appendChild(testSpan);
+  for (var fontSize = 0; fontSize <= Math.floor(width); fontSize++) {
     $("#test-span").css("font-size", fontSize);
-
-    counter++;
-    if (counter > $(window).height()) {
-      console.warn("fontSizeForIdealLineLength ran too long!");
-      return;
+    if ($("#test-span").outerWidth() > width) {
+      document.body.removeChild(testSpan);
+      return fontSize;
     }
-  } while ($("#test-span").outerWidth() < width)
-
-  fontSize--;
-  body.removeChild(testSpan);
-  return fontSize;
+  }
 };
 
 
-$(window).resize(function(){
+var currentSlide = 0;
+var switchSlide = function () {
+  console.log("hide slide " + currentSlide);
+  $("#slide" + currentSlide).hide("drop", {easing: "easeInOutBack", direction: "right"}, 1800);
+  currentSlide = (currentSlide + 1) % $(".slide").length;
+  console.log("show slide " + currentSlide);
+  $("#slide" + currentSlide).show("drop", {easing: "easeInOutBack", direction: "left"}, 1800);
+};
+
+var slideshowTimer = null;
+var startSlideshow = function () {
+  for (var i = 0; i < $(".slide").length; i++) {
+    $("#slide" + i).css("display", "block");
+
+    // set slide div dimensions.
+    $("#slide" + i).css({
+      "width": $(window).innerWidth() * 0.6180339887,
+      "height": $(window).height() * 0.6180339887
+    });
+
+    // set slide div coordinates (requires dimensions, so do that first!).
+    $("#slide" + i).css({
+      "position": "absolute",
+      "left": 0,
+      "top": 0
+    });
+
+    // set font-size of slide text to ideal line length (60-75 chars).
+    $("#slide" + i).css({
+      "font-size": fontSizeForIdealLineLength($(window).width() * 0.6180339887)
+    });
+
+    $("#slide" + i).css("display", "none");
+  }
+
+  $("#slide" + currentSlide).show("drop", {easing: "easeInOutBack", direction: "left"}, 1800);
+
+  // switch slide every 3 seconds.
+  slideshowTimer = setInterval(switchSlide, 5000);
+};
+
+
+$(window).resize(function (){
   // set title div dimensions.
   $("#title").css({
     "width": $(window).innerWidth() * 0.6180339887,
@@ -100,7 +102,7 @@ $(window).resize(function(){
   });
 
   // set font-size of title-text span to largest fit in title div.
-  fitSpanText("#title-text");
+  fitText("#title-text");
 
   // place title-text span in center-middle of title div.
   placeCenterMiddle("#title-text");
@@ -159,7 +161,7 @@ $(window).resize(function(){
   });
 
   // set font-size of get-started-button-text span to largest fit in get-started-button div.
-  fitSpanText("#get-started-button-text");
+  fitText("#get-started-button-text");
 
   // place get-started-button-text span in center-middle of get-started-button div.
   placeCenterMiddle("#get-started-button-text");
@@ -181,14 +183,14 @@ $(window).resize(function(){
   });
 
   // set font-size of learn-more-button-text span to largest fit in learn-more-button div.
-  fitSpanText("#learn-more-button-text");
+  fitText("#learn-more-button-text");
 
   // place learn-more-button-text span in center-middle of learn-more-button div.
   placeCenterMiddle("#learn-more-button-text");
 });
 
 
-$(window).load(function() {
+$(window).load(function () {
   // THE FLOW OF THINGS WILL BE ABSTRACTED OUT IN THE FUTURE
 
 
@@ -223,7 +225,7 @@ $(window).load(function() {
   });
 
   // set font-size of title-text span to largest fit in title div.
-  fitSpanText("#title-text");
+  fitText("#title-text");
 
   // place title-text span in center-middle of title div.
   placeCenterMiddle("#title-text");
@@ -232,19 +234,18 @@ $(window).load(function() {
   // set welcome div dimensions.
   $("#welcome").css({
     "width": $(window).innerWidth() * 0.6180339887,
-    "height": parseInt($("#title-text").css("font-size")) * 0.7
+    "height": parseInt($("#title-text").css("font-size"), 10) * 0.7
   });
 
   // set welcome div coordinates (requires dimensions, so do that first!)
   $("#welcome").css({
     "position": "absolute",
     "left": ($(window).innerWidth() - $("#welcome").outerWidth()) * 0.5,
-    "top": ($(window).innerHeight() - $("#welcome").outerHeight()) * 0.5
-           - parseInt($("#title-text").css("font-size")) * 0.9
+    "top": ($(window).innerHeight() - $("#welcome").outerHeight()) * 0.5 - parseInt($("#title-text").css("font-size"), 10) * 0.9
   });
 
   // set font-size of welcome-text span to largest fit in welcome div.
-  fitSpanText("#welcome-text");
+  fitText("#welcome-text");
 
   // place welcome-text span in center-middle of welcome div
   placeCenterMiddle("#welcome-text");
@@ -253,19 +254,18 @@ $(window).load(function() {
   // set tagline div dimensions.
   $("#tagline").css({
     "width": $(window).innerWidth() * 0.6180339887,
-    "height": parseInt($("#title-text").css("font-size")) * 0.6180339887
+    "height": parseInt($("#title-text").css("font-size"), 10) * 0.6180339887
   });
 
   // set tagline div coordinates (requires dimensions, so do that first!)
   $("#tagline").css({
     "position": "absolute",
     "left": ($(window).innerWidth() - $("#tagline").outerWidth()) * 0.5,
-    "top": ($(window).innerHeight() - $("#tagline").outerHeight()) * 0.5
-           + parseInt($("#title-text").css("font-size")) * 0.7
+    "top": ($(window).innerHeight() - $("#tagline").outerHeight()) * 0.5 + parseInt($("#title-text").css("font-size"), 10) * 0.7
   });
 
   // set font-size of tagline-text span to largest fit in tagline div.
-  fitSpanText("#tagline-text");
+  fitText("#tagline-text");
 
   // place tagline-text span in center-middle of tagline div
   placeCenterMiddle("#tagline-text");
@@ -285,7 +285,7 @@ $(window).load(function() {
   });
 
   // set font-size of tagline-text span to largest fit in tagline div.
-  fitSpanText("#disclaimer-text");
+  fitText("#disclaimer-text");
 
   // place tagline-text span in center-middle of tagline div
   placeCenterMiddle("#disclaimer-text");
@@ -401,7 +401,7 @@ $(window).load(function() {
   });
 
   // set font-size of get-started-button-text span to largest fit in get-started-button div.
-  fitSpanText("#get-started-button-text");
+  fitText("#get-started-button-text");
 
   // place get-started-button-text span in center-middle of get-started-button div.
   placeCenterMiddle("#get-started-button-text");
@@ -423,7 +423,7 @@ $(window).load(function() {
   });
 
   // set font-size of learn-more-button-text span to largest fit in learn-more-button div.
-  fitSpanText("#learn-more-button-text");
+  fitText("#learn-more-button-text");
 
   // place learn-more-button-text span in center-middle of learn-more-button div.
   placeCenterMiddle("#learn-more-button-text");
@@ -431,7 +431,7 @@ $(window).load(function() {
 
   // turn "off" page elements and fade them in.
   $("#slideshow").css("display", "none");
-  $("#slideshow").delay(7000).fadeIn(900, "easeInOutSine");
+  $("#slideshow").delay(7000).fadeIn(900, "easeInOutSine", startSlideshow);
   $("#more-info").css("display", "none");
   $("#get-started-button").css("display", "none");
   $("#get-started-button").delay(7900).fadeIn(900, "easeInOutSine");
@@ -439,9 +439,16 @@ $(window).load(function() {
   $("#learn-more-button").delay(7900).fadeIn(900, "easeInOutSine");
 
 
-  // show more-info div if learn-more-button clicked
+  // toggle more-info div if learn-more-button clicked
   $("#learn-more-button").click(function () {
-    $("#slideshow").fadeOut(900, "easeInOutSine");
-    $("#more-info").fadeIn(900, "easeInOutSine");
+    if ($("#more-info").css("display") === "none") {
+      $("#slideshow").fadeOut(900, "easeInOutSine");
+      $("#more-info").fadeIn(900, "easeInOutSine");
+      clearInterval(slideshowTimer);
+    } else {
+      $("#more-info").fadeOut(900, "easeInOutSine");
+      $("#slideshow").fadeIn(900, "easeInOutSine");
+      startSlideshow();
+    }
   });
 });
