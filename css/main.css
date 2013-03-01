@@ -113,7 +113,6 @@ body {
 
 #more-info {
   display: none;
-  overflow: scroll;
   overflow-x: hidden;
 }
 
@@ -156,7 +155,7 @@ body {
 }
 
 .button:active {
-  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);  /* letterpress effect */
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5), -1px -1px 1px rgba(0, 0, 0, 0.5);  /* deep letterpress effect */
 }
 
 
