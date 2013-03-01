@@ -1,9 +1,9 @@
 /*** RESET BOX FOR ALL ELEMENTS ***/
 
-html, body, div, h1, h2, h3, h4, h5, h6, p, img, dl, dt, dd, ol, ul, li, table, tr, td, 
-form, object, embed, article, aside, canvas, command, details, fieldset, figcaption, 
-figure, footer, group, header, hgroup, legend, mark, menu, meter, nav, output, 
-progress, section, summary, time, audio, video, a {
+html, body, div, h1, h2, h3, h4, h5, h6, p, img, dl, dt, dd, ol, ul, li, table, tr, td,
+form, object, embed, article, aside, canvas, command, details, fieldset, figcaption,
+figure, footer, group, header, hgroup, legend, mark, menu, meter, nav, output,
+progress, section, summary, time, audio, video, a, span {
   padding: 0;
   border: 0;
   margin: 0;
@@ -17,11 +17,11 @@ progress, section, summary, time, audio, video, a {
 /* css skeleton
   /* Position - put things that affect things outside the box
   display: block;
-  
+
   /* Box - put styles that affect the box
   width: 100%;
   height: 100%;
-  
+
   padding: 0px;
   border: 0px;
   margin: 0px;
@@ -29,11 +29,11 @@ progress, section, summary, time, audio, video, a {
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   border-radius: 12px;
-  
+
   /* Colors - put the colors for the content of the box
   color: #000000;
-  background-color: #FFFFFF;
-  
+  background-color: #ffffff;
+
   /* Text - put styles that affect the content text
   font-family: "MuseoSlab500", arial, sans-serif;
   font-size: 1em;
@@ -42,45 +42,84 @@ progress, section, summary, time, audio, video, a {
 
 
 
+body {
+  /* Colors */
+  background-color: #eeeeee;
+
+  /* Text */
+  font-family: "MuseoSlab500", arial, sans-serif;
+}
 
 
-
-/*** content ***/
+/* google-style scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #eeeeee;
+  -webkit-box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  -webkit-box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #888888;
+  -webkit-box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
 
 
 #welcome {
-  /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
-  font-size: 2em;  /* standard h1 size is 2.15em */
-  text-align:center;
+  display: none;
 }
 
-#title  {
-  /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
-  font-size: 4em;  /* standard h1 size is 2.15em */
-  font-weight: bold;
-  text-align:center;
-  text-transform: uppercase;
+#title {
+  display: none;
 }
 
 #tagline {
+  display: none;
+}
+
+#welcome-text {
+}
+
+#title-text  {
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
-  font-size: 1em;  /* standard h1 size is 2.15em */
-  text-align:center;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#tagline-text {
 }
 
 #slideshow {
-  visibility: hidden;
+  display: none;
 }
 
-#get-started {
-  visibility: hidden;
+#more-info {
+  display: none;
+  overflow: scroll;
+  overflow: scroll-y;
 }
 
-#learn-more {
-  visibility: hidden;
+#get-started-button {
+  display: none;
+}
+
+#learn-more-button {
+  display: none;
+}
+
+#disclaimer {
+  display: none;
+}
+
+#disclaimer-text {
+  font-size: 14px;
 }
 
 
@@ -94,28 +133,28 @@ progress, section, summary, time, audio, video, a {
 
 /* @license
  * MyFonts Webfont Build ID 2478206, 2013-02-12T23:18:43-0500
- * 
+ *
  * The fonts listed in this notice are subject to the End User License
- * Agreement(s) entered into by the website owner. All other parties are 
+ * Agreement(s) entered into by the website owner. All other parties are
  * explicitly restricted from using the Licensed Webfonts(s).
- * 
+ *
  * You may obtain a valid license at the URLs below.
- * 
+ *
  * Webfont: Museo Slab 500 by exljbris
  * URL: http://www.myfonts.com/fonts/exljbris/museo-slab/500/
  * Copyright: Copyright (c) 2009 by Jos Buivenga. All rights reserved.
  * Licensed pageviews: Unlimited
- * 
- * 
+ *
+ *
  * License: http://www.myfonts.com/viewlicense?type=web&buildid=2478206
- * 
+ *
  * © 2013 MyFonts Inc
 */
 
 @font-face {
   font-family: 'MuseoSlab500';
-    src: url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.eot');
-    src: url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.eot?#iefix') format('embedded-opentype'),
-      url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.woff') format('woff'),
-      url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.ttf') format('truetype');
+  src: url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.eot');
+  src: url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.eot?#iefix') format('embedded-opentype'),
+       url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.woff') format('woff'),
+       url('https://github.com/Logaritmisk/wunderpong/raw/master/themes/wunderpong/fonts/museo-slab-500.ttf') format('truetype');
 }

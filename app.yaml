@@ -14,14 +14,11 @@ handlers:
 - url: /js
   static_dir: js
 
-- url: /main.html
-  script: main.app
-
 - url: /ploverquiz.html
   script: ploverquiz.app
 
 - url: /.*
-  script: ploverdojo.app
+  script: main.app
 
 libraries:
 - name: jinja2
