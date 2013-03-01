@@ -119,28 +119,16 @@ body {
 
 #get-started-button {
   display: none;
-  cursor: pointer;
 }
 
 #get-started-button-text {
-  /* Colors */  
-  color: #faa951;  /* orange */
-
-  /* Text */  
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), -1px -1px 1px rgba(255, 255, 255, 0.5);  /* emboss effect */
 }
 
 #learn-more-button {
   display: none;
-  cursor: pointer;
 }
 
 #learn-more-button-text {
-  /* Colors */  
-  color: #ffffff;  /* white */
-
-  /* Text */  
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), -1px -1px 1px rgba(255, 255, 255, 0.5);  /* emboss effect */
 }
 
 #disclaimer {
@@ -150,6 +138,25 @@ body {
 #disclaimer-text {
   /* Text */  
   font-size: 14px;
+}
+
+.button {
+  /* Colors */  
+  color: #ffffff;  /* white */
+
+  /* Text */  
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), -1px -1px 1px rgba(255, 255, 255, 0.5);  /* emboss effect */
+
+  cursor: pointer;
+}
+
+.button:hover {
+  /* Colors */  
+  color: #faa951;  /* orange */
+}
+
+.button:active {
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);  /* letterpress effect */
 }
 
 
