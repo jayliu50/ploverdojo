@@ -63,7 +63,7 @@ body {
   font-family: "MuseoSlab500", arial, sans-serif;
   text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);  /* letterpress effect */
 
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 

@@ -450,11 +450,16 @@ $(window).load(function () {
     if ($("#more-info").css("display") === "none") {
       $("#slideshow").fadeOut(900, "easeInOutSine");
       $("#more-info").fadeIn(900, "easeInOutSine");
+
+      // stop slideshow
       clearInterval(slideshowTimer);
+      clearTimeout(slideshowTimeout);
+      $(".slide").css("display", "none");
+      $(".slide").stop(true, true);
     } else {
       $("#more-info").fadeOut(900, "easeInOutSine");
       $("#slideshow").fadeIn(900, "easeInOutSine");
-      slideshowTimeout = setTimeout(startSlideshow, 900);
+      slideshowTimeout = setTimeout(startSlideshow, 150);
     }
   });
 });
