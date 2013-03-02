@@ -47,47 +47,50 @@ var fontSizeForIdealLineLength = function (width) {
 
 var currentSlide = 0;
 var switchSlide = function () {
-  console.log("hide slide " + currentSlide);
   $("#slide" + currentSlide).hide("drop", {easing: "easeInOutBack", direction: "right"}, 1800);
-  currentSlide = (currentSlide + 1) % $(".slide").length;
-  console.log("show slide " + currentSlide);
+  currentSlide = (currentSlide + 1) % $(".slide").length;  
   $("#slide" + currentSlide).show("drop", {easing: "easeInOutBack", direction: "left"}, 1800);
 };
 
 var slideshowTimer = null;
 var startSlideshow = function () {
-  for (var i = 0; i < $(".slide").length; i++) {
-    $("#slide" + i).css("display", "block");
+  $(".slide").css("display", "block");
 
-    // set slide div dimensions.
-    $("#slide" + i).css({
-      "width": $(window).innerWidth() * 0.6180339887,
-      "height": $(window).height() * 0.6180339887
-    });
+  // set slide div dimensions.
+  $(".slide").css({
+    "width": $(window).innerWidth() * 0.6180339887,
+    "height": $(window).height() * 0.6180339887
+  });
 
-    // set slide div coordinates (requires dimensions, so do that first!).
-    $("#slide" + i).css({
-      "position": "absolute",
-      "left": 0,
-      "top": 0
-    });
+  // set slide div coordinates (requires dimensions, so do that first!).
+  $(".slide").css({
+    "position": "absolute",
+    "left": 0,
+    "top": 0
+  });
 
-    // set font-size of slide text to ideal line length (60-75 chars).
-    $("#slide" + i).css({
-      "font-size": fontSizeForIdealLineLength($(window).width() * 0.6180339887)
-    });
+  // set font-size of slide text to ideal line length (60-75 chars).
+  $(".slide").css({
+    "font-size": fontSizeForIdealLineLength($(window).width() * 0.6180339887)
+  });
 
-    $("#slide" + i).css("display", "none");
-  }
-
+  $(".slide").css("display", "none");
+  
+  console.log("show slide " + currentSlide);
   $("#slide" + currentSlide).show("drop", {easing: "easeInOutBack", direction: "left"}, 1800);
 
-  // switch slide every 3 seconds.
+  // switch slide every 5 seconds.
   slideshowTimer = setInterval(switchSlide, 5000);
 };
 
-
+var slideshowTimeout = null;
 $(window).resize(function (){
+  // stop slideshow
+  clearInterval(slideshowTimer);
+  clearTimeout(slideshowTimeout);
+  $(".slide").css("display", "none");
+  $(".slide").stop(true, true);
+  
   // set title div dimensions.
   $("#title").css({
     "width": $(window).innerWidth() * 0.6180339887,
@@ -187,6 +190,9 @@ $(window).resize(function (){
 
   // place learn-more-button-text span in center-middle of learn-more-button div.
   placeCenterMiddle("#learn-more-button-text");
+  
+  // delay slideshow from starting to prevent buildup while user is resizing.
+  slideshowTimeout = setTimeout(startSlideshow, 150);
 });
 
 
@@ -448,7 +454,7 @@ $(window).load(function () {
     } else {
       $("#more-info").fadeOut(900, "easeInOutSine");
       $("#slideshow").fadeIn(900, "easeInOutSine");
-      startSlideshow();
+      slideshowTimeout = setTimeout(startSlideshow, 900);
     }
   });
 });
