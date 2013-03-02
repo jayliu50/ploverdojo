@@ -462,4 +462,17 @@ $(window).load(function () {
       slideshowTimeout = setTimeout(startSlideshow, 150);
     }
   });
+  
+  
+  // toggle more-info div if learn-more-button clicked
+  $("#get-started-button").click(function () {
+    $("#title").fadeOut(900, "easeInOutSine");
+    $("#slideshow").fadeOut(900, "easeInOutSine");
+    $("#more-info").fadeOut(900, "easeInOutSine");
+    $("#get-started-button").fadeOut(900, "easeInOutSine");
+    $("#learn-more-button").fadeOut(900, "easeInOutSine");
+    setTimeout(function () {
+      document.location = "/tutor";
+    }, 900);
+  });
 });

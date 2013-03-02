@@ -36,8 +36,8 @@ class BaseHandler(webapp2.RequestHandler):
         template_values"""
         self.response.out.write(render_template(template, **template_values))
 
-
-class MainPage(BaseHandler):
+        
+class TutorPage(BaseHandler):
     def get(self):
         user = users.get_current_user()
 
@@ -57,7 +57,7 @@ class MainPage(BaseHandler):
                 'logoutURL': logoutURL
             }
 
-            self.write_template('main.html', **template_values)
+            self.write_template('tutor.html', **template_values)
         else:
             loginURL = users.create_login_url(self.request.uri)
 
@@ -65,10 +65,10 @@ class MainPage(BaseHandler):
                 'loginURL': loginURL,
             }
 
-            self.write_template('main.html', **template_values)
+            self.write_template('tutor.html', **template_values)
 
    
 ### ROUTER
 
-app = webapp2.WSGIApplication([('/?', MainPage)],
+app = webapp2.WSGIApplication([('/tutor/?', TutorPage)],
                               debug=True)

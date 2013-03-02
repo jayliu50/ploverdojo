@@ -17,6 +17,9 @@ handlers:
 - url: /ploverquiz.html
   script: ploverquiz.app
 
+- url: /tutor
+  script: tutor.app
+
 - url: /.*
   script: main.app
 
