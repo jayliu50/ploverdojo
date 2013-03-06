@@ -1,139 +1,141 @@
-#stdKeyboard{
-	/* Positioning */
-	position:absolute;
-	left: 0px;
-	top: 228px;
-	
-	/* Box */
-	width: 522px; /* will fit 15 regular-sized keys horizontally */
-	height: 174px; /* will fit 5 regular-sized keys vertically */
-	padding: 10px;
-	border: 1px solid	#000000;
-	margin: 0;
+/****** Standard Keyboard ******/
 
-	/* Colors */
-	background-color: #ffffff;
+#standard-keyboard {
+  /* Position */
+  position: absolute;
+  left: 37px;
+  top: 360px;
+  
+  /* Box */
+  width: 522px; /* will fit 15 regular-sized keys horizontally */
+  height: 174px; /* will fit 5 regular-sized keys vertically */
+  padding: 10px;
+  border: 6px solid white;
+  margin: 0px;
+
+  /* Colors */
+  background-color: #679c9f;
 }
 
-.stdRow {
-	/* Box */
-	width: 100%;
-	height: 20%; /* will fit 5 rows in the keyboard */
-	padding: 0;
-	border: 0;
-	margin: 0;
+.standard-row {
+  /* Box */
+  width: 100%;
+  height: 20%; /* will fit 5 rows in the keyboard */
+  padding: 0;
+  border: 0;
+  margin: 0;
 }
 
-.stdKey {
-	/* Positioning */
-	float: left;
+.standard-key {
+  /* Position */
+  float: left;
 
-	/* Box */
-	width: 6%; /* 100% / 15 (keys) - (2 (left and right) * 0.333% (margin)) */
-	height: 90%; /* 100% - (15 (ratio across width / row height) * (2 (left and right) * 0.333% (margin))) */
-	padding: 0;
-	border: 0;
-	margin: 0.333%; /* width and height depend on this value. change accordingly */
+  /* Box */
+  width: 6%; /* 100% / 15 (keys) - (2 (left and right) * 0.333% (margin)) */
+  height: 90%; /* 100% - (15 (ratio across width / row height) * (2 (left and right) * 0.333% (margin))) */
 
-	/* Colors */
-	color: #ffffff;
-	background-color: #000000;
+  padding: 0;
+  border: 0;
+  margin: 0.333%; /* width and height depend on this value. change accordingly */
 
-	/* Text */
-	font-family: sans-serif;
-	font-size: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
-	font-weight: bold;
-	line-height: 31.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) */
-	text-align: center;
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  border-radius: 10%;
 
-	/* Styling */
-	-webkit-border-radius: 10%;
-	-moz-border-radius: 10%;
-	border-radius: 10%;
+  /* Colors */
+  color: #679c9f;
+  background-color: white;
+
+  /* Text */
+  font-family: sans-serif;
+  font-size: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
+  font-weight: bold;
+  line-height: 31.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) */
+  text-align: center;
 }
 
-#stdKeyBackspace{
-	/* Box */
-	width: 12.666%;
+#standard-key-backspace {
+  /* Box */
+  width: 12.666%;
 }
 
-#stdKeyTab{
-	/* Box */
-	width: 9.333%;
+#standard-key-tab{
+  /* Box */
+  width: 9.333%;
 }
 
-#stdKeyBackslash{
-	/* Box */
-	width: 9.333%;
+#standard-key-backslash {
+  /* Box */
+  width: 9.333%;
 }
 
-#stdKeyCapsLock{
-	/* Box */
-	width: 11%;
+#standard-key-caps-lock {
+  /* Box */
+  width: 11%;
 }
 
-#stdKeyEnter{
-	/* Box */
-	width: 14.333%;
+#standard-key-enter {
+  /* Box */
+  width: 14.333%;
 }
 
-#stdKeyLeftShift{
-	/* Box */
-	width: 14.333%;
+#standard-key-left-shift {
+  /* Box */
+  width: 14.333%;
 }
 
-#stdKeyRightShift{
-	/* Box */
-	width: 17.666%;
+#standard-key-right-shift {
+  /* Box */
+  width: 17.666%;
 }
 
-#stdKeyLeftControl{
-	/* Box */
-	width: 9.333%;
+#standard-key-left-control {
+  /* Box */
+  width: 9.333%;
 }
 
-#stdKeyLeftAlt{
-	/* Box */
-	width: 9.333%;
+#standard-key-left-alt {
+  /* Box */
+  width: 9.333%;
 }
 
-#stdKeySpace{
-	/* Box */
-	width: 39.333%;
+#standard-key-space {
+  /* Box */
+  width: 39.333%;
 }
 
-#stdKeyRightAlt{
-	/* Box */
-	width: 9.333%;
+#standard-key-right-alt {
+  /* Box */
+  width: 9.333%;
 }
 
-#stdKeyRightControl{
-	/* Box */
-	width: 9.333%;
+#standard-key-right-control {
+  /* Box */
+  width: 9.333%;
 }
 
-.upper {
-	/* Positionning */
-	float: left;
-	
-	/* Box */
-	height: 50%;
-	width: 100%;
+.upper-key-text {
+  /* Position */
+  float: left;
 
-	/* Text */
-	line-height: 21px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 * 2 */
-	text-align: center;
+  /* Box */
+  height: 50%;
+  width: 100%;
+
+  /* Text */
+  line-height: 21px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 * 2 */
+  text-align: center;
 }
 
-.lower {
-	/* Positioning */
-	float: left;
-	
-	/* Box */
-	height: 50%;
-	width: 100%;
-	
-	/* Text */
-	line-height: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
-	text-align: center;
+.lower-key-text {
+  /* Position */
+  float: left;
+
+  /* Box */
+  height: 50%;
+  width: 100%;
+
+  /* Text */
+  line-height: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
+  text-align: center;
 }
