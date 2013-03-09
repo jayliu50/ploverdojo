@@ -141,10 +141,28 @@ body {
   font-size: 14px;
 }
 
-.slide {
+div.slide {
   display: none;
-  background-color: rgba(255,0,0,0.5);
+  background-color: rgba(255,255,255,0.5);
+  padding: 20px;
 }
+
+div.slide > p{
+  padding-bottom: 2.0em;
+}
+
+div.slide > ul  {
+  list-style-type: none;
+  margin-left: 2.0em;
+}
+
+div.slide > li {
+  line-height: 4.0em;
+  margin: 2.0em;
+  padding: 2.0em;
+}
+
+
 
 .button {
   /* Colors */  
@@ -191,6 +209,41 @@ body {
 }
 
 
+/** Steno Speed Bar Chart **/
+.chart {
+  background: #7bc1bc;
+  margin: 5px;
+}
+
+.chart rect {
+  stroke: #7bc1bc;
+  fill: white;
+}
+
+.chart text {
+  fill: #7bc1bc;
+}
+
+.chart text.name {
+  fill: #000;
+ }
+ 
+.chart line {
+  stroke: #c1c1c1;
+}
+
+.chart line.benchmark {
+  stroke: #faa951;
+  stroke-width: 2;
+}
+
+.chart .benchmark_rule {
+  fill: #faa951;
+}
+
+.chart .benchmark_label {
+  fill: #faa951;
+}
 
 
 
