@@ -1,170 +1,176 @@
-#stenoKeyboard{
-	/* Positioning */
-	position:absolute;
-	left: 543px;
-	top: 228px;
-	
-	/* Box */
-	width: 348px;
-	height: 174px;
-	padding: 10px;
-	border: 1px solid #000000;
-	margin: 0;
+
+
+/****** Steno Keyboard ******/
+
+#steno-keyboard {
+  /* Position */
+  position: absolute;
+  left: 640px;
+  top: 360px;
+  
+  /* Box */
+  width: 348px;
+  height: 174px;
+  padding: 10px;
+  border: 6px solid white;
+  margin: 0px;
 
   /* Colors */
-	background-color: #FFFFFF;
+  background-color: #679c9f;
 }
 
-.stenoNumberBar {
+.steno-number-bar {
   /* Box */
-	width: 100%;
-	height: 15%;
-	padding: 0;
-	border: 0;
-	margin: 0 0 0.625% 0;
+  width: 100%;
+  height: 15%;
+  padding: 0;
+  border: 0;
+  margin: 0 0 0.625% 0;
 }
 
-.stenoUpperBank {
+.steno-upper-bank {
   /* Box */
-	width: 100%;
-	height: 25%;
-	padding: 0;
-	border: 0;
-	margin: 0.625% 0 0.625% 0;
+  width: 100%;
+  height: 25%;
+  padding: 0;
+  border: 0;
+  margin: 0.625% 0 0.625% 0;
 }
 
-.stenoLowerBank {
+.steno-lower-bank {
   /* Box */
-	width: 100%;
-	height: 25%;
-	padding: 0;
-	border: 0;
-	margin: 0.625% 0 3.75% 0;
+  width: 100%;
+  height: 25%;
+  padding: 0;
+  border: 0;
+  margin: 0.625% 0 3.75% 0;
 }
 
-.stenoVowelKeys {
+.steno-vowel-keys {
   /* Box */
-	width: 100%;
-	height: 25%;
-	padding: 0;
-	border: 0;
-	margin: 3.75% 0 0 0;
+  width: 100%;
+  height: 25%;
+  padding: 0;
+  border: 0;
+  margin: 3.75% 0 0 0;
 }
 
-#stenoKeyNumberBar {
-	/* Positioning */
-	float: left;
+#steno-key-number-bar {
+  /* Position */
+  float: left;
 
-	/* Box */
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	border: 0;
-	margin: 0;
+  /* Box */
+  width: 100%;
+  height: 100%;
 
-	/* Color */	
-	color: #ffffff;
-	background-color: #000000;
-	
-	/* Text */
-	font-family: sans-serif;
-	font-size: 22px;
-	text-align: center;
-	line-height: 44px;	
+  padding: 0;
+  border: 0;
+  margin: 0;
 
-	/* Styling */
-	-webkit-border-radius: 0.9375% / 12.5%;
-	-moz-border-radius: 0.9375% / 12.5%;
-	border-radius: 0.9375% / 12.5%;
+  -webkit-border-radius: 0.9375% / 12.5%;
+  -moz-border-radius: 0.9375% / 12.5%;
+  border-radius: 0.9375% / 12.5%;
+
+  /* Color */  
+  color: #679c9f;
+  background-color: white;
+
+  /* Text */
+  font-family: sans-serif;
+  font-size: 22px;
+  text-align: center;
+  line-height: 44px;	
 }
 
-.stenoKey {
-	/* Positioning */
-	float: left;
+.steno-key {
+  /* Position */
+  float: left;
 
-	/* Box */
-	width: 7.5%;
-	height: 100%;
-	padding: 0;
-	border: 0;
-	margin: 0 1.25% 0 1.25%;
+  /* Box */
+  width: 7.5%;
+  height: 100%;
 
-	/* Color */	
-	color: #ffffff;
-	background-color: #000000;
+  padding: 0;
+  border: 0;
+  margin: 0 1.25% 0 1.25%;
 
-	/* Text */
-	font-family: sans-serif;
-	font-size: 20px;
-	text-align: center;
-	line-height: 41px;	
+  /* Color */	
+  color: #679c9f;
+  background-color: white;
+
+  /* Text */
+  font-family: sans-serif;
+  font-size: 20px;
+  text-align: center;
+  line-height: 41px;	
 }
 
 .square {
-	/* Styling */
-	-webkit-border-radius: 12.5% / 7.5%;
-	-moz-border-radius: 12.5% / 7.5%;
-	border-radius: 12.5% / 7.5%;
+  /* Box */
+  -webkit-border-radius: 12.5% / 7.5%;
+  -moz-border-radius: 12.5% / 7.5%;
+  border-radius: 12.5% / 7.5%;
 }
 
 .rounded {
-	/* Styling */
-	-webkit-border-radius: 12.5% / 7.5%;
-	-webkit-border-bottom-right-radius: 50% 30%;
-	-webkit-border-bottom-left-radius: 50% 30%;
-	-moz-border-radius: 12.5% / 7.5%;
-	-moz-border-radius-bottomright: 50% 30%;
-	-moz-border-radius-bottomleft: 50% 30%;
-	border-radius: 12.5% / 7.5%;
-	border-bottom-right-radius: 50% 30%;
-	border-bottom-left-radius: 50% 30%;
+  /* Box */
+  -webkit-border-radius: 12.5% / 7.5%;
+  -webkit-border-bottom-right-radius: 50% 30%;
+  -webkit-border-bottom-left-radius: 50% 30%;
+  -moz-border-radius: 12.5% / 7.5%;
+  -moz-border-radius-bottomright: 50% 30%;
+  -moz-border-radius-bottomleft: 50% 30%;
+  border-radius: 12.5% / 7.5%;
+  border-bottom-right-radius: 50% 30%;
+  border-bottom-left-radius: 50% 30%;
 }
 
-#stenoKeyS-1, #stenoKeyS-2 {
-	/* Box */
-	margin-left: 0;
+#steno-key-s-1, #steno-key-s-2 {
+  /* Box */
+  margin-left: 0;
 }
 
-#stenoKeyH-, #stenoKeyR- {
-	/* Box */
-	margin-right: 1.875%;
+#steno-key-h-, #steno-key-r- {
+  /* Box */
+  margin-right: 1.875%;
 }
 
-#stenoKeyAsterisk1, #stenoKeyAsterisk2 {
-	/* Box */
-	margin-left: 1.875%;
-	margin-right: 1.875%;
+#steno-key-asterisk-1, #steno-key-asterisk-2 {
+  /* Box */
+  margin-left: 1.875%;
+  margin-right: 1.875%;
 }
 
-#stenoKey-F, #stenoKey-R {
-	/* Box */
-	margin-left: 1.875%;
+#steno-key--f, #steno-key--r {
+  /* Box */
+  margin-left: 1.875%;
 }
 
-#stenoKey-D, #stenoKey-Z {
-	/* Box */
-	margin-right: 0;
+#steno-key--d, #steno-key--z {
+  /* Box */
+  margin-right: 0;
 }
 
-#stenoKeyA- {
-	/* Box */
-	margin-left: 27.8125%;
-	margin-right: 0.3125%;	
+#steno-key-a- {
+  /* Box */
+  margin-left: 27.8125%;
+  margin-right: 0.3125%;	
 }
 
-#stenoKeyO- {
-	/* Box */
-	margin-left: 0.3125%;
-	margin-right: 1.5625%;	
+#steno-key-o- {
+  /* Box */
+  margin-left: 0.3125%;
+  margin-right: 1.5625%;	
 }
 
-#stenoKey-E {
-	/* Box */
-	margin-left: 1.5625%;
-	margin-right: 0.3125%;	
+#steno-key--e {
+  /* Box */
+  margin-left: 1.5625%;
+  margin-right: 0.3125%;	
 }
 
-#stenoKey-U {
-	/* Box */
-	margin-left: 0.3125%;
+#steno-key--u {
+  /* Box */
+  margin-left: 0.3125%;
 }
+
