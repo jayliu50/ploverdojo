@@ -5,11 +5,12 @@
     <title>Plover Dojo</title>
 
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-
+    <link rel="stylesheet" type="text/css" href="css/ploverquiz.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">    
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
   <body>
     <div id="welcome">
@@ -25,13 +26,57 @@
     </div>
 
     <div id="slideshow">
-      <div id="slide0" class="slide">slide 0</div>
-      <div id="slide1" class="slide">slide 1</div>
-      <div id="slide2" class="slide">slide 2</div>
+    
+      <div id="slide0" class="slide">
+        
+        <h1>Stenography</h1>
+        <ul>
+          <li>allows you to <strong>type quickly</strong> and accurately</li>
+          <li>keeping up with conversation,
+          <li>dictation,</li>
+          <li>and train of thought,</li>
+          <li>or transcribe text</li>
+          <li></li>
+          <li>all with <em>less fatigue</em></li>
+        </ul>
+        <p></p>
+      </div>
+        
+      <div id="slide1" class="slide">      
+        <h1>Just how FAST is steno, in comparison with other ways of input?</h1>
+      </div>
+              
+      <div id="slide2" class="slide">
+        <h3>In words per minute (WPM):</h3>
+        <div id="speed_comparison"></div>
+        <p>Or check out <a href="http://www.youtube.com/watch?v=jkUyg_uoidY" target="_blank">this video</a> of steno vs QWERTY.</p>
+      </div>
+      
+      <div id="slide3" class="slide">
+        <p>Plover Dojo is here to help you develop skill and speed through games and competition.</p>
+        <p></p>
+        <h1>Click below to get started!</h1>
+        <p></p>
+        <h3>or click Learn More</h3>
+      </div>
+
+
     </div>
 
     <div id="more-info">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      <h2>What is Plover Dojo?</h2>
+      <p>The Plover Dojo is a place where people with a standard keyboard can game their way to mastering the skill of stenography. We named it Plover after the first free open source <a href="http://stenoknight.com/wiki/Main_Page">stenography program</a> available <a href="https://launchpad.net/plover">here for download</a>.</p>
+      <h2>What is Stenography?</h2>
+      <p>Real-time machine stenography is a code translation system that lets users enter words and syllables by pressing multiple keys simultaneously in a chord, which is then instantly translated into text. This makes steno is the fastest and most accurate text entry method currently available. In the first semester of steno school, nearly all students learn to exceed 100 words per minute. By comparison, top qwerty typists can do 120 WPM, top Dvorak typists around 140 WPM, and voice writers dictating to voice recognition software around 180 WPM. But experienced stenographers can enter text at up to 300 words per minute (the world record is actually 360, but that's an outlier). Conceivably, with practice, amateur steno users could reach 160-200 words per minute. We hope to assist in that practice part of it.</p>
+      <h2>Plover Community</h2>
+      <p>This website goes along with a large community of other Plover websites: </p>
+      <ul>
+      	<li><a href="http://stenoknight.com/wiki/Main_Page">The Plover Wiki</a> </li>
+        <li><a href="http://plover.stenoknight.com/">The Plover Blog</a> written by <a href="http://www.blogger.com/profile/16494847224950297255">Plover's founder Mirabai Knight</a></li>
+        <li><a href="http://stenoknight.com/plover/aviary/phpBB3/">The Plover Aviary</a>: a forum</li>
+        <li><a href="https://groups.google.com/forum/?fromgroups#!forum/ploversteno">The Plover Google Group</a></li>
+      </ul>
+      <p>Need to contact someone about the site? Send an email to ploverdojo [at] gmail [dotcom] for any questions, feedback, or comments. Or file an issue at our <a href="https://github.com/cyanos/ploverdojo">GitHub repository</a></p>
     </div>
 
     <div id="get-started-button" class="button">

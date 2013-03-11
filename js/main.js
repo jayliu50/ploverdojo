@@ -44,16 +44,189 @@ var fontSizeForIdealLineLength = function (width) {
   }
 };
 
+var renderSpeedChart = function() {
+
+  /*
+Handwritten Text,31
+Average Typist,40
+Very Skilled Typist,120
+Audiobook Speed,150
+Conversation,200
+Professional Stenographer,225
+
+http://hdnrnzk.me/2012/07/04/creating-a-bar-graph-using-d3js/
+*/
+
+  // erase previously rendered chart
+  d3.select(barchartSlide+'>svg').remove().transition().duration(1000);
+
+  var methods = ['Handwriting', 'Average Typist', 'Very Skilled Typist', 'Professional Stenographer'],
+  speeds = [31, 40, 120, 225],
+  benchmarks = [
+  {
+    'name': 'Audiobook',
+    'speed': 150
+  }, 
+  {
+    'name': 'Newscaster',
+    'speed': 180
+  },
+  {
+    'name': 'Conversation',
+    'speed': 200
+  }],
+  chart,
+  width = 400,
+  bar_height = 30,
+  text_label = 275,
+  vertical_gap = 15,
+  footer = 100,
+  height = bar_height * methods.length;
+ 
+  // chart as a whole
+  chart = d3.select(barchartSlide)
+    .append('svg')
+    .attr('class', 'chart')
+    .attr('width', text_label + width + 40)
+    .attr('height', (bar_height + vertical_gap * 2) * methods.length + footer)
+    .append("g")
+    .attr("transform", "translate(10, 20)"); // move everything down rather than recalculate
+  
+  var x,y;
+  x = d3.scale.linear()
+    .domain([0, d3.max(speeds)])
+    .range([0, width]);
+    
+  y = d3.scale.ordinal()
+    .domain(speeds)
+    .rangeBands([0, (bar_height + 2 * vertical_gap) * methods.length]);
+  
+  // to calculate the below-the-chart benchmark label spacing
+  y_append = d3.scale.linear()
+    .domain([0, benchmarks.length - 1])
+    .range([0, footer / benchmarks.length]);
+
+  // adding ticks
+  chart.selectAll('line')
+    .data(x.ticks(15))
+    .enter().append('line')
+    .attr('x1', function(d) { return x(d) + text_label; })
+    .attr('y1', 0)
+    .attr('x2', function(d) { return x(d) + text_label; })
+    .attr('y2', (bar_height + vertical_gap * 2) * methods.length);
+    
+  // adding benchmark lines
+  chart.selectAll('line.benchmark')
+    .data(benchmarks)
+    .enter().append('line')
+    .attr('y1', 0)
+    .attr('y2', function(d, i) { return (bar_height + vertical_gap * 2) * methods.length + y_append(i);})
+    .attr('class', 'benchmark')
+    .attr('x1', function(d) { return x(d.speed) + text_label; })
+    .attr('x2', function(d) { return x(d.speed) + text_label; });
+
+  // adding data bars
+  chart.selectAll('rect')
+    .data(speeds)
+    .enter().append('rect')
+    .attr('x', text_label)
+    .attr('y', function(d) { return y(d) + vertical_gap})
+    .attr('width', 0)
+    .attr('height', bar_height)
+    .transition()
+    .attr('width', x)
+    .delay(200)
+    .duration(3000);
+    
+
+  // adding axis label
+  chart.selectAll('.rule')
+    .data(x.ticks(15))
+    .enter().append('text')
+    .attr('x', function(d) { return x(d) + text_label; })
+    .attr('y', 0)
+    .attr('dy', -6)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 10)
+    .attr('class', 'rule')
+    .text(String);
+    
+  // adding descriptions for benchmarks
+  chart.selectAll('.benchmark_label')
+    .data(benchmarks)
+    .enter().append('text')
+    .attr('dy', -6)
+    .attr('dx', -12)
+    .attr('text-anchor', 'end')
+    .attr('font-size', 14)
+    .attr('class', 'benchmark_label')
+    .text(function(d) {return d.name})    
+    .attr('x', function(d) { return x(d.speed) + text_label; })
+    .attr('y', function(d, i) { return (bar_height + vertical_gap * 2) * methods.length + 20 + y_append(i);})
+    
+    
+  // adding axis number labels for benchmarks
+  chart.selectAll('.benchmark_rule')
+    .data(benchmarks)
+    .enter().append('text')
+    .attr('x', function(d) { return x(d.speed) + text_label; })
+    .attr('y', function(d, i) { return (bar_height + vertical_gap * 2) * methods.length + 20 + y_append(i);} )
+    .attr('dy', -6)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 10)
+    .attr('class', 'benchmark_rule')
+    .text(function (d) { return d.speed; })
+    .attr('title', function (d) { return d.name; } );
+
+  // adding text labels for bars
+  chart.selectAll('text.speed')
+    .data(speeds)
+    .enter().append('text')
+    .attr('x', text_label )
+    .attr('y', function(d) { return y(d) + y.rangeBand() / 2;} )
+    .attr('dx', -5)
+    .attr('dy', '.36em')
+    .attr('text-anchor', 'end')
+    .attr('class', 'speed')
+    .attr('font-size', 14)
+    .text(String)
+    .transition()
+    .duration(3000)
+    .delay(200)
+    .attr('x', function(d) { return x(d) + text_label; });
+    
+  // adding text labels to the side
+  chart.selectAll('text.name')
+    .data(methods)
+    .enter().append('text')
+    .attr('x', (text_label - 5))
+    .attr('y', function(d) { return y(d) + y.rangeBand() / 2; })
+    .attr('dy', '.36em')
+    .attr('text-anchor', 'end')
+    .attr('class', 'name')
+    .text(String);
+    
+  };
 
 var currentSlide = 0;
+var barchartSlide = '#speed_comparison';
 var switchSlide = function () {
+
   $("#slide" + currentSlide).hide("drop", {easing: "easeInOutBack", direction: "right"}, 1800);
   currentSlide = (currentSlide + 1) % $(".slide").length;  
   $("#slide" + currentSlide).show("drop", {easing: "easeInOutBack", direction: "left"}, 1800);
+  
+  if(currentSlide === 2)
+  {
+    renderSpeedChart();
+  }
 };
 
 var slideshowTimer = null;
 var startSlideshow = function () {
+
+
+
   $(".slide").css("display", "block");
 
   // set slide div dimensions.
@@ -79,8 +252,8 @@ var startSlideshow = function () {
   console.log("show slide " + currentSlide);
   $("#slide" + currentSlide).show("drop", {easing: "easeInOutBack", direction: "left"}, 1800);
 
-  // switch slide every 5 seconds.
-  slideshowTimer = setInterval(switchSlide, 5000);
+  // switch slide every 7 seconds.
+  slideshowTimer = setInterval(switchSlide, 7000);
 };
 
 var slideshowTimeout = null;
