@@ -1,0 +1,58 @@
+[{
+  "description": "Chords -- Left thumb: A, O; Right thumb: E, U, I",
+  "test": {
+    "768": "binary",
+    "6144": "binary",
+    "6912": "binary"
+  }
+},
+{
+  "description": "Chords -- Left index finger: H, R, L; Right index finger: F, R ",
+  "test": {
+    "192": "binary",
+  }
+},
+{
+  "description": "Left middle finger: P, W, B; Right middle finger: P, B, N",
+  "test": {
+    "48": "binary",
+    "98304": "binary",
+    
+  }
+},
+{
+  "description": "Left ring finger: T, K, D; Right middle finger: L, G",
+  "test": {
+    "12": "binary"
+  }
+},
+{
+  "description": "Upper left combos: F, M, N; Right-hand two-key combos: M, K, X",
+  "test": {
+    "20": "binary",
+    "80": "binary",
+    "84": "binary",
+    "163840": "binary",
+    "327680": "binary",
+    "1376256": "binary"
+  }
+},
+{
+  "description": "Lower left combos: Q, Y, J, V, C",
+  "test": {
+    "40": "binary",
+    "168": "binary",
+    "170": "binary",
+    "130": "binary",
+    "136": "binary"
+  }
+},
+{
+  "description": "Cross-row letter mashers: G, J, X, Z",
+  "test": {
+    "60": "binary",
+    "491520": "binary",
+    "24": "binary",
+    "62": "binary"
+  }
+}]

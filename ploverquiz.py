@@ -20,11 +20,9 @@ f = open(hmac_message, 'r')
 SECRET = f.read().strip()
 f.close()
 
-lessons_path = os.path.join(os.path.dirname(__file__), 'lessons/keyboard.json')
-l = open(lessons_path, 'r')
+l = open(os.path.join(os.path.dirname(__file__), 'lessons/keyboard.json'), 'r')
 LESSONS = json.load(l)
 l.close()
-
 
 def render_template(template, **template_values):
     """Renders the given template with the given template_values"""
@@ -95,25 +93,35 @@ class MainPage(BaseHandler):
         user = users.get_current_user()
 
         if user:
+            stage = self.request.get('stage')
             try:
-                quizNo = int(self.request.get('quiz'))
-                if(quizNo >= len(LESSONS)):
-                    quizNo = 1
+                unitNo = int(self.request.get('unit'))
+                if(unitNo >= len(LESSONS)):
+                    unitNo = 1
             except:
-                quizNo = 1
-            self.set_cookie("testdata", json.dumps(LESSONS[quizNo - 1]["test"]))
+                unitNo = 1
+            material = self.get_material(unitNo - 1, stage == 'review')
+            self.set_cookie('testdata', json.dumps(material))
             self.write_template('ploverquiz.html', **{
                 'user': user,
-                'quizNo': quizNo,
-                'lessonDescription': LESSONS[quizNo - 1]["description"],
-                'hasNext': ((quizNo + 1) < len(LESSONS)),
-                'hasPrevious': (quizNo > 1),
+                'unitNo': unitNo,
+                'isReview': (stage == 'review' and unitNo > 1),
+                'lessonDescription': LESSONS[unitNo -1]["description"],
+                'hasNext': ((unitNo + 1) < len(LESSONS)),
+                'hasPrevious': (unitNo > 1),
                 'login_href': users.create_logout_url(self.request.uri),
                 'login_content': 'Logout'
-
             })
         else:
             self.redirect(users.create_login_url(self.request.uri))
 
+    def get_material(self, unitIndex, isCumulative):
+        if(isCumulative and unitIndex > 0):
+            stuff = LESSONS[unitIndex]["test"]
+            for i in reversed(range(0, unitIndex)):
+                stuff = dict(stuff.items() + LESSONS[i]["test"].items())
+            return stuff
+            
+        return LESSONS[unitIndex]["test"];
 
 app = webapp2.WSGIApplication([('/ploverquiz.html', MainPage)], debug=True)
