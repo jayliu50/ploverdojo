@@ -101,11 +101,14 @@ class MainPage(BaseHandler):
             except:
                 unitNo = 1
             material = self.get_material(unitNo - 1, stage == 'review')
+            isReview = (stage == 'review' and unitNo > 1)
             self.set_cookie('testdata', json.dumps(material))
+            self.set_cookie('unitNo', unitNo)
+            self.set_cookie('isReview', isReview )
             self.write_template('ploverquiz.html', **{
                 'user': user,
                 'unitNo': unitNo,
-                'isReview': (stage == 'review' and unitNo > 1),
+                'isReview': isReview,
                 'lessonDescription': LESSONS[unitNo -1]["description"],
                 'hasNext': ((unitNo + 1) < len(LESSONS)),
                 'hasPrevious': (unitNo > 1),

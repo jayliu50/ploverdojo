@@ -17,44 +17,29 @@
   }
 },
 {
-  "description": "Left middle finger: P, W",
+  "description": "Left middle finger: P, W; Right middle finger: P, B",
   "test": {
     "16": "binary",
-    "32": "binary"
-  }
-},
-{
-  "description": "Right middle finger: P, B",
-  "test": {
+    "32": "binary",
     "32768": "binary",
     "65536": "binary"
   }
 },
 {
-  "description": "Left ring finger: T, K",
+  "description": "Left ring finger: T, K; Right middle finger: L, G",
   "test": {
     "4": "binary",
-    "8": "binary"
-  }
-},
-{
-  "description": "Right middle finger: L, G",
-  "test": {
+    "8": "binary",
     "131072": "binary",
     "262144": "binary"
   }
 },
 {
-  "description": "Left pinky: S; Right pinky: T, S",
+  "description": "Left pinky: S; Right pinky: T, S; Right pinky: D, Z",
   "test": {
     "2": "binary",
     "524288": "binary",
-    "1048576": "binary"
-  }
-},
-{
-  "description": "Right pinky: D, Z",
-  "test": {
+    "1048576": "binary",
     "2097152": "binary",
     "4194304": "binary"
   }

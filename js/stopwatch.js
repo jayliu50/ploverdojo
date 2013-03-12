@@ -54,12 +54,8 @@ Stopwatch.prototype.restart = function() {
 	this.start();
 }
 Stopwatch.prototype.getElapsed = function() {
-	// * if watch is stopped, use that date, else use now
-	var elapsed = 0;
-	if(this.started)
-		elapsed = new Date().getTime() - this.startTime;
-	elapsed += this.totalElapsed;
-
+	var elapsed = this.getElapsedInMs();
+  
 	var hours = parseInt(elapsed / this.onehour);
 	elapsed %= this.onehour;
 	var mins = parseInt(elapsed / this.onemin);
@@ -74,6 +70,17 @@ Stopwatch.prototype.getElapsed = function() {
 		milliseconds: ms
 	};
 }
+
+Stopwatch.prototype.getElapsedInMs = function() {
+	// * if watch is stopped, use that date, else use now
+	var elapsed = 0;
+	if(this.started)
+		elapsed = new Date().getTime() - this.startTime;
+	elapsed += this.totalElapsed;
+  
+  return elapsed;
+}
+
 Stopwatch.prototype.setElapsed = function(hours, mins, secs) {
 	this.reset();
 	this.totalElapsed = 0;
