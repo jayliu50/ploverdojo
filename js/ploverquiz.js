@@ -26,6 +26,10 @@ var translatedString = '';
 
 var currentQuizIndex = -1;
 
+/** This is used to keep track of the response time */
+var stopwatch = new Stopwatch(null, 1); // usage: http://www.seph.dk/blog/projects/javascript-stopwatch-class/
+
+
 // IMPORT ASSETS
 
 /**
@@ -600,6 +604,45 @@ function zeroFill(number, width) {
   return number;
 }
 
+function timer(time,update,complete) {
+    var start = new Date().getTime();
+    var interval = setInterval(function() {
+        var now = time-(new Date().getTime()-start);
+        if( now <= 0) {
+            clearInterval(interval);
+            complete();
+        }
+        else update(Math.floor(now/1000));
+    },100); // the smaller this number, the more accurate the timer will be
+}
+
+function getReadyDialog(message) {
+  
+  $('#dialog-modal').dialog({
+      height: 140,
+      modal: true,
+      resizable: false,
+      closeOnEscape: false,
+      open: function(event, ui) { $('.ui-dialog-titlebar-close').hide(); }
+    });
+  
+  timer(
+    5000,
+    function(timeLeft) {
+      $('#countdown').html(timeLeft);
+    },
+    function() {
+      $( "#dialog-modal" ).dialog('destroy');
+      
+      // commence with the initialization of the rest of it
+      stopwatch.start();
+      nextQuizQuestion();
+    }
+    );
+
+}
+
+
 function nextQuizQuestion() {
   if(tdArray.length >= 2) {    
     var candidateIndex = 0;
@@ -620,17 +663,23 @@ function nextQuizQuestion() {
   //$('#quiz-prompt-text').html(quizChord.toHTMLTable());
   $('#quiz-prompt-text').html(quizChord.toRTFCRE());
 }
-nextQuizQuestion();
 
 function match(conversion) {
   switch(conversion) {
     case "chord-binary":
       if (chords[chords.length - 1].toBinary() === quizChord.toBinary()) {
+        stopwatch.stop();
         console.log("match! " + chords[chords.length - 1].toBinary() + " == " + quizChord.toBinary());
-        $('#feedback-text').html('Correct!');
+        $('#feedback-text').html('Correct! ' + 'response time: ' + stopwatch.toString());
         $('#feedback-text').attr('class', 'correct');
-        resetAll();
-        nextQuizQuestion();
+        
+        if(!readyToMoveOn()){
+          resetAll();
+          stopwatch.reset();
+          stopwatch.start();
+          nextQuizQuestion();
+        }
+        
       }
     default:
       if (chords.length) {
@@ -639,6 +688,18 @@ function match(conversion) {
         $('#feedback-text').attr('class', 'incorrect');
       }
   }
+}
+
+function readyToMoveOn() {
+  
+  return false;
+  
+  //todo: to be implemented
+  //var ready = false;
+  //for(var r in responseLog)
+  //{
+  //  ready &= responseLog[r] < 
+  //}
 }
 
 function showUserInput() {
@@ -669,6 +730,9 @@ function showUserInput() {
   document.getElementById('uiKeys').scrollLeft = document.getElementById('uiKeys').scrollWidth;
 }
 
+
+// launch! 
+getReadyDialog();
 
 // CREATE 'CLASSES'
 

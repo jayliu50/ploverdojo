@@ -122,6 +122,21 @@ progress, section, summary, time, audio, video, a {
   text-transform: uppercase;
 }
 
+/****** Countdown ******/
+#dialog-modal .ui-dialog-titlebar {
+
+  /* Text */
+  font-family: "MuseoSlab500", arial, sans-serif;
+  font-size: 1em;  /* standard h2 size is 1.85em */
+  font-weight: normal;  /* standard h2 weight is bold */
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#countdown {
+  font-size: 2em;  /* standard h2 size is 1.85em */
+}
+
 
 /****** Quiz Prompt ******/
 

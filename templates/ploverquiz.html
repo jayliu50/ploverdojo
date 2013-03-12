@@ -21,6 +21,12 @@
     </div>
     
     <div id="content">
+    
+    <div id="dialog-modal" title="Get ready!" style="display: none">
+      <p>Your quiz starts in ... </p>
+      <div id="countdown"></div>
+    </div>
+    
       <h1 id="content-title">Quiz #{{ unitNo }} {% if isReview %}(REVIEW) {% endif %}</h1>  
       
       <div id="quiz-prompt">
@@ -154,6 +160,9 @@
     <!-- make elements draggable and resizable -->
     <script type="text/javascript" src="js/uielements.js"></script>
 
+    <!-- load required stopwatch -->
+    <script type="text/javascript" src="js/stopwatch.js"></script>    
+    
     <!-- do the steno thing! -->
     <script type="text/javascript" src="js/ploverquiz.js"></script>
   </body>
