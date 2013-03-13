@@ -27,7 +27,7 @@
       <div id="countdown"></div>
     </div>
     
-      <h1 id="content-title">Quiz #{{ unitNo }} {% if isReview %}(REVIEW) {% endif %}</h1>  
+      <h1 id="content-title">Quiz #{{ unitNo }} {% if isReview and unitNo != 1 %}(REVIEW) {% endif %}</h1>  
       
       <div id="quiz-prompt">
         <h2>Please Type:</h2>

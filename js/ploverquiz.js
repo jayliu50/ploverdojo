@@ -38,8 +38,11 @@ var EVALUATED_RECORD_LENGTH = 2;
 /** the acceptable response time */
 var RESPONSE_TIME_STANDARD = 1500;
 
+/** the unit the user is currently on */
+var unitNo = 1;
 
-var unitNo, isReview;
+/** whether the incoming test data will contain the strokes from previous units */
+var isReview = 'True';
 
 // IMPORT ASSETS
 
