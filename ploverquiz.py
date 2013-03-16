@@ -94,12 +94,18 @@ class MainPage(BaseHandler):
 
         if user:
             stage = self.request.get('stage')
-            try:
+            
+            unitNo = 1
+            # unit number from the URL should override that from the database
+            if(self.request.get('unit')):
                 unitNo = int(self.request.get('unit'))
                 if(unitNo >= len(LESSONS)):
                     unitNo = 1
-            except:
-                unitNo = 1
+            else:
+                player = get_current_player(user)
+                if(player and hasattr(player, 'last_unit_completed') and player.last_unit_completed):
+                    unitNo = int(player.last_unit_completed)
+                    
             material = self.get_material(unitNo - 1, stage == 'review')
             isReview = (stage == 'review' or unitNo == 1)
             self.set_cookie('testdata', json.dumps(material))
@@ -125,6 +131,59 @@ class MainPage(BaseHandler):
                 stuff = dict(stuff.items() + LESSONS[i]["test"].items())
             return stuff
             
-        return LESSONS[unitIndex]["test"];
-
+        return LESSONS[unitIndex]["test"]
+        
+    def post(self):
+        user = users.get_current_user()
+        #stage = self.request.get('stage')
+        
+        player = get_or_create_current_player(user)
+        player.last_unit_completed = int(self.request.get('unit'))
+        player.put()
+        
 app = webapp2.WSGIApplication([('/ploverquiz.html', MainPage)], debug=True)
+
+
+class Player(db.Model):
+  """ models an individual player and their current progress """
+  #name = db.StringProperty(required=True)
+  registration_date = db.DateProperty(auto_now_add=True)
+  #new_hire_training_completed = db.BooleanProperty(indexed=False)
+  email = db.StringProperty()
+  
+  # contains the number of the last unit completed by the player, of the current phase
+  last_unit_completed = db.IntegerProperty()
+  
+  # marks the overall progress of the player
+  current_training_phase = db.StringProperty(choices=set(
+    [ "keyboard"
+    , "alphabet"
+    , "dictionary"]
+    ), default="keyboard")
+    
+  # date the last time this object was updated
+  last_updated = db.DateTimeProperty(auto_now=True)
+
+def player_key(player_id):
+  """Constructs a Datastore key for a Player entity with the given id."""
+  return db.Key.from_path('Player', player_id)
+
+def get_or_create_current_player(user):
+    player = Player.gql("WHERE ANCESTOR IS :1 LIMIT 1", player_key(user.user_id())).fetch(1)
+    # convert player query to object (is this bad code?)
+    if(not player or len(player) is 0):
+        player = Player(parent=player_key(user.user_id()))
+    else:
+        player = player[0]
+        
+    return player
+    
+def get_current_player(user):
+    player = Player.gql("WHERE ANCESTOR IS :1 LIMIT 1", player_key(user.user_id())).fetch(1)
+    # convert player query to object (is this bad code?)
+    if(not player or len(player) is 0):
+        return None
+    else:
+        player = player[0]
+        
+    return player
