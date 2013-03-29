@@ -1,0 +1,139 @@
+/****** Standard Keyboard ******/
+
+#standard-keyboard {
+  /* Position */
+  position: absolute;
+  
+  /* Box */
+  width: 522px; /* will fit 15 regular-sized keys horizontally */
+  height: 174px; /* will fit 5 regular-sized keys vertically */
+  padding: 10px;
+  border: 6px solid white;
+  margin: 0px;
+
+  /* Colors */
+  background-color: #679c9f;
+}
+
+.standard-row {
+  /* Box */
+  width: 100%;
+  height: 20%; /* will fit 5 rows in the keyboard */
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.standard-key {
+  /* Position */
+  float: left;
+
+  /* Box */
+  width: 6%; /* 100% / 15 (keys) - (2 (left and right) * 0.333% (margin)) */
+  height: 90%; /* 100% - (15 (ratio across width / row height) * (2 (left and right) * 0.333% (margin))) */
+
+  padding: 0;
+  border: 0;
+  margin: 0.333%; /* width and height depend on this value. change accordingly */
+
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  border-radius: 10%;
+
+  /* Colors */
+  color: #679c9f;
+  background-color: white;
+
+  /* Text */
+  font-family: sans-serif;
+  font-size: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
+  font-weight: bold;
+  line-height: 31.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) */
+  text-align: center;
+}
+
+#standard-key-backspace {
+  /* Box */
+  width: 12.666%;
+}
+
+#standard-key-tab{
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-backslash {
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-caps-lock {
+  /* Box */
+  width: 11%;
+}
+
+#standard-key-enter {
+  /* Box */
+  width: 14.333%;
+}
+
+#standard-key-left-shift {
+  /* Box */
+  width: 14.333%;
+}
+
+#standard-key-right-shift {
+  /* Box */
+  width: 17.666%;
+}
+
+#standard-key-left-control {
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-left-alt {
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-space {
+  /* Box */
+  width: 39.333%;
+}
+
+#standard-key-right-alt {
+  /* Box */
+  width: 9.333%;
+}
+
+#standard-key-right-control {
+  /* Box */
+  width: 9.333%;
+}
+
+.upper-key-text {
+  /* Position */
+  float: left;
+
+  /* Box */
+  height: 50%;
+  width: 100%;
+
+  /* Text */
+  line-height: 21px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 * 2 */
+  text-align: center;
+}
+
+.lower-key-text {
+  /* Position */
+  float: left;
+
+  /* Box */
+  height: 50%;
+  width: 100%;
+
+  /* Text */
+  line-height: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
+  text-align: center;
+}
