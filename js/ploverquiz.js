@@ -721,7 +721,10 @@ function match(conversion) {
           nextQuizQuestion();
         }
         else {
-          advanceQuiz(unitNo, isReview);
+          if(isReview == 'True') unitNo++;
+          var link = "/ploverquiz.html?unit=" + unitNo;
+          link += "&stage="+ ((isReview == 'False') ? 'review' : 'quiz');
+          window.location.href = link;
         }
       }
       else {
@@ -737,25 +740,6 @@ function match(conversion) {
         $('#feedback-text').attr('class', 'incorrect');
       }
   }
-}
-
-function advanceQuiz(unitNo, isReview) {
-    if(isReview == 'True') unitNo++;
-    
-    $.ajax({
-      type: "POST",
-      url: '/ploverquiz.html',
-      data: {
-      'unit': unitNo, 
-      'stage': isReview ? 'review' : 'quiz'},
-      success: function() { 
-        var link = "/ploverquiz.html?unit=" + unitNo;
-        link += "&stage="+ ((isReview == 'False') ? 'review' : 'quiz');
-        window.location.href = link;
-      }
-      // dataType: dataType
-    });
-    
 }
 
 function readyToMoveOn() {
