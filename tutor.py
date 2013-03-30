@@ -22,9 +22,10 @@ def render_template(template, **template_values):
 
 ### CLASSES
 
-class Player(db.Model):
-    """Models a player."""
-    user_id = db.StringProperty()
+class Student(db.Model):
+    """Models a student."""
+    user_id = db.StringProperty();
+    tutor_lesson = db.IntegerProperty();
 
 
 ### HANDLERS
@@ -36,6 +37,14 @@ class BaseHandler(webapp2.RequestHandler):
         template_values"""
         self.response.out.write(render_template(template, **template_values))
 
+    def set_cookie(self, name, value):
+        """Function to set an http cookie"""
+        self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % (name, value))
+
+    def get_cookie(self, name):
+        """Function to get the value of a named parameter of an http cookie"""
+        return self.request.cookies.get(name)
+
         
 class TutorPage(BaseHandler):
     def get(self):
@@ -44,28 +53,38 @@ class TutorPage(BaseHandler):
         if user:
             logoutURL = users.create_logout_url(self.request.uri)
 
-            player = db.GqlQuery("SELECT * FROM Player " +
-                                 "WHERE user_id = :1 ",
-                                 user.user_id())
-            player = player.get()
+            student = db.GqlQuery("SELECT * FROM Student " +
+                                  "WHERE user_id = :1 ",
+                                  user.user_id())
+            student = student.get()
 
-            if not player:
-                player = Player(user_id = user.user_id())
-                player.put()
+            if not student:
+                student = Student(user_id = user.user_id(), tutor_lesson = 0)
+                student.put()
 
             template_values = {
                 'logoutURL': logoutURL
             }
 
+            self.set_cookie('currentLesson', student.tutor_lesson)
             self.write_template('tutor.html', **template_values)
         else:
             loginURL = users.create_login_url(self.request.uri)
+            
+            self.redirect(loginURL)
 
-            template_values = {
-                'loginURL': loginURL,
-            }
+    def post(self):
+        current_lesson = self.request.get('ploverdojo_currentlesson')
+        user = users.get_current_user()
+        
+        student = db.GqlQuery("SELECT * FROM Student " +
+                              "WHERE user_id = :1 ",
+                              user.user_id())
+        student = student.get()
 
-            self.write_template('tutor.html', **template_values)
+        student.tutor_lesson = int(current_lesson)
+        self.set_cookie('currentLesson', student.tutor_lesson)
+        student.put()   
 
    
 ### ROUTER

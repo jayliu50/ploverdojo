@@ -74,7 +74,15 @@ body {
 
 
 
+#header {
+  /* Colors */  
+  color: #ffffff;  /* white */
 
+  /* Text */
+  font-weight: bold;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 1px rgba(123, 193, 188, 0.75), 3px 3px 1px #ffffff;  /* retro effect */
+}
 
 
 
