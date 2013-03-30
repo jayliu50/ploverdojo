@@ -7,12 +7,21 @@
   /* Box */
   width: 522px; /* will fit 15 regular-sized keys horizontally */
   height: 174px; /* will fit 5 regular-sized keys vertically */
+<<<<<<< HEAD
   padding: 0;
   border: 0;
   margin: 0;
 
   /* Colors */
   background-color: rgba(0, 0, 0, 0.1);
+=======
+  padding: 10px;
+  border: 6px solid white;
+  margin: 0px;
+
+  /* Colors */
+  background-color: #679c9f;
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
 }
 
 .standard-row {
@@ -41,8 +50,13 @@
   border-radius: 10%;
 
   /* Colors */
+<<<<<<< HEAD
   color: rgba(0, 0, 0, 0.9);
   background-color: rgba(0, 0, 0, 0.1);
+=======
+  color: #679c9f;
+  background-color: white;
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
 
   /* Text */
   font-family: sans-serif;

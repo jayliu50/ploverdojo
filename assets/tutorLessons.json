@@ -1,4 +1,5 @@
 [
+<<<<<<< HEAD
    {
       "title":"Lesson 1: Vowels",
       "slides":[
@@ -95,4 +96,51 @@
          }
       ]
    }
+=======
+  {
+    "title": "someTitle0",
+    "slides": [
+      {
+        "keyboard": "",
+        "header": "Keyboard Layout - Vowels",
+        "html": ""
+      },
+      {
+        "keyboard": "",
+        "header": "Keyboard Layout - Vowels",
+        "html": "html0"
+      },
+      {
+        "keyboard": "qwer|qwer",
+        "header": "Keyboard Layout - Vowels",
+        "html": "html0"
+      },
+      {
+        "keyboard": "qwer|asdf",
+        "header": "Keyboard Layout - Vowels",
+        "html": "html0"
+      },
+      {
+        "keyboard": "asdf|asdf",
+        "header": "Keyboard Layout - Vowels",
+        "html": "html1"
+      }
+    ]
+  },
+  {
+    "title": "someTitle1",
+    "slides": [
+      {
+        "keyboard": "qwer|qwer",
+        "header": "header0",
+        "html": "html0"
+      },
+      {
+        "keyboard": "asdf|asdf",
+        "header": "header1",
+        "html": "html1"
+      }
+    ]
+  }
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
 ]
