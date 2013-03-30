@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * This function trims a string of leading and trailing whitespace.
  * @return {String} The string stripped of whitespace from both ends.
@@ -22,6 +23,20 @@ var lessonsLoaded = false;
 var currentLesson = 0;
 var currentSlide = 0;
 
+=======
+/* constant for golden ratio conjugate, which will be used in layouts. */
+var PHI = 0.6180339887498948;
+
+var keyboard = "";
+var keyboardLoaded = false;
+
+var lessons = [];
+var lessonsLoaded = false;
+
+var currentLesson = 0;
+var currentSlide = 0;
+
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
 
 
 
@@ -30,11 +45,18 @@ var currentSlide = 0;
 var cookies = document.cookie.split(';');
 
 for (var i = 0; i < cookies.length; i++) {
+<<<<<<< HEAD
   var cookieName = cookies[i].split('=')[0].trim();
   var cookieValue = cookies[i].split('=')[1].trim();
 
   if (cookieName === 'currentLesson') {
     console.log("COOKIE FOUND!");
+=======
+  var cookieName = cookies[i].split('=')[0];
+  var cookieValue = cookies[i].split('=')[1];
+
+  if (cookieName === 'currentLesson') {
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
     currentLesson = parseInt(cookieValue, 10);
   }
 }
@@ -55,6 +77,7 @@ var xhrGet = function(reqUri, callback, type) {
   xhr.send();
 };
 
+<<<<<<< HEAD
 var xhrPost = function(reqUri, params, callback) {
   var xhr = new XMLHttpRequest();
 
@@ -67,6 +90,8 @@ var xhrPost = function(reqUri, params, callback) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  
   xhr.send(params);
 };
+=======
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
 
 
 var loadLessonData = function() {
@@ -90,7 +115,10 @@ var showKeyboard = function(translation) {
 var adjustKeyboard = function() {
   var standardKeyboardElement = document.getElementById("standard-keyboard");
   standardKeyboardElement.style.height = document.height * (1 - PHI) + "px";
+<<<<<<< HEAD
   standardKeyboardElement.style.width = 3 * document.height * (1 - PHI) + "px";
+=======
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
 
   var keyHeight = document.getElementsByClassName("standard-row")[0].offsetHeight;
   var standardKeyElements = document.getElementsByClassName("standard-key");
@@ -109,10 +137,13 @@ var showSlide = function(lesson, slide) {
   var htmlDiv = document.getElementById("html");
   var keyboardDiv = document.getElementById("keyboard");
 
+<<<<<<< HEAD
   console.log(lessons[lesson].slides[slide].header);
   console.log(lessons[lesson].slides[slide].html);
   console.log(lessons[lesson].slides[slide].keyboard);
   
+=======
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
   if (lessons[lesson].slides[slide].header && 
       lessons[lesson].slides[slide].html &&
       lessons[lesson].slides[slide].keyboard) {
@@ -200,6 +231,7 @@ var showSlide = function(lesson, slide) {
 window.onclick = function() {
   if (lessonsLoaded) {
     currentSlide++;
+<<<<<<< HEAD
     
     if (currentSlide < lessons[currentLesson].slides.length) {
       showSlide(currentLesson, currentSlide);  
@@ -209,6 +241,9 @@ window.onclick = function() {
       xhrPost("/tutor", "ploverdojo_currentlesson=" + currentLesson);  
       showSlide(currentLesson, currentSlide);  
     }
+=======
+    showSlide(currentLesson, currentSlide);  
+>>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
   }
 }
 
