@@ -72,7 +72,6 @@ class TutorPage(BaseHandler):
             loginURL = users.create_login_url(self.request.uri)
             
             self.redirect(loginURL)
-<<<<<<< HEAD
 
     def post(self):
         current_lesson = self.request.get('ploverdojo_currentlesson')
@@ -86,8 +85,6 @@ class TutorPage(BaseHandler):
         student.tutor_lesson = int(current_lesson)
         self.set_cookie('currentLesson', student.tutor_lesson)
         student.put()   
-=======
->>>>>>> 405a93e88a9637bdf5076d31828c656ac5faf95b
 
    
 ### ROUTER
