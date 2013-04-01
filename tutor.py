@@ -2,8 +2,9 @@ import jinja2
 import os
 import webapp2
 
-from google.appengine.ext import db
 from google.appengine.api import users
+
+from models.student import Student
 
 
 template_directory = os.path.join(os.path.dirname(__file__), 'templates')
@@ -18,15 +19,6 @@ def render_template(template, **template_values):
 
     # render the html template with th given dictionary
     return t.render(template_values)
-
-
-### CLASSES
-
-class Student(db.Model):
-    """Models a student."""
-    user_id = db.StringProperty();
-    tutor_lesson = db.IntegerProperty();
-
 
 ### HANDLERS
 
@@ -53,20 +45,13 @@ class TutorPage(BaseHandler):
         if user:
             logoutURL = users.create_logout_url(self.request.uri)
 
-            student = db.GqlQuery("SELECT * FROM Student " +
-                                  "WHERE user_id = :1 ",
-                                  user.user_id())
-            student = student.get()
-
-            if not student:
-                student = Student(user_id = user.user_id(), tutor_lesson = 0)
-                student.put()
+            student = Student.get_or_create_current_student(user)
 
             template_values = {
                 'logoutURL': logoutURL
             }
 
-            self.set_cookie('currentLesson', student.tutor_lesson)
+            self.set_cookie('currentLesson', student.current_unit)
             self.write_template('tutor.html', **template_values)
         else:
             loginURL = users.create_login_url(self.request.uri)
@@ -77,13 +62,10 @@ class TutorPage(BaseHandler):
         current_lesson = self.request.get('ploverdojo_currentlesson')
         user = users.get_current_user()
         
-        student = db.GqlQuery("SELECT * FROM Student " +
-                              "WHERE user_id = :1 ",
-                              user.user_id())
-        student = student.get()
+        student = get_current_student(user)
 
-        student.tutor_lesson = int(current_lesson)
-        self.set_cookie('currentLesson', student.tutor_lesson)
+        student.current_unit = int(current_lesson)
+        self.set_cookie('currentLesson', student.current_unit)
         student.put()   
 
    
