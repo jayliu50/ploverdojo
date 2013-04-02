@@ -26,6 +26,24 @@ var translatedString = '';
 
 var currentQuizIndex = -1;
 
+/** This is used to keep track of the response time */
+var stopwatch = new Stopwatch(null, 1); // usage: http://www.seph.dk/blog/projects/javascript-stopwatch-class/
+
+/** keeps track of how well the user is doing in each keystroke, with each keystroke as the key, and a list of response times in ms as the value */
+var responseLog = {};
+
+/** the past N responses that will be evaluated to see whether user is ready to move on (if the last N entries fit the criteria, the user moves on from current quiz) */
+var EVALUATED_RECORD_LENGTH = 2;
+
+/** the acceptable response time */
+var RESPONSE_TIME_STANDARD = 1500;
+
+/** the unit the user is currently on */
+var unitNo = 1;
+
+/** whether the incoming test data will contain the strokes from previous units */
+var isReview = 'True';
+
 // IMPORT ASSETS
 
 /**
@@ -131,14 +149,22 @@ for (var i = 0; i < cookies.length; i++) {
   if (cookieName === 'testdata') {
     testdata = JSON.parse(cookieValue);
   }
+  if (cookieName === 'isReview') {
+    isReview = cookieValue;
+  }
+  if(cookieName === 'unitNo') {
+    unitNo = cookieValue;
+  }
 }
 
 // put test data into an array for easier random fetching
+// also initialize responseLog with empty list in each value
 var tdArray = [];
 
 for (var key in testdata) {
     if (testdata.hasOwnProperty(key)) {
         tdArray.push(key);
+        responseLog[key] = [];
     }
 }
 
@@ -600,6 +626,45 @@ function zeroFill(number, width) {
   return number;
 }
 
+function timer(time,update,complete) {
+    var start = new Date().getTime();
+    var interval = setInterval(function() {
+        var now = time-(new Date().getTime()-start);
+        if( now <= 0) {
+            clearInterval(interval);
+            complete();
+        }
+        else update(Math.floor(now/1000));
+    },100); // the smaller this number, the more accurate the timer will be
+}
+
+function getReadyDialog(message) {
+  
+  $('#dialog-modal').dialog({
+      height: 140,
+      modal: true,
+      resizable: false,
+      closeOnEscape: false,
+      open: function(event, ui) { $('.ui-dialog-titlebar-close').hide(); }
+    });
+  
+  timer(
+    5000,
+    function(timeLeft) {
+      $('#countdown').html(timeLeft + 1);
+    },
+    function() {
+      $( "#dialog-modal" ).dialog('destroy');
+      
+      // commence with the initialization of the rest of it
+      stopwatch.start();
+      nextQuizQuestion();
+    }
+    );
+
+}
+
+
 function nextQuizQuestion() {
   if(tdArray.length >= 2) {    
     var candidateIndex = 0;
@@ -620,17 +685,53 @@ function nextQuizQuestion() {
   //$('#quiz-prompt-text').html(quizChord.toHTMLTable());
   $('#quiz-prompt-text').html(quizChord.toRTFCRE());
 }
-nextQuizQuestion();
 
 function match(conversion) {
   switch(conversion) {
     case "chord-binary":
-      if (chords[chords.length - 1].toBinary() === quizChord.toBinary()) {
+      var bChord = chords[chords.length - 1].toBinary();
+      var record = responseLog[bChord];
+      if (bChord === quizChord.toBinary()) {
+        stopwatch.stop();
+        var time = stopwatch.getElapsedInMs();
+
+        record.push(time);
+        if(record.length > EVALUATED_RECORD_LENGTH) record.shift();
+        
+        if(time > RESPONSE_TIME_STANDARD) encouragement = 'You are getting it';
+        else {
+          
+          switch(record.length) {
+            case EVALUATED_RECORD_LENGTH:
+              encouragement = 'You have it down. Keep it up!';
+              break;
+            case EVALUATED_RECORD_LENGTH - 1:
+              encouragement = 'Good job';
+              break;
+          }
+        }
         console.log("match! " + chords[chords.length - 1].toBinary() + " == " + quizChord.toBinary());
-        $('#feedback-text').html('Correct!');
+        $('#feedback-text').html('Correct! ' + encouragement);
         $('#feedback-text').attr('class', 'correct');
-        resetAll();
-        nextQuizQuestion();
+        
+        if(!readyToMoveOn()){
+          resetAll();
+          stopwatch.reset();
+          stopwatch.start();
+          nextQuizQuestion();
+        }
+        else {
+          if(isReview == 'True') unitNo++;
+          var link = "/ploverquiz.html?unit=" + unitNo;
+          link += "&stage="+ ((isReview == 'False') ? 'review' : 'quiz');
+          window.location.href = link;
+        }
+      }
+      else {
+        // extend the number of correct responses needed
+        // makes it tough!
+        // record = quizChord.toBinary();
+        // if (record.length > 1) record.pop();
       }
     default:
       if (chords.length) {
@@ -639,6 +740,25 @@ function match(conversion) {
         $('#feedback-text').attr('class', 'incorrect');
       }
   }
+}
+
+function readyToMoveOn() {
+  // is ready if the past N tries in responding to each key was done in T milliseconds or less
+  var ready = true;
+  for(var key in responseLog) {
+    // haven't proven yourself
+    if(responseLog[key].length < EVALUATED_RECORD_LENGTH) {
+      return false;
+    }
+    
+    // if you have enough records, then make sure that they are all within the milliseconds
+    for(var r in responseLog[key]) {
+      ready &= responseLog[key][r] < RESPONSE_TIME_STANDARD;
+      if(!ready) return ready;
+    }
+  }
+  
+  return true;
 }
 
 function showUserInput() {
@@ -669,6 +789,9 @@ function showUserInput() {
   document.getElementById('uiKeys').scrollLeft = document.getElementById('uiKeys').scrollWidth;
 }
 
+
+// launch! 
+getReadyDialog();
 
 // CREATE 'CLASSES'
 

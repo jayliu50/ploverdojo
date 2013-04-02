@@ -37,36 +37,6 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.out.write(render_template(template, **template_values))
 
 
-class IntroPage(BaseHandler):
-    def get(self):
-        user = users.get_current_user()
-
-        if user:
-            logoutURL = users.create_logout_url(self.request.uri)
-
-            player = db.GqlQuery("SELECT * FROM Player " +
-                                 "WHERE user_id = :1 ",
-                                 user.user_id())
-            player = player.get()
-
-            if not player:
-                player = Player(user_id = user.user_id())
-                player.put()
-
-            template_values = {
-                'logoutURL': logoutURL
-            }
-
-            self.write_template('intro.html', **template_values)
-        else:
-            loginURL = users.create_login_url(self.request.uri)
-
-            template_values = {
-                'loginURL': loginURL,
-            }
-
-            self.write_template('intro.html', **template_values)
-
 class MainPage(BaseHandler):
     def get(self):
         user = users.get_current_user()
