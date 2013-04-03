@@ -55,6 +55,11 @@ var xhrGet = function(reqUri, callback, type) {
   xhr.send();
 };
 
+
+
+
+
+
 var xhrPost = function(reqUri, params, callback) {
   var xhr = new XMLHttpRequest();
 
@@ -69,11 +74,22 @@ var xhrPost = function(reqUri, params, callback) {
 };
 
 
+
+
+
+
+
 var loadLessonData = function() {
 	lessons = JSON.parse(this.responseText);
   lessonsLoaded = true;
   showSlide(currentLesson, currentSlide);
 };
+
+
+
+
+
+
 
 var loadBlankQwertyKeyboard = function() {
   keyboard = this.responseText;
@@ -81,9 +97,77 @@ var loadBlankQwertyKeyboard = function() {
 };
 
 
+
+
+
+
 var showKeyboard = function(translation) {
 
 }
+
+
+
+
+
+
+
+
+var placeCenterMiddle = function (elementID) {
+  var element = document.getElementById(elementID);
+
+  if (element) {
+    element.style.position = "absolute";
+    element.style.left = (element.parentNode.offsetWidth - element.offsetWidth) * 0.5 + "px";
+    element.style.top = (element.parentNode.offsetHeight - element.offsetHeight) * 0.5 + "px";
+  } else {
+    console.warn("placeCenterMiddle element not found.");
+  }
+};
+
+
+var fitText = function (selector) {
+  if ($(selector).length !== 0) {
+    $(selector).css("white-space", "nowrap");
+
+    var maxWidth = $(selector).parent().innerWidth();
+    var maxHeight = $(selector).parent().innerHeight();
+
+    for (var fontSize = maxHeight; fontSize >= 0; fontSize--) {
+      $(selector).css("font-size", fontSize);
+      if ($(selector).outerWidth() < maxWidth) {
+        return;
+      }
+    }
+  } else {
+    console.warn("fitText called with improper parameters!");
+  }
+};
+
+
+var fontSizeForIdealLineLength = function (width) {
+  var testSpan = document.createElement("span");
+  testSpan.setAttribute("id", "test-span");
+  testSpan.innerHTML = "Quick hijinx swiftly revamped gazebo. Quick hijinx swiftly revamped gazebo.";
+  document.body.appendChild(testSpan);
+  for (var fontSize = 0; fontSize <= Math.floor(width); fontSize++) {
+    $("#test-span").css("font-size", fontSize);
+    if ($("#test-span").outerWidth() > width) {
+      document.body.removeChild(testSpan);
+      return fontSize;
+    }
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -108,7 +192,7 @@ var showSlide = function(lesson, slide) {
   var headerDiv = document.getElementById("header");
   var htmlDiv = document.getElementById("html");
   var keyboardDiv = document.getElementById("keyboard");
-
+  
   console.log(lessons[lesson].slides[slide].header);
   console.log(lessons[lesson].slides[slide].html);
   console.log(lessons[lesson].slides[slide].keyboard);
@@ -122,17 +206,23 @@ var showSlide = function(lesson, slide) {
     headerDiv.style.left = "0px";
     headerDiv.style.height = (PHI * (1 - PHI) * 100) + "%";
     headerDiv.style.width = "100%";
-    headerDiv.style.backgroundColor = "#FF0000";
-    headerDiv.innerHTML = lessons[lesson].slides[slide].header;   
-
+    //headerDiv.style.backgroundColor = "#FF0000";
+    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';   
+    headerDiv.style.fontSize = (1 + PHI) * fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
+    //fitText("#header-text");
+    placeCenterMiddle("header-text");
+    
     htmlDiv.style.display = "block";
     htmlDiv.style.position = "absolute";
     htmlDiv.style.top = (PHI * (1 - PHI) * 100) + "%";
     htmlDiv.style.left = "0px";
     htmlDiv.style.height = (PHI * PHI * 100) + "%";
     htmlDiv.style.width = "100%";
-    htmlDiv.style.backgroundColor = "#00FF00";    
-    htmlDiv.innerHTML = lessons[lesson].slides[slide].html;   
+    //htmlDiv.style.backgroundColor = "#00FF00";    
+    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '</span>';   
+    htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
+    document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
+    placeCenterMiddle("html-text");
 
     keyboardDiv.style.display = "block";
     keyboardDiv.style.position = "absolute";
@@ -140,10 +230,11 @@ var showSlide = function(lesson, slide) {
     keyboardDiv.style.left = "0px";
     keyboardDiv.style.height = ((1 - PHI) * 100) + "%";
     keyboardDiv.style.width = "100%";
-    keyboardDiv.style.backgroundColor = "#0000FF";    
+    //keyboardDiv.style.backgroundColor = "#0000FF";    
     keyboardDiv.innerHTML = keyboard;
-
-    adjustKeyboard();  
+    adjustKeyboard();
+    placeCenterMiddle("standard-keyboard");
+  
   } else if (lessons[lesson].slides[slide].header && 
              lessons[lesson].slides[slide].html &&
              !lessons[lesson].slides[slide].keyboard) {
@@ -153,8 +244,10 @@ var showSlide = function(lesson, slide) {
     headerDiv.style.left = "0px";
     headerDiv.style.height = ((1 - PHI) * 100) + "%";
     headerDiv.style.width = "100%";
-    headerDiv.style.backgroundColor = "#FF0000";
-    headerDiv.innerHTML = lessons[lesson].slides[slide].header;   
+    //headerDiv.style.backgroundColor = "#FF0000";
+    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';   
+    fitText("#header-text");
+    placeCenterMiddle("header-text");
 
     htmlDiv.style.display = "block";
     htmlDiv.style.position = "absolute";
@@ -162,8 +255,11 @@ var showSlide = function(lesson, slide) {
     htmlDiv.style.left = "0px";
     htmlDiv.style.height = (PHI * 100) + "%";
     htmlDiv.style.width = "100%";
-    htmlDiv.style.backgroundColor = "#00FF00";    
-    htmlDiv.innerHTML = lessons[lesson].slides[slide].html;   
+    //htmlDiv.style.backgroundColor = "#00FF00";    
+    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '</span>';   
+    htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
+    document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
+    placeCenterMiddle("html-text");
 
     keyboardDiv.style.display = "none";  
   } else if (lessons[lesson].slides[slide].header && 
@@ -175,9 +271,11 @@ var showSlide = function(lesson, slide) {
     headerDiv.style.left = "0px";
     headerDiv.style.height = "auto";
     headerDiv.style.width = "100%";
-    headerDiv.style.backgroundColor = "#FF0000";
-    headerDiv.innerHTML = lessons[lesson].slides[slide].header;   
-
+    //headerDiv.style.backgroundColor = "#FF0000";
+    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';   
+    fitText("#header-text");
+    placeCenterMiddle("header-text");
+    
     htmlDiv.style.display = "none";
     
     keyboardDiv.style.display = "none";  

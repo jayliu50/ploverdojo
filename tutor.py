@@ -19,12 +19,16 @@ def render_template(template, **template_values):
     # render the html template with th given dictionary
     return t.render(template_values)
 
+
+
 ### CLASSES
 
 class Disciple(db.Model):
     """Models a disciple of the dojo."""
     user_id = db.StringProperty();
     tutor_lesson = db.IntegerProperty();
+
+
 
 ### HANDLERS
 
@@ -52,8 +56,8 @@ class TutorPage(BaseHandler):
             logoutURL = users.create_logout_url(self.request.uri)
 
             disciple = db.GqlQuery("SELECT * FROM Disciple " +
-                                  "WHERE user_id = :1 ",
-                                  user.user_id())
+                                   "WHERE user_id = :1 ",
+                                   user.user_id())
             disciple = disciple.get()
 
             if not disciple:
@@ -76,8 +80,8 @@ class TutorPage(BaseHandler):
         user = users.get_current_user()
         
         disciple = db.GqlQuery("SELECT * FROM Disciple " +
-                              "WHERE user_id = :1 ",
-                              user.user_id())
+                               "WHERE user_id = :1 ",
+                               user.user_id())
         disciple = disciple.get()
 
         disciple.tutor_lesson = int(current_lesson)
