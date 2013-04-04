@@ -184,7 +184,6 @@ var nextSlide = function() {
         updateDatastore();
         if (currentLesson > maxLesson) {
           maxLesson = currentLesson;
-          alert(maxLesson);
           window.location.href = "/ploverquiz.html";
         } else {
           showSlide(currentLesson, currentSlide);  
