@@ -26,7 +26,8 @@ def render_template(template, **template_values):
 class Disciple(db.Model):
     """Models a disciple of the dojo."""
     user_id = db.StringProperty();
-    tutor_lesson = db.IntegerProperty();
+    tutor_max_lesson = db.IntegerProperty();
+    tutor_current_lesson = db.StringProperty();
 
 
 
@@ -61,14 +62,15 @@ class TutorPage(BaseHandler):
             disciple = disciple.get()
 
             if not disciple:
-                disciple = Disciple(user_id = user.user_id(), tutor_lesson = 0)
+                disciple = Disciple(user_id = user.user_id(), tutor_max_lesson = 0, tutor_current_lesson = "0.0")
                 disciple.put()
 
             template_values = {
                 'logoutURL': logoutURL
             }
 
-            self.set_cookie('currentLesson', disciple.tutor_lesson)
+            self.set_cookie('currentLesson', str(disciple.tutor_current_lesson))
+            self.set_cookie('maxLesson', str(disciple.tutor_max_lesson))
             self.write_template('tutor.html', **template_values)
         else:
             loginURL = users.create_login_url(self.request.uri)
@@ -77,6 +79,7 @@ class TutorPage(BaseHandler):
 
     def post(self):
         current_lesson = self.request.get('ploverdojo_currentlesson')
+        max_lesson = self.request.get('ploverdojo_maxlesson')
         user = users.get_current_user()
         
         disciple = db.GqlQuery("SELECT * FROM Disciple " +
@@ -84,10 +87,12 @@ class TutorPage(BaseHandler):
                                user.user_id())
         disciple = disciple.get()
 
-        disciple.tutor_lesson = int(current_lesson)
-        self.set_cookie('currentLesson', disciple.tutor_lesson)
-        disciple.put()   
-
+        disciple.tutor_max_lesson = int(max_lesson)
+        disciple.tutor_current_lesson = current_lesson
+        disciple.put()
+           
+        self.set_cookie('currentLesson', str(disciple.tutor_current_lesson))
+            
    
 ### ROUTER
 
