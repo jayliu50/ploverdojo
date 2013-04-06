@@ -21,7 +21,7 @@ class Disciple(db.Model):
         
     @staticmethod
     def get_current(user):
-        db.GqlQuery("SELECT * FROM Disciple " +
+        disciple = db.GqlQuery("SELECT * FROM Disciple " +
                                "WHERE user_id = :1 ",
                                user.user_id())
         disciple = disciple.get()
