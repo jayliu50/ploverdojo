@@ -20,6 +20,7 @@ f = open(hmac_message, 'r')
 SECRET = f.read().strip()
 f.close()
 
+# todo: lessons/keyboard.json is obsolete. refactor to pull assets/tutorLessons.json in quiz.js
 l = open(os.path.join(os.path.dirname(__file__), 'lessons/keyboard.json'), 'r')
 LESSONS = json.load(l)
 l.close()
@@ -88,7 +89,7 @@ class BaseHandler(webapp2.RequestHandler):
         return validate_value_salt_hash_triplet(self.request.cookies.get(name))
 
 
-class MainPage(BaseHandler):
+class QuizPage(BaseHandler):
     def get(self):
         user = users.get_current_user()
 
@@ -105,7 +106,7 @@ class MainPage(BaseHandler):
             self.set_cookie('testdata', json.dumps(material))
             self.set_cookie('unitNo', unitNo)
             self.set_cookie('isReview', isReview )
-            self.write_template('ploverquiz.html', **{
+            self.write_template('quiz.html', **{
                 'user': user,
                 'unitNo': unitNo,
                 'isReview': isReview,
@@ -120,11 +121,11 @@ class MainPage(BaseHandler):
 
     def get_material(self, unitIndex, isCumulative):
         if(isCumulative and unitIndex > 0):
-            stuff = LESSONS[unitIndex]["test"]
+            stuff = LESSONS[unitIndex]["quiz"]
             for i in reversed(range(0, unitIndex)):
-                stuff = dict(stuff.items() + LESSONS[i]["test"].items())
+                stuff = dict(stuff.items() + LESSONS[i]["quiz"].items())
             return stuff
             
-        return LESSONS[unitIndex]["test"];
+        return LESSONS[unitIndex]["quiz"];
 
-app = webapp2.WSGIApplication([('/ploverquiz.html', MainPage)], debug=True)
+app = webapp2.WSGIApplication([('/quiz/?', QuizPage)], debug=True)

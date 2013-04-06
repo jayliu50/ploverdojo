@@ -1,6 +1,6 @@
 [{
   "description": "Left thumb: A, O; Right thumb: E, U",
-  "test": {
+  "quiz": {
     "256": "binary",
     "512": "binary",
     "2048": "binary",
@@ -9,7 +9,7 @@
 },
 {
   "description": "Left index finger: H, R; Right index finger: F, R",
-  "test": {
+  "quiz": {
     "64": "binary",
     "128": "binary",
     "8192": "binary",
@@ -18,7 +18,7 @@
 },
 {
   "description": "Left middle finger: P, W; Right middle finger: P, B",
-  "test": {
+  "quiz": {
     "16": "binary",
     "32": "binary",
     "32768": "binary",
@@ -27,7 +27,7 @@
 },
 {
   "description": "Left ring finger: T, K; Right middle finger: L, G",
-  "test": {
+  "quiz": {
     "4": "binary",
     "8": "binary",
     "131072": "binary",
@@ -36,7 +36,7 @@
 },
 {
   "description": "Left pinky: S; Right pinky: T, S; Right pinky: D, Z",
-  "test": {
+  "quiz": {
     "2": "binary",
     "524288": "binary",
     "1048576": "binary",

@@ -14,8 +14,8 @@ handlers:
 - url: /js
   static_dir: js
 
-- url: /ploverquiz.html
-  script: ploverquiz.app
+- url: /quiz
+  script: quiz.app
 
 - url: /tutor
   script: tutor.app

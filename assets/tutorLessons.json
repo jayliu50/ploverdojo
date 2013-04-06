@@ -1,98 +1,133 @@
 [
-   {
-      "title":"Lesson 1: Vowels",
-      "slides":[
-         {
-            "header":"Thumbs",
-            "html":"<p>As mentioned in the introduction, the thumbs input all the vowel sounds.</p>"
-         },
-         {
-            "header":"Placement",
-            "html":"<p>The vowels are located on the bottom row of the QWERTY keyboard.</p><p>Place your LEFT thumb between the 'C' and 'V' keys and your RIGHT thumb between the 'N' and 'M' keys.</p><p>It might feel a bit strange, as the tendency is to place your thumbs on the spacebar.</p>",
-            "keyboard":"cvnm|cvnm"
-         },
-         {
-            "header":"New Keys",
-            "html":"<p>Here is a diagram of the keyboard again, but this time with the steno vowels substituted in. Go ahead and try it out to get a feel for it. Hit continue when you are ready for a tiny quiz to help you get used to it</p><p>(You might be wondering where 'I' is. 'I' is like many other letters that are not featured on the steno keyboard, but can be formed using a combination of keys. That'll come later. But for now, let's just get used to the placement of the vowel keys.)</p>",
-            "keyboard":"cvnm|aoeu"
-         }
-      ]
-   },
-   {
-      "title":"Lesson 2: First Finger",
-      "slides":[
-         {
-            "header":"First Finger",
-            "html":"<p>Time to move on to some consonant!</p>"
-         },
-         {
-            "header":"Placement",
-            "html":"<p>The LEFT index finger will hover between the 'R' and the 'F' keys, yes right in the middle of the rows of keys. The RIGHT index finger will hover between the 'U' and 'J' keys. Check out the diagram.</p>",
-            "keyboard":"cvnmrfuj|aoeurfuj"
-         },
-         {
-            "header":"New Keys",
-            "html":"<p>Check out the keyboard now. Like before, try it out to get a feel for it, and then hit continue for the quiz. One important thing is to note there are two 'R' keys. The 'R' on the LEFT is pressed for words or syllables that START with 'R', whereas the 'R' on the RIGHT is for sounds that END in 'R'. <em>On the quiz, it will ask you for either 'R' or '-R'. The '-R' is the one on the right. Good luck!</p>",
-            "keyboard":"cvnmrfuj|aoeuhrfr"
-         }
-      ]
-   },
-   {
-      "title":"Lesson 3: Second Finger",
-      "slides":[
-         {
-            "header":"Second Finger",
-            "html":"<p></p>"
-         },
-         {
-            "header":"Placement",
-            "html":"<p>Making sure that your thumbs continue to stay at the bottom row, and the index fingers at 'R', 'F', 'U', and 'J', then it should not be too hard to guess where all the rest of the fingers go. The LEFT middle finger will between the 'E' and the 'D' keys, The RIGHT middle finger will hover between the 'I' and 'K' keys.</p>",
-            "keyboard":"cvnmrfujedik|aoeurfujedik"
-         },
-         {
-            "header":"New Keys",
-            "html":"<p>Now you know where to find the 'W', 'B', and the two 'P' keys. Remember, the 'P' on the right will look like '-P' in the quiz</p>",
-            "keyboard":"cvnmrfujedik|aoeurfujpwpb"
-         }
-      ]
-   },
-   {
-      "title":"Lesson 4: Third Finger",
-      "slides":[
-         {
-            "header":"Third Finger",
-            "html":"<p></p>"
-         },
-         {
-            "header":"Placement",
-            "html":"<p>Place the LEFT ring finger between the 'W' and 'S' keys, and the RIGHT ring finger between the 'O' and 'L' keys. Easy.</p>",
-            "keyboard":"cvnmrfujedikwsol|aoeurfujedikwsol"
-         },
-         {
-            "header":"New Keys",
-            "html":"<p>Here we have the 'K', the RIGHT 'S' (there is a LEFT 'S' which will come later), and the two 'T' keys.</p>",
-            "keyboard":"cvnmrfujedikwsol|aoeurfujediktklg"
-         }
-      ]
-   },
-   {
-      "title":"Lesson 5: Fourth Finger",
-      "slides":[
-         {
-            "header":"Fourth Finger",
-            "html":"<p>The good news is that the LEFT pinky is only in charge of one letter. The bad news? The RIGHT pinky is in charge of <em>four</em> keys. Are you ready for this?</p>"
-         },
-         {
-            "header":"Placement",
-            "html":"<p>Place the LEFT ring finger between the 'Q' and 'A' keys. BOTH of these keys are 'S'. Easy enough, right?</p><p>For the RIGHT pinky finger, however, things are a bit trickier. Normally it will rest between the 'P' and ';' keys for 'T' and 'S', but it'll extend out to the '[' and the quote key when it needs to, for 'D' and 'Z'</p>",
-            "keyboard":"cvnmrfujedikwsolqap;['|aoeurfujediktklgqap;['"
-                      
-         },
-         {
-            "header":"New Keys",
-            "html":"<p>RIGHT pinky is in charge of four keys, 'T', 'S', 'D', and 'Z'. Perhaps later on when we start forming words with it, you might find this isn't so bad.</p><p>Congratulations! You have now made it to the end of our first unit and have seen all the steno keys! Take your time getting familiar with the steno keyboard. Next unit, we'll move on to combinations, to catch all those other letters in the alphabet that aren't on the steno keyboard</p>",
-            "keyboard":"cvnmrfujedikwsolqap;['|aoeurfujediktklgsstsdz"
-         }
-      ]
-   }
+  {
+    "title": "Lesson 1: Vowels",
+    "description": "Left thumb: A, O; Right thumb: E, U",
+    "slides": [
+      {
+        "header": "Thumbs",
+        "html": "<p>As mentioned in the introduction, the thumbs input all the vowel sounds.</p>"
+      },
+      {
+        "header": "Placement",
+        "html": "<p>The vowels are located on the bottom row of the QWERTY keyboard.</p><p>Place your LEFT thumb between the 'C' and 'V' keys and your RIGHT thumb between the 'N' and 'M' keys.</p><p>It might feel a bit strange, as the tendency is to place your thumbs on the spacebar.</p>",
+        "keyboard": "cvnm|cvnm"
+      },
+      {
+        "header": "New Keys",
+        "html": "<p>Here is a diagram of the keyboard again, but this time with the steno vowels substituted in. Go ahead and try it out to get a feel for it. Hit continue when you are ready for a tiny quiz to help you get used to it</p><p>(You might be wondering where 'I' is. 'I' is like many other letters that are not featured on the steno keyboard, but can be formed using a combination of keys. That'll come later. But for now, let's just get used to the placement of the vowel keys.)</p>",
+        "keyboard": "cvnm|aoeu"
+      }
+    ],
+    "quiz": {
+      "256": "binary",
+      "512": "binary",
+      "2048": "binary",
+      "4096": "binary"
+    }
+  },
+  {
+    "title": "Lesson 2: First Finger",
+    "description": "Left index finger: H, R; Right index finger: F, R",
+    "slides": [
+      {
+        "header": "First Finger",
+        "html": "<p>Time to move on to some consonant!</p>"
+      },
+      {
+        "header": "Placement",
+        "html": "<p>The LEFT index finger will hover between the 'R' and the 'F' keys, yes right in the middle of the rows of keys. The RIGHT index finger will hover between the 'U' and 'J' keys. Check out the diagram.</p>",
+        "keyboard": "cvnmrfuj|aoeurfuj"
+      },
+      {
+        "header": "New Keys",
+        "html": "<p>Check out the keyboard now. Like before, try it out to get a feel for it, and then hit continue for the quiz. One important thing is to note there are two 'R' keys. The 'R' on the LEFT is pressed for words or syllables that START with 'R', whereas the 'R' on the RIGHT is for sounds that END in 'R'. <em>On the quiz, it will ask you for either 'R' or '-R'. The '-R' is the one on the right. Good luck!</p>",
+        "keyboard": "cvnmrfuj|aoeuhrfr"
+      }
+    ],
+    "quiz": {
+      "64": "binary",
+      "128": "binary",
+      "8192": "binary",
+      "16384": "binary"
+    }
+  },
+  {
+    "title": "Lesson 3: Second Finger",
+    "description": "Left middle finger: P, W; Right middle finger: P, B",
+    "slides": [
+      {
+        "header": "Second Finger",
+        "html": "<p></p>"
+      },
+      {
+        "header": "Placement",
+        "html": "<p>Making sure that your thumbs continue to stay at the bottom row, and the index fingers at 'R', 'F', 'U', and 'J', then it should not be too hard to guess where all the rest of the fingers go. The LEFT middle finger will between the 'E' and the 'D' keys, The RIGHT middle finger will hover between the 'I' and 'K' keys.</p>",
+        "keyboard": "cvnmrfujedik|aoeurfujedik"
+      },
+      {
+        "header": "New Keys",
+        "html": "<p>Now you know where to find the 'W', 'B', and the two 'P' keys. Remember, the 'P' on the right will look like '-P' in the quiz</p>",
+        "keyboard": "cvnmrfujedik|aoeurfujpwpb"
+      }
+    ],
+    "quiz": {
+      "16": "binary",
+      "32": "binary",
+      "32768": "binary",
+      "65536": "binary"
+    }
+  },
+  {
+    "title": "Lesson 4: Third Finger",
+    "description": "Left ring finger: T, K; Right middle finger: L, G",
+    "slides": [
+      {
+        "header": "Third Finger",
+        "html": "<p></p>"
+      },
+      {
+        "header": "Placement",
+        "html": "<p>Place the LEFT ring finger between the 'W' and 'S' keys, and the RIGHT ring finger between the 'O' and 'L' keys. Easy.</p>",
+        "keyboard": "cvnmrfujedikwsol|aoeurfujedikwsol"
+      },
+      {
+        "header": "New Keys",
+        "html": "<p>Here we have the 'K', the RIGHT 'S' (there is a LEFT 'S' which will come later), and the two 'T' keys.</p>",
+        "keyboard": "cvnmrfujedikwsol|aoeurfujediktklg"
+      }
+    ],
+    "quiz": {
+      "4": "binary",
+      "8": "binary",
+      "131072": "binary",
+      "262144": "binary"
+    }
+  },
+  {
+    "title": "Lesson 5: Fourth Finger",
+    "description": "Left pinky: S; Right pinky: T, S; Right pinky: D, Z",
+    "slides": [
+      {
+        "header": "Fourth Finger",
+        "html": "<p>The good news is that the LEFT pinky is only in charge of one letter. The bad news? The RIGHT pinky is in charge of <em>four</em> keys. Are you ready for this?</p>"
+      },
+      {
+        "header": "Placement",
+        "html": "<p>Place the LEFT ring finger between the 'Q' and 'A' keys. BOTH of these keys are 'S'. Easy enough, right?</p><p>For the RIGHT pinky finger, however, things are a bit trickier. Normally it will rest between the 'P' and ';' keys for 'T' and 'S', but it'll extend out to the '[' and the quote key when it needs to, for 'D' and 'Z'</p>",
+        "keyboard": "cvnmrfujedikwsolqap;['|aoeurfujediktklgqap;['"
+      },
+      {
+        "header": "New Keys",
+        "html": "<p>RIGHT pinky is in charge of four keys, 'T', 'S', 'D', and 'Z'. Perhaps later on when we start forming words with it, you might find this isn't so bad.</p><p>Congratulations! You have now made it to the end of our first unit and have seen all the steno keys! Take your time getting familiar with the steno keyboard. Next unit, we'll move on to combinations, to catch all those other letters in the alphabet that aren't on the steno keyboard</p>",
+        "keyboard": "cvnmrfujedikwsolqap;['|aoeurfujediktklgsstsdz"
+      }
+    ],
+    "quiz": {
+      "2": "binary",
+      "524288": "binary",
+      "1048576": "binary",
+      "2097152": "binary",
+      "4194304": "binary"
+    }
+  }
 ]

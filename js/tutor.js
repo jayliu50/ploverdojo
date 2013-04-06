@@ -184,14 +184,14 @@ var nextSlide = function() {
         updateDatastore();
         if (currentLesson > maxLesson) {
           maxLesson = currentLesson;
-          window.location.href = "/ploverquiz.html";
+          window.location.href = "/quiz?unit=" + currentLesson;
         } else {
           showSlide(currentLesson, currentSlide);  
         }
       } else {
         currentLesson--;
         currentSlide--;
-        window.location.href = "/ploverquiz.html";
+        window.location.href = "/quiz?unit=" + currentLesson;
       }
     }
   }
