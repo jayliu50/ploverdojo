@@ -2,8 +2,8 @@ import jinja2
 import os
 import webapp2
 
-from google.appengine.ext import db
 from google.appengine.api import users
+from models.disciple import Disciple
 
 
 template_directory = os.path.join(os.path.dirname(__file__), 'templates')
@@ -18,17 +18,6 @@ def render_template(template, **template_values):
 
     # render the html template with th given dictionary
     return t.render(template_values)
-
-
-
-### CLASSES
-
-class Disciple(db.Model):
-    """Models a disciple of the dojo."""
-    user_id = db.StringProperty();
-    tutor_max_lesson = db.IntegerProperty();
-    tutor_current_lesson = db.StringProperty();
-
 
 
 ### HANDLERS
@@ -56,14 +45,7 @@ class TutorPage(BaseHandler):
         if user:
             logoutURL = users.create_logout_url(self.request.uri)
 
-            disciple = db.GqlQuery("SELECT * FROM Disciple " +
-                                   "WHERE user_id = :1 ",
-                                   user.user_id())
-            disciple = disciple.get()
-
-            if not disciple:
-                disciple = Disciple(user_id = user.user_id(), tutor_max_lesson = 0, tutor_current_lesson = "0.0")
-                disciple.put()
+            disciple = Disciple.get_or_create_current(user)
 
             template_values = {
                 'logoutURL': logoutURL
@@ -82,10 +64,7 @@ class TutorPage(BaseHandler):
         max_lesson = self.request.get('ploverdojo_maxlesson')
         user = users.get_current_user()
         
-        disciple = db.GqlQuery("SELECT * FROM Disciple " +
-                               "WHERE user_id = :1 ",
-                               user.user_id())
-        disciple = disciple.get()
+        disciple = Disciple.get_current(user)
 
         disciple.tutor_max_lesson = int(max_lesson)
         disciple.tutor_current_lesson = current_lesson
