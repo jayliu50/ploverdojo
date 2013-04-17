@@ -6,8 +6,9 @@ import re
 import webapp2
 import json
 
-from google.appengine.ext import db
 from google.appengine.api import users
+
+from models.disciple import Disciple
 
 
 template_directory = os.path.join(os.path.dirname(__file__), 'templates')
@@ -92,30 +93,31 @@ class BaseHandler(webapp2.RequestHandler):
 class QuizPage(BaseHandler):
     def get(self):
         user = users.get_current_user()
-
         if user:
-            stage = self.request.get('stage')
-            try:
-                unitNo = int(self.request.get('unit'))
-                if(unitNo >= len(LESSONS)):
-                    unitNo = 1
-            except:
-                unitNo = 1
-            material = self.get_material(unitNo - 1, stage == 'review')
-            isReview = (stage == 'review' or unitNo == 1)
-            self.set_cookie('testdata', json.dumps(material))
-            self.set_cookie('unitNo', unitNo)
-            self.set_cookie('isReview', isReview )
-            self.write_template('quiz.html', **{
-                'user': user,
-                'unitNo': unitNo,
-                'isReview': isReview,
-                'lessonDescription': LESSONS[unitNo -1]["description"],
-                'hasNext': ((unitNo + 1) < len(LESSONS)),
-                'hasPrevious': (unitNo > 1),
-                'login_href': users.create_logout_url(self.request.uri),
-                'login_content': 'Logout'
-            })
+           stage = self.request.get('stage')
+           current_lesson = 1
+           # unit number from the URL should override that from the database
+           if(self.request.get('unit')):
+               current_lesson = int(self.request.get('unit'))
+               if(current_lesson >= len(LESSONS)):
+                   current_lesson = 1
+           else:
+               disciple = Disciple.get_current(user)
+               if(disciple and hasattr(disciple, 'tutor_max_lesson') and disciple.tutor_max_lesson):
+                   current_lesson = int(disciple.tutor_max_lesson)
+           material = self.get_material(current_lesson - 1, stage == 'review')
+           isReview = (stage == 'review' or current_lesson == 1)
+           self.set_cookie('testdata', json.dumps(material))
+           self.set_cookie('current_lesson', current_lesson)
+           self.set_cookie('is_review', isReview )
+           self.write_template('quiz.html', **{
+               'user': user,
+               'current_lesson': current_lesson,
+               'is_review': isReview,
+               'lessonDescription': LESSONS[current_lesson -1]["description"],
+               'login_href': users.create_logout_url(self.request.uri),
+               'login_content': 'Logout'
+           })
         else:
             self.redirect(users.create_login_url(self.request.uri))
 
@@ -128,4 +130,14 @@ class QuizPage(BaseHandler):
             
         return LESSONS[unitIndex]["quiz"];
 
+    def post(self):
+        user = users.get_current_user()
+        #stage = self.request.get('stage')
+        
+        disciple = Disciple.get_current(user)
+        disciple.tutor_max_lesson = int(self.request.get('current_lesson'))
+        disciple.put()
+        
+    
 app = webapp2.WSGIApplication([('/quiz/?', QuizPage)], debug=True)
+        

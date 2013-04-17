@@ -2,9 +2,9 @@ import jinja2
 import os
 import webapp2
 
-from google.appengine.ext import db
 from google.appengine.api import users
 
+from models.disciple import Disciple
 
 template_directory = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(
@@ -18,13 +18,6 @@ def render_template(template, **template_values):
 
     # render the html template with th given dictionary
     return t.render(template_values)
-
-
-### CLASSES
-
-class Player(db.Model):
-    """Models a player."""
-    user_id = db.StringProperty()
 
 
 ### HANDLERS
@@ -42,30 +35,27 @@ class MainPage(BaseHandler):
         user = users.get_current_user()
 
         if user:
-            logoutURL = users.create_logout_url(self.request.uri)
+            logout_url = users.create_logout_url(self.request.uri)
 
-            player = db.GqlQuery("SELECT * FROM Player " +
-                                 "WHERE user_id = :1 ",
-                                 user.user_id())
-            player = player.get()
-
-            if not player:
-                player = Player(user_id = user.user_id())
-                player.put()
-
+            disciple = Disciple.get_current(user)
             template_values = {
-                'logoutURL': logoutURL
+                'logout_url': logout_url
             }
-
-            self.write_template('main.html', **template_values)
+            if(disciple and hasattr(disciple, 'skip_introduction') and disciple.skip_introduction):
+                self.write_template('dashboard.html', **template_values)
+            else:
+                disciple.skip_introduction = True
+                disciple.put()
+                self.write_template('introduction.html', **template_values)
         else:
             loginURL = users.create_login_url(self.request.uri)
 
             template_values = {
                 'loginURL': loginURL,
             }
-
-            self.write_template('main.html', **template_values)
+            
+            self.write_template('introduction.html', **template_values)
+            
 
    
 ### ROUTER

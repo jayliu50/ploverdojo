@@ -43,16 +43,16 @@ class TutorPage(BaseHandler):
         user = users.get_current_user()
 
         if user:
-            logoutURL = users.create_logout_url(self.request.uri)
+            logout_url = users.create_logout_url(self.request.uri)
 
-            disciple = Disciple.get_or_create_current(user)
+            disciple = Disciple.get_current(user)
 
             template_values = {
-                'logoutURL': logoutURL
+                'logout_url': logout_url
             }
 
-            self.set_cookie('currentLesson', str(disciple.tutor_current_lesson))
-            self.set_cookie('maxLesson', str(disciple.tutor_max_lesson))
+            self.set_cookie('current_lesson', str(disciple.tutor_current_lesson))
+            self.set_cookie('max_lesson', str(disciple.tutor_max_lesson))
             self.write_template('tutor.html', **template_values)
         else:
             loginURL = users.create_login_url(self.request.uri)
@@ -60,8 +60,8 @@ class TutorPage(BaseHandler):
             self.redirect(loginURL)
 
     def post(self):
-        current_lesson = self.request.get('ploverdojo_currentlesson')
-        max_lesson = self.request.get('ploverdojo_maxlesson')
+        current_lesson = self.request.get('current_lesson')
+        max_lesson = self.request.get('max_lesson')
         user = users.get_current_user()
         
         disciple = Disciple.get_current(user)
@@ -70,7 +70,7 @@ class TutorPage(BaseHandler):
         disciple.tutor_current_lesson = current_lesson
         disciple.put()
            
-        self.set_cookie('currentLesson', str(disciple.tutor_current_lesson))
+        self.set_cookie('current_lesson', str(disciple.tutor_current_lesson))
             
    
 ### ROUTER

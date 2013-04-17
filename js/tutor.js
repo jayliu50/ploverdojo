@@ -58,9 +58,9 @@ var maxLesson = 0;
 //// DATASTORE FUNCTIONS
 var updateDatastore = function() {
   var postData = "";
-  postData += "ploverdojo_currentlesson=" + currentLesson + '.' + currentSlide;
+  postData += "current_lesson=" + currentLesson + '.' + currentSlide;
   postData += "&";
-  postData += "ploverdojo_maxlesson=" + maxLesson;
+  postData += "max_lesson=" + maxLesson;
   xhrPost("/tutor", postData);
 }
 
@@ -400,12 +400,12 @@ var setup = function () {
     var cookieName = cookies[i].split('=')[0].trim();
     var cookieValue = cookies[i].split('=')[1].trim();
 
-    if (cookieName === 'currentLesson') {
+    if (cookieName === 'current_lesson') {
       currentLesson = parseInt(cookieValue.split('.')[0], 10);
       currentSlide = parseInt(cookieValue.split('.')[1], 10);
     }
 
-    if (cookieName === 'maxLesson') {
+    if (cookieName === 'max_lesson') {
       maxLesson = parseInt(cookieValue, 10);
     }
   }  

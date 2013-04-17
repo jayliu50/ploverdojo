@@ -39,7 +39,7 @@ var EVALUATED_RECORD_LENGTH = 2;
 var RESPONSE_TIME_STANDARD = 1500;
 
 /** the unit the user is currently on */
-var unitNo = 1;
+var currentLesson = 1;
 
 /** whether the incoming test data will contain the strokes from previous units */
 var isReview = 'True';
@@ -149,11 +149,11 @@ for (var i = 0; i < cookies.length; i++) {
   if (cookieName === 'testdata') {
     testdata = JSON.parse(cookieValue);
   }
-  if (cookieName === 'isReview') {
+  if (cookieName === 'is_review') {
     isReview = cookieValue;
   }
-  if(cookieName === 'unitNo') {
-    unitNo = cookieValue;
+  if(cookieName === 'current_lesson') {
+    currentLesson = cookieValue;
   }
 }
 
@@ -721,20 +721,7 @@ function match(conversion) {
           nextQuizQuestion();
         }
         else {
-          var link;
-        
-          if(unitNo == 1) {
-            link = "/tutor";
-          }
-          else {
-            if(isReview == 'True') { 
-              unitNo++; 
-            }
-            var link = "/quiz?unit=" + unitNo;
-            link += "&stage="+ ((isReview == 'False') ? 'review' : 'quiz');
-          }
-          
-          window.location.href = link;
+          advanceQuiz();
         }
       }
       else {
@@ -751,6 +738,38 @@ function match(conversion) {
       }
   }
 }
+
+function advanceQuiz() {
+    var link;
+  
+    if(currentLesson == 1) {
+      currentLesson++;
+    }
+    else {
+      if(isReview == 'True') { 
+        currentLesson++; 
+      }
+      var link = "/quiz?unit=" + currentLesson;
+      link += "&stage="+ ((isReview == 'False') ? 'review' : 'quiz');
+    }
+    
+    link = "/";
+    
+    $.ajax({
+      type: "POST",
+      url: '/quiz',
+      data: {
+      'current_lesson': currentLesson, 
+      'stage': isReview ? 'review' : 'quiz'},
+      success: function() { 
+        window.location.href = link;
+      }
+    });
+    
+}
+
+// todo: remove this in production
+$('#debug-advance-quiz').click(advanceQuiz);
 
 function readyToMoveOn() {
   // is ready if the past N tries in responding to each key was done in T milliseconds or less
