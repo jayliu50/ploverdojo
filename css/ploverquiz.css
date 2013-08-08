@@ -35,7 +35,7 @@ progress, section, summary, time, audio, video, a {
   background-color: #FFFFFF;
   
   /* Text - put styles that affect the content text
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 1em;
   text-align: center;
 */
@@ -79,7 +79,7 @@ progress, section, summary, time, audio, video, a {
   color: white;
   
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 0.65em;
   text-transform: uppercase;
   text-decoration: none;
@@ -87,13 +87,13 @@ progress, section, summary, time, audio, video, a {
 
 
 
+body {
+  background-color: #76bbb6;
+}
 
 
 
 /*** CONTENT ***/
-
-
-
 #content {
   /* Position */
   position: relative;  /* create new positional context */
@@ -116,7 +116,7 @@ progress, section, summary, time, audio, video, a {
   color: white;
   
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 4em;  /* standard h1 size is 2.15em */
   font-weight: normal;  /* standard h1 weight is bold */
   text-transform: uppercase;
@@ -126,7 +126,7 @@ progress, section, summary, time, audio, video, a {
 #dialog-modal .ui-dialog-titlebar {
 
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 1em;  /* standard h2 size is 1.85em */
   font-weight: normal;  /* standard h2 weight is bold */
   text-align: center;
@@ -160,7 +160,7 @@ progress, section, summary, time, audio, video, a {
   color: white;
   
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 1em;  /* standard h2 size is 1.85em */
   font-weight: normal;  /* standard h2 weight is bold */
   text-align: center;
@@ -178,7 +178,7 @@ progress, section, summary, time, audio, video, a {
   color: white;
   
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 3em;
   text-align: center;
   letter-spacing: 88;
@@ -209,7 +209,7 @@ progress, section, summary, time, audio, video, a {
   color: white;
 
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 1em;  /* standard h2 size is 1.85em */
   font-weight: normal;  /* standard h2 weight is bold */
   text-transform: uppercase;
@@ -232,7 +232,7 @@ progress, section, summary, time, audio, video, a {
   background-color: #e6e7e8;  /* light gray */
 
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 3em;
   text-align: center;
 }
@@ -248,7 +248,7 @@ progress, section, summary, time, audio, video, a {
   color: white;
 
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 3em;
   text-align: center;
 }
@@ -267,7 +267,7 @@ progress, section, summary, time, audio, video, a {
   border-radius: 5px;
   
   /* Text */
-  font-family: "MuseoSlab500", arial, sans-serif;
+  font-family: 'MuseoSlab500', arial, sans-serif;
   font-size: 1em;
   text-transform: uppercase;
   text-align: center;
