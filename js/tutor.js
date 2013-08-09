@@ -167,11 +167,20 @@ var placeCenterMiddle = function (elementID) {
 
 //// SLIDE FUNCTIONS
 
+var END_SLIDE = -1;
+
 /**
  * set current slide to the next one.
  */
 var nextSlide = function() {
   if (lessonsLoaded) {
+  	
+  	if(currentSlide == END_SLIDE) {
+  	  maxLesson = currentLesson;
+      window.location.href = "/quiz?unit=" + currentLesson;
+      return;
+  	}
+    
     currentSlide++;
     
     if (currentSlide < lessons[currentLesson].slides.length) {
@@ -183,8 +192,8 @@ var nextSlide = function() {
         currentSlide = 0;
         updateDatastore();
         if (currentLesson > maxLesson) {
-          maxLesson = currentLesson;
-          window.location.href = "/quiz?unit=" + currentLesson;
+          showEndSlide(currentLesson - 1, lessons[currentLesson].slides.length - 1);
+          currentSlide = END_SLIDE;
         } else {
           showSlide(currentLesson, currentSlide);  
         }
@@ -254,7 +263,7 @@ var showSlide = function(lesson, slide) {
     htmlDiv.style.height = (PHI * PHI * 100) + "%";
     htmlDiv.style.width = "100%";
     //htmlDiv.style.backgroundColor = "#00FF00";    
-    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '</span>';   
+    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '<br /><br />Press these keys on your keyboard. Try it out! <br /><br /><small>Arrow RIGHT to continue.</small>' + '</span>';   
     htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
     document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
     placeCenterMiddle("html-text");
@@ -292,7 +301,7 @@ var showSlide = function(lesson, slide) {
     htmlDiv.style.height = (PHI * 100) + "%";
     htmlDiv.style.width = "100%";
     //htmlDiv.style.backgroundColor = "#00FF00";    
-    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '</span>';   
+    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '<br /><br /><small>Arrow RIGHT to continue</small>' + '</span>';   
     htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
     document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
     placeCenterMiddle("html-text");
@@ -318,7 +327,51 @@ var showSlide = function(lesson, slide) {
   }
 }
 
+/**
+ * show the end slide.
+ * @param {number} lesson the lesson index.
+ * @param {number} slide the slide index.
+ */
+var showEndSlide = function(lesson, slide) {
+  var headerDiv = document.getElementById("header");
+  var htmlDiv = document.getElementById("html");
+  var keyboardDiv = document.getElementById("keyboard");
+   
+    headerDiv.style.display = "block";
+    headerDiv.style.position = "absolute";
+    headerDiv.style.top = "0px";
+    headerDiv.style.left = "0px";
+    headerDiv.style.height = (PHI * (1 - PHI) * 100) + "%";
+    headerDiv.style.width = "100%";
+    //headerDiv.style.backgroundColor = "#FF0000";
+    headerDiv.innerHTML = '<span id="header-text">' + 'Time for a Quiz!' + '</span>';   
+    headerDiv.style.fontSize = (1 + PHI) * fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
+    placeCenterMiddle("header-text");
+    
+    htmlDiv.style.display = "block";
+    htmlDiv.style.position = "absolute";
+    htmlDiv.style.top = (PHI * (1 - PHI) * 100) + "%";
+    htmlDiv.style.left = "0px";
+    htmlDiv.style.height = (PHI * PHI * 100) + "%";
+    htmlDiv.style.width = "100%";
+    //htmlDiv.style.backgroundColor = "#00FF00";    
+    htmlDiv.innerHTML = '<span id="html-text">' + 'Arrow RIGHT to start the Quiz (Arrow LEFT to go back and review)' + '</span>';   
+    htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
+    document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
+    placeCenterMiddle("html-text");
 
+    keyboardDiv.style.display = "block";
+    keyboardDiv.style.position = "absolute";
+    keyboardDiv.style.top = (PHI * 100) + "%";
+    keyboardDiv.style.left = "0px";
+    keyboardDiv.style.height = ((1 - PHI) * 100) + "%";
+    keyboardDiv.style.width = "100%";
+    //keyboardDiv.style.backgroundColor = "#0000FF";    
+    keyboardDiv.innerHTML = qwertyKeyboard;
+    showKeys(lessons[lesson].slides[slide].keyboard);
+    adjustKeyboard();
+    placeCenterMiddle("standard-keyboard");
+}
 
 
 //// VIRTUAL KEYBOARD FUNCTIONS
@@ -413,7 +466,7 @@ var setup = function () {
   xhrGet("../assets/tutorLessons.json", loadLessonData, null);
   xhrGet("../assets/qwertyKeyboard.html", loadBlankQwertyKeyboard, null);  
 
-  document.addEventListener("click", onClickEvent);
+  //document.addEventListener("click", onClickEvent);
   document.addEventListener("keydown", onKeyDownEvent);
   document.addEventListener("keyup", onKeyUpEvent);
   window.addEventListener("resize", onResizeEvent);
