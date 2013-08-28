@@ -1,0 +1,301 @@
+<h2>What is Stenography?</h2>
+<p>
+    <aside>Note: as so much about steno and Plover has been written up already, this whole section will only point you
+        into the direction where you could take your questions.
+    </aside>
+</p>
+<p>
+    Real-time machine stenography is a code translation system that lets users enter words and syllables by pressing
+    multiple keys simultaneously in a chord, which is then instantly translated into text. This makes steno is the
+    fastest and most accurate text entry method currently available. In the first semester of steno school, nearly all
+    students learn to exceed 100 words per minute. By comparison, top qwerty typists can do 120 WPM, top Dvorak typists
+    around 140 WPM, and voice writers dictating to voice recognition software around 180 WPM. But experienced
+    stenographers can enter text at up to 300 words per minute (the world record is actually 360, but that's an
+    outlier). Conceivably, with practice, amateur steno users could reach 160-200 words per minute. We hope to assist in
+    that practice part of it.
+</p>
+<h3>Speed</h3>
+<p>
+    To get an idea of the speed of steno, check this out:
+</p>
+
+<figure>
+    <figcaption>
+        In words per minute (WPM):
+    </figcaption>
+    <div id="speed_comparison"></div>
+</figure>
+<p>
+    Or check out <a href="http://www.youtube.com/watch?v=jkUyg_uoidY" target="_blank">this video</a> of steno vs QWERTY.
+</p>
+<p>
+    Also be sure to check out Mirabai Knight's <a href="http://plover.stenoknight.com/2010/06/raw-speed.html">post
+    Plover Blog about speed.</a>. It's a 6-part post on Why Steno, which is worth checking out.
+</p>
+
+<h2>Plover Community</h2>
+<p>
+    This website goes along with a large community of other Plover websites:
+</p>
+<ul>
+    <li>
+        <a href="http://stenoknight.com/wiki/Main_Page">The Plover Wiki</a>
+    </li>
+    <li>
+        <a href="http://plover.stenoknight.com/">The Plover Blog</a> written by <a
+            href="http://www.blogger.com/profile/16494847224950297255">Plover's founder Mirabai Knight</a>
+    </li>
+    <li>
+        <a href="http://stenoknight.com/plover/aviary/phpBB3/">The Plover Aviary</a>: a forum
+    </li>
+    <li>
+        <a href="https://groups.google.com/forum/?fromgroups#!forum/ploversteno">The Plover Google Group</a>
+    </li>
+</ul>
+
+<style>
+        /** Steno Speed Bar Chart **/
+    .chart {
+        background: #7bc1bc;
+        margin: 5px;
+    }
+
+    .chart rect {
+        stroke: #7bc1bc;
+        fill: white;
+    }
+
+    .chart text {
+        fill: white;
+    }
+
+    .chart text.name {
+        fill: #000;
+    }
+
+    .chart line {
+        stroke: #c1c1c1;
+    }
+
+    .chart line.benchmark {
+        stroke: #faa951;
+        stroke-width: 2;
+    }
+
+    .chart .benchmark_rule {
+        fill: #faa951;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), -1px -1px 1px rgba(255, 255, 255, 0.5); /* emboss effect */
+
+    }
+
+    .chart .benchmark_label {
+        fill: #faa951;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), -1px -1px 1px rgba(255, 255, 255, 0.5); /* emboss effect */
+
+    }
+
+</style>
+
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+    /*
+     Handwritten Text,31
+     Average Typist,40
+     Very Skilled Typist,120
+     Audiobook Speed,150
+     Conversation,200
+     Professional Stenographer,225
+
+     http://hdnrnzk.me/2012/07/04/creating-a-bar-graph-using-d3js/
+     */
+
+    // erase previously rendered chart
+    var barchartSlide = '#speed_comparison';
+    var slide = d3.select(barchartSlide + '>svg');
+
+    if (slide) slide.remove().transition().duration(1000);
+
+    var methods = ['Handwriting', 'Average Typist', 'Very Skilled Typist', 'Professional Stenographer'],
+            speeds = [31, 40, 120, 225],
+            benchmarks = [
+                {
+                    'name': 'Audiobook',
+                    'speed': 150
+                },
+                {
+                    'name': 'Newscaster',
+                    'speed': 180
+                },
+                {
+                    'name': 'Conversation',
+                    'speed': 200
+                }
+            ],
+            chart,
+            width = 400,
+            bar_height = 30,
+            text_label = 275,
+            vertical_gap = 15,
+            footer = 100,
+            height = bar_height * methods.length;
+
+    // chart as a whole
+    chart = d3.select(barchartSlide)
+            .append('svg')
+            .attr('class', 'chart')
+            .attr('width', text_label + width + 40)
+            .attr('height', (bar_height + vertical_gap * 2) * methods.length + footer)
+            .append("g")
+            .attr("transform", "translate(10, 20)"); // move everything down rather than recalculate
+
+    var x, y;
+    x = d3.scale.linear()
+            .domain([0, d3.max(speeds)])
+            .range([0, width]);
+
+    y = d3.scale.ordinal()
+            .domain(speeds)
+            .rangeBands([0, (bar_height + 2 * vertical_gap) * methods.length]);
+
+    // to calculate the below-the-chart benchmark label spacing
+    y_append = d3.scale.linear()
+            .domain([0, benchmarks.length - 1])
+            .range([0, footer / benchmarks.length]);
+
+    // adding ticks
+    chart.selectAll('line')
+            .data(x.ticks(15))
+            .enter().append('line')
+            .attr('x1', function (d) {
+                return x(d) + text_label;
+            })
+            .attr('y1', 0)
+            .attr('x2', function (d) {
+                return x(d) + text_label;
+            })
+            .attr('y2', (bar_height + vertical_gap * 2) * methods.length);
+
+    // adding benchmark lines
+    chart.selectAll('line.benchmark')
+            .data(benchmarks)
+            .enter().append('line')
+            .attr('y1', 0)
+            .attr('y2', function (d, i) {
+                return (bar_height + vertical_gap * 2) * methods.length + y_append(i);
+            })
+            .attr('class', 'benchmark')
+            .attr('x1', function (d) {
+                return x(d.speed) + text_label;
+            })
+            .attr('x2', function (d) {
+                return x(d.speed) + text_label;
+            });
+
+    // adding data bars
+    chart.selectAll('rect')
+            .data(speeds)
+            .enter().append('rect')
+            .attr('x', text_label)
+            .attr('y', function (d) {
+                return y(d) + vertical_gap;
+            })
+            .attr('width', 0)
+            .attr('height', bar_height)
+            .transition()
+            .attr('width', x)
+            .delay(200)
+            .duration(3000);
+
+
+    // adding axis label
+    chart.selectAll('.rule')
+            .data(x.ticks(15))
+            .enter().append('text')
+            .attr('x', function (d) {
+                return x(d) + text_label;
+            })
+            .attr('y', 0)
+            .attr('dy', -6)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', 10)
+            .attr('class', 'rule')
+            .text(String);
+
+    // adding descriptions for benchmarks
+    chart.selectAll('.benchmark_label')
+            .data(benchmarks)
+            .enter().append('text')
+            .attr('dy', -6)
+            .attr('dx', -12)
+            .attr('text-anchor', 'end')
+            .attr('font-size', 14)
+            .attr('class', 'benchmark_label')
+            .text(function (d) {
+                return d.name
+            })
+            .attr('x', function (d) {
+                return x(d.speed) + text_label;
+            })
+            .attr('y', function (d, i) {
+                return (bar_height + vertical_gap * 2) * methods.length + 20 + y_append(i);
+            });
+
+
+    // adding axis number labels for benchmarks
+    chart.selectAll('.benchmark_rule')
+            .data(benchmarks)
+            .enter().append('text')
+            .attr('x', function (d) {
+                return x(d.speed) + text_label;
+            })
+            .attr('y', function (d, i) {
+                return (bar_height + vertical_gap * 2) * methods.length + 20 + y_append(i);
+            })
+            .attr('dy', -6)
+            .attr('text-anchor', 'middle')
+            .attr('font-size', 10)
+            .attr('class', 'benchmark_rule')
+            .text(function (d) {
+                return d.speed;
+            })
+            .attr('title', function (d) {
+                return d.name;
+            });
+
+    // adding text labels for bars
+    chart.selectAll('text.speed')
+            .data(speeds)
+            .enter().append('text')
+            .attr('x', text_label)
+            .attr('y', function (d) {
+                return y(d) + y.rangeBand() / 2;
+            })
+            .attr('dx', -5)
+            .attr('dy', '.36em')
+            .attr('text-anchor', 'end')
+            .attr('class', 'speed')
+            .attr('font-size', 14)
+            .text(String)
+            .transition()
+            .duration(3000)
+            .delay(200)
+            .attr('x', function (d) {
+                return x(d) + text_label;
+            });
+
+    // adding text labels to the side
+    chart.selectAll('text.name')
+            .data(methods)
+            .enter().append('text')
+            .attr('x', (text_label - 5))
+            .attr('y', function (d) {
+                return y(d) + y.rangeBand() / 2;
+            })
+            .attr('dy', '.36em')
+            .attr('text-anchor', 'end')
+            .attr('class', 'name')
+            .text(String);
+
+</script>

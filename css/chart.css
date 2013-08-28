@@ -1,0 +1,37 @@
+
+/** Steno Speed Bar Chart **/
+.chart {
+  background: #7bc1bc;
+  margin: 5px;
+}
+
+.chart rect {
+  stroke: #7bc1bc;
+  fill: white;
+}
+
+.chart text {
+  fill: #7bc1bc;
+}
+
+.chart text.name {
+  fill: #000;
+ }
+ 
+.chart line {
+  stroke: #c1c1c1;
+}
+
+.chart line.benchmark {
+  stroke: #faa951;
+  stroke-width: 2;
+}
+
+.chart .benchmark_rule {
+  fill: #faa951;
+}
+
+.chart .benchmark_label {
+  fill: #faa951;
+}
+

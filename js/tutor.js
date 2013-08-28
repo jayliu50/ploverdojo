@@ -28,6 +28,13 @@ var keyDownColor = "rgba(255, 0, 0, " + PHI + ")";
 /* the color of an "active" key when released. */
 var keyUpColor = "rgba(255, 255, 255, " + PHI + ")";
 
+/* the color of an "active" key of special importance key when pressed. */
+var highLightKeyDownColor = "rgba(255, 0, 0, " + PHI + ")";
+
+/* the color of an "active" key of special importance, when released. */
+var highlightKeyUpColor = "rgba(250, 169, 81, 1)";
+
+
 /* holds a keycode for a key, and a html color as a value. used so we can return the previous color of a key after it has been highlighted. see onKeyDownEvent() and onKeyUpEvent(). */
 var downKeyColors = {};
 
@@ -355,7 +362,7 @@ var showEndSlide = function(lesson, slide) {
     htmlDiv.style.height = (PHI * PHI * 100) + "%";
     htmlDiv.style.width = "100%";
     //htmlDiv.style.backgroundColor = "#00FF00";    
-    htmlDiv.innerHTML = '<span id="html-text">' + 'Arrow RIGHT to start the Quiz (Arrow LEFT to go back and review)' + '</span>';   
+    htmlDiv.innerHTML = '<span id="html-text">' + 'Arrow RIGHT to start the Quiz<br>(Arrow LEFT to go back and review)<br>Go to the <a href="/dashboard">dashboard</a> to take a break' + '</span>';
     htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
     document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
     placeCenterMiddle("html-text");
@@ -390,6 +397,7 @@ var adjustKeyboard = function() {
   }
   
   // get the height of a key on the qwerty keyboard.
+  if(document.getElementsByClassName("standard-row").length == 0) return; 
   var keyHeight = document.getElementsByClassName("standard-row")[0].offsetHeight;
   
   // grab the qwerty keyboard key elements.
@@ -398,6 +406,7 @@ var adjustKeyboard = function() {
   // set the font size the qwerty keyboard keys.
   for (var i = 0; i < qwertyKeyElements.length; i++) {
     qwertyKeyElements[i].style.fontSize = (keyHeight * PHI) + "px";
+    qwertyKeyElements[i].style.lineHeight = (keyHeight * PHI * 1.5) + "px";
   }
 }
 
@@ -420,9 +429,20 @@ var showKeys = function(translation) {
 
   for (var i = 0; i < originalKeys.length; i++) {
     var key = document.getElementById("standard-key-" + originalKeys[i]);
-    
+
+    if(!key) {
+      if(originalKeys[i] == ';')
+          key = document.getElementById("standard-key-semicolon");
+      if(originalKeys[i] == '[')
+          key = document.getElementById("standard-key-open-bracket");
+      if(originalKeys[i] == '\'')
+          key = document.getElementById("standard-key-single-quote");
+
+    }
+
+
     if (key) {
-      key.style.backgroundColor = keyUpColor;
+      key.style.backgroundColor = originalKeys[i] === newKeys[i] ? highlightKeyUpColor : keyUpColor;
       key.innerHTML = newKeys[i];
     }
   }

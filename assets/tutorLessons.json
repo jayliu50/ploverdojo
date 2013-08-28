@@ -62,12 +62,12 @@
       {
         "header": "Placement",
         "html": "<p>Making sure that your thumbs continue to stay at the bottom row, and the index fingers at 'R', 'F', 'U', and 'J', then it should not be too hard to guess where all the rest of the fingers go. The LEFT middle finger will between the 'E' and the 'D' keys, The RIGHT middle finger will hover between the 'I' and 'K' keys.</p>",
-        "keyboard": "cvnmrfujedik|aoeurfujedik"
+        "keyboard": "cvnmrfujedik|aoeuhrfredik"
       },
       {
         "header": "New Keys",
         "html": "<p>Now you know where to find the 'W', 'B', and the two 'P' keys. Remember, the 'P' on the right will look like '-P' in the quiz</p>",
-        "keyboard": "cvnmrfujedik|aoeurfujpwpb"
+        "keyboard": "cvnmrfujedik|aoeuhrfrpwpb"
       }
     ],
     "quiz": {
@@ -88,12 +88,12 @@
       {
         "header": "Placement",
         "html": "<p>Place the LEFT ring finger between the 'W' and 'S' keys, and the RIGHT ring finger between the 'O' and 'L' keys. Easy.</p>",
-        "keyboard": "cvnmrfujedikwsol|aoeurfujedikwsol"
+        "keyboard": "cvnmrfujedikwsol|aoeuhrfrpwpbwsol"
       },
       {
         "header": "New Keys",
         "html": "<p>Here we have the 'K', the RIGHT 'S' (there is a LEFT 'S' which will come later), and the two 'T' keys.</p>",
-        "keyboard": "cvnmrfujedikwsol|aoeurfujediktklg"
+        "keyboard": "cvnmrfujedikwsol|aoeuhrfrpwpbtklg"
       }
     ],
     "quiz": {
@@ -114,12 +114,12 @@
       {
         "header": "Placement",
         "html": "<p>Place the LEFT ring finger between the 'Q' and 'A' keys. BOTH of these keys are 'S'. Easy enough, right?</p><p>For the RIGHT pinky finger, however, things are a bit trickier. Normally it will rest between the 'P' and ';' keys for 'T' and 'S', but it'll extend out to the '[' and the quote key when it needs to, for 'D' and 'Z'</p>",
-        "keyboard": "cvnmrfujedikwsolqap;['|aoeurfujediktklgqap;['"
+        "keyboard": "cvnmrfujedikwsolqap;['|aoeuhrfrpwpbtklgqap;['"
       },
       {
         "header": "New Keys",
         "html": "<p>RIGHT pinky is in charge of four keys, 'T', 'S', 'D', and 'Z'. Perhaps later on when we start forming words with it, you might find this isn't so bad.</p><p>Congratulations! You have now made it to the end of our first unit and have seen all the steno keys! Take your time getting familiar with the steno keyboard. Next unit, we'll move on to combinations, to catch all those other letters in the alphabet that aren't on the steno keyboard</p>",
-        "keyboard": "cvnmrfujedikwsolqap;['|aoeurfujediktklgsstsdz"
+        "keyboard": "cvnmrfujedikwsolqap;['|aoeuhrfrpwpbtklgsstsdz"
       }
     ],
     "quiz": {

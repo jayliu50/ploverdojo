@@ -1,4 +1,4 @@
-application: ploverdojo
+application: jl-ploverdojo
 version: 1
 runtime: python27
 api_version: 1
@@ -13,6 +13,9 @@ handlers:
 
 - url: /js
   static_dir: js
+  
+- url: /webfonts
+  static_dir: webfonts
 
 - url: /quiz
   script: quiz.app

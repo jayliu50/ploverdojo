@@ -115,7 +115,7 @@ class QuizPage(BaseHandler):
                'current_lesson': current_lesson,
                'is_review': isReview,
                'lessonDescription': LESSONS[current_lesson -1]["description"],
-               'login_href': users.create_logout_url(self.request.uri),
+               'login_href': users.create_logout_url('/'),
                'login_content': 'Logout'
            })
         else:

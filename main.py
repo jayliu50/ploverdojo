@@ -28,37 +28,59 @@ class BaseHandler(webapp2.RequestHandler):
         """Function to write out the given template with the given
         template_values"""
         self.response.out.write(render_template(template, **template_values))
+        
+    def write_static_template(self, template, **template_values):
+        """Wraps the template given with the static.html, and then presents that"""
+        t = jinja_environment.get_template(template)
+        template_values['content'] = t.render(template_values)
+        
+        self.write_template("static.html", **template_values)
 
 
 class MainPage(BaseHandler):
-    def get(self):
+    """Meant to serve the generic pages, not user-specific"""
+    def get(self, *args):
+        specific_page_requested = len(args) > 0
         user = users.get_current_user()
-
+        template_values = {}
         if user:
-            logout_url = users.create_logout_url(self.request.uri)
-
+            logout_url = users.create_logout_url('home.html')
             disciple = Disciple.get_current(user)
-            template_values = {
-                'logout_url': logout_url
-            }
-            if(disciple and hasattr(disciple, 'skip_introduction') and disciple.skip_introduction):
-                self.write_template('dashboard.html', **template_values)
-            else:
-                disciple.skip_introduction = True
-                disciple.put()
-                self.write_template('introduction.html', **template_values)
+            template_values['logout_url'] = logout_url;
+                      
+        if specific_page_requested:
+            try:
+                self.write_static_template(args[0], **template_values)
+            except:
+                self.error(404)
+                self.write_static_template("error.html", **template_values) 
+        elif user:
+            self.redirect('/dashboard')
         else:
             loginURL = users.create_login_url(self.request.uri)
 
-            template_values = {
-                'loginURL': loginURL,
-            }
+            template_values['loginURL'] = loginURL
             
-            self.write_template('introduction.html', **template_values)
+            self.write_static_template('home.html', **template_values)     
             
+class DashboardPage(BaseHandler):
+    """User comes here to see her progress, and to choose the next activity"""
+    def get(self, *args):
+        user = users.get_current_user()
+        template_values = {}
+        if user:
+            logout_url = users.create_logout_url('home.html')
+            disciple = Disciple.get_current(user)
+            template_values['logout_url'] = logout_url;
+            self.write_static_template('dashboard.html', **template_values)
+        else:
+            loginURL = users.create_login_url(self.request.uri)
+            self.redirect(loginURL)
 
-   
 ### ROUTER
 
-app = webapp2.WSGIApplication([('/?', MainPage)],
+app = webapp2.WSGIApplication([
+                               ('/dashboard', DashboardPage),
+                               ('/?', MainPage), 
+                               ('/(.+)', MainPage)],
                               debug=True)
