@@ -42,3 +42,63 @@ class DictionaryTest(unittest.TestCase):
         
         self.assertTrue(len(result) is 1, 'Returned wrong number of elements. Expected: 1, Actual: %d' % len(result))
         self.assertTrue(result["TKOPBT"], 'Doesn\'t contain TKOPBT')     
+        
+    def test_expand_brief_right_explicit(self):
+        """Basic case for expanding a brief from the right hand, explicit"""
+        
+        dictionary = Dictionary()
+        result = dictionary.expand_brief("-FR")
+        expected = "-F-R"
+        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+    
+    def test_expand_brief_right_implicit(self):
+        """Basic case for expanding a brief from the right hand, implicit"""
+        
+        dictionary = Dictionary()
+        result = dictionary.expand_brief("EU")
+        expected = "-E-U"
+        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+        
+    def test_expand_brief_left(self):
+        """Basic case for expanding a brief from the left hand"""
+        
+        dictionary = Dictionary()
+        result = dictionary.expand_brief("TK")
+        expected = "T-K-"
+        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+
+    def test_expand_brief_mix(self):
+        """Basic case for expanding a brief from the both hands"""
+        
+        dictionary = Dictionary()
+        result = dictionary.expand_brief("WAUL")
+        expected = "W-A--U-L"
+        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+    
+        
+    def test_expand_brief_all(self):
+        """Basic case for expanding a brief from everything"""
+        
+        dictionary = Dictionary()
+        result = dictionary.expand_brief("#STKPWHRAO*EUFRPBLGTSDZ")
+        expected = "#S-T-K-P-W-H-R-A-O-*-E-U-F-R-P-B-L-G-T-S-D-Z"
+        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+        
+            
+    def test_expand_brief_hash(self):
+        """Basic case for expanding hash sign"""
+        
+        dictionary = Dictionary()
+        result = dictionary.expand_brief("#")
+        
+        self.assertEquals(result, "#", "Expected to find #, but found %s instead" % result)
+                   
+    def test_expand_brief_star(self):
+        """Basic case for expanding star"""
+        
+        dictionary = Dictionary()
+        result = dictionary.expand_brief("*")
+        
+        self.assertEquals(result, "*", "Expected to find #, but found %s instead" % result)
+        
+        

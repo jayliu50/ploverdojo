@@ -149,7 +149,7 @@ body {
   /* Box */
   padding: 12px;
   border: 6px solid white;
-  width: 250px;
+  min-width: 250px;
   
   /* Colors */
   background-color: #faa951;  /* orange */
@@ -197,7 +197,7 @@ body {
   padding: 12px;
   border: 6px solid white;
   display: none; /* hidden until user provides input */
-  width: 350px;
+  min-width: 350px;
   height: 230px;
   
   /* Colors */

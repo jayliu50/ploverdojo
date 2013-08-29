@@ -30,7 +30,7 @@ var currentQuizIndex = -1;
 var stopwatch = new Stopwatch(null, 1); // usage: http://www.seph.dk/blog/projects/javascript-stopwatch-class/
 
 /** keeps track of how well the user is doing in each keystroke, with each keystroke as the key, and a list of response times in ms as the value */
-var responseLog = {};
+var responseLog = null;
 
 /** the past N responses that will be evaluated to see whether user is ready to move on (if the last N entries fit the criteria, the user moves on from current quiz) */
 var EVALUATED_RECORD_LENGTH = 2;
@@ -43,6 +43,14 @@ var currentLesson = 1;
 
 /** whether the incoming test data will contain the strokes from previous units */
 var isReview = 'True';
+
+/** the mode of the quiz */
+var quizModeEnum = {
+    WORD: 0, // tests by dictionary word
+    KEY: 1  // tests by steno key
+};
+
+var quizMode = quizModeEnum.WORD;
 
 // IMPORT ASSETS
 
@@ -139,6 +147,7 @@ $.ajax({
 });
 
 
+
 // GRAB COOKIES
 
 var cookies = document.cookie.split(';');
@@ -146,28 +155,34 @@ var cookies = document.cookie.split(';');
 for (var i = 0; i < cookies.length; i++) {
   var cookieName = cookies[i].split('=')[0].trim();
   var cookieValue = cookies[i].split('=')[1].trim();
-  if (cookieName === 'testdata') {
-    testdata = JSON.parse(cookieValue);
+  if(cookieName === 'quiz_config') {
+    $.ajax({
+        url: 'quiz/data?' + cookieValue,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            testdata = data;
+        }
+    });
   }
-  if (cookieName === 'is_review') {
+  else if(cookieName === 'testdata') {
+      testdata = JSON.parse(cookieValue);
+  }
+  else if (cookieName === 'is_review') {
     isReview = cookieValue;
   }
-  if(cookieName === 'current_lesson') {
+  else if(cookieName === 'current_lesson') {
     currentLesson = cookieValue;
   }
-}
-
-// put test data into an array for easier random fetching
-// also initialize responseLog with empty list in each value
-var tdArray = [];
-
-for (var key in testdata) {
-    if (testdata.hasOwnProperty(key)) {
-        tdArray.push(key);
-        responseLog[key] = [];
+  else if(cookieName === 'quiz_mode') {
+    if(cookieValue === 'WORD'){
+      quizMode = quizModeEnum.WORD;
     }
+    else if(cookieValue == 'KEY') {
+      quizMode = quizModeEnum.KEY
+    }
+  }
 }
-
 
 // CREATE GLOBAL FUNCTIONS
 
@@ -581,10 +596,10 @@ function resetKeys() {
   // Clear keyboard colors
   $('.standard-key').css('background-color', '#FFFFFF');
   $('.steno-key').css('background-color', '#FFFFFF');
-  
+
   // Clear user input
   $('#user-response').hide();
-  
+
 }
 
 /**
@@ -639,23 +654,23 @@ function timer(time,update,complete) {
 }
 
 function getReadyDialog(message) {
-  
-  $('#dialog-modal').dialog({
+
+  $('#countdown-dialog-modal').dialog({
       height: 140,
       modal: true,
       resizable: false,
       closeOnEscape: false,
       open: function(event, ui) { $('.ui-dialog-titlebar-close').hide(); }
     });
-  
+
   timer(
     5000,
     function(timeLeft) {
       $('#countdown').html(timeLeft + 1);
     },
     function() {
-      $( "#dialog-modal" ).dialog('destroy');
-      
+      $( "#countdown-dialog-modal" ).dialog('destroy');
+
       // commence with the initialization of the rest of it
       stopwatch.start();
       nextQuizQuestion();
@@ -666,70 +681,98 @@ function getReadyDialog(message) {
 
 
 function nextQuizQuestion() {
-  if(tdArray.length >= 2) {    
+  if(testdata.length >= 2) {
     var candidateIndex = 0;
     do {
-      candidateIndex = Math.floor(Math.random() * tdArray.length);
+      candidateIndex = Math.floor(Math.random() * testdata.length);
     } while (candidateIndex === currentQuizIndex);
     currentQuizIndex = candidateIndex;
   }
-  
-  var newQuestion = tdArray[currentQuizIndex];  // random question, has to be a different one than the one before
+  else if(testdata.length == 1){
+    // well, it's going to be a very boring quiz
+    currentQuizIndex = 0;
+  }
 
-  if (testdata[newQuestion] === "binary") {
+  var newQuestion = testdata[currentQuizIndex];  // random question, has to be a different one than the one before
+
+  //if (testdata[newQuestion] === "binary") {   // it will always be "binary", per architectural decision
     quizChord = new Chord();
     quizChord.fromBinary(newQuestion);
     console.log("quizChord is " + quizChord.toBinary());
-  }
+  //}
+
   console.log("newQuestion is " + newQuestion);
   //$('#quiz-prompt-text').html(quizChord.toHTMLTable());
-  $('#quiz-prompt-text').html(quizChord.toRTFCRE());
+
+    if(quizMode === quizModeEnum.KEY)
+        $('#quiz-prompt-text').html(quizChord.toRTFCRE());
+    else
+        $('#quiz-prompt-text').html(dictionary[quizChord.toRTFCRE()]).attr('title', quizChord.toRTFCRE());
 }
 
 function match(conversion) {
   switch(conversion) {
-    case "chord-binary":
-      var bChord = chords[chords.length - 1].toBinary();
-      var record = responseLog[bChord];
-      if (bChord === quizChord.toBinary()) {
-        stopwatch.stop();
-        var time = stopwatch.getElapsedInMs();
+      case "chord-binary":
+        var bChord = chords[chords.length - 1];
 
-        record.push(time);
-        if(record.length > EVALUATED_RECORD_LENGTH) record.shift();
-        
-        if(time > RESPONSE_TIME_STANDARD) encouragement = 'You are getting it';
-        else {
-          
-          switch(record.length) {
-            case EVALUATED_RECORD_LENGTH:
-              encouragement = 'You have it down. Keep it up!';
-              break;
-            case EVALUATED_RECORD_LENGTH - 1:
-              encouragement = 'Good job';
-              break;
+        if(responseLog === null){
+          responseLog = {};
+        }
+
+        var key = quizMode === quizModeEnum.KEY ? bChord.toBinary() : dictionary[quizChord.toRTFCRE()];
+
+
+        if(!responseLog.hasOwnProperty(key))
+          responseLog[key] = [];
+
+        var record = responseLog[key];
+
+
+
+        var correct = (quizMode === quizModeEnum.KEY) ?
+          bChord.toBinary() === quizChord.toBinary() :
+          dictionary[bChord.toRTFCRE()] === dictionary[quizChord.toRTFCRE()];
+
+        if (correct) {
+          stopwatch.stop();
+          var time = stopwatch.getElapsedInMs();
+
+          record.push(time);
+          if(record.length > EVALUATED_RECORD_LENGTH) record.shift();
+
+          if(time > RESPONSE_TIME_STANDARD) encouragement = 'You are getting it';
+          else {
+
+            switch(record.length) {
+              case EVALUATED_RECORD_LENGTH:
+                encouragement = 'You have it down. Keep it up!';
+                break;
+              case EVALUATED_RECORD_LENGTH - 1:
+                encouragement = 'Good job';
+                break;
+            }
+          }
+          console.log("match! " + chords[chords.length - 1].toBinary() + " == " + quizChord.toBinary());
+          $('#feedback-text').html('Correct! ' + encouragement);
+          $('#feedback-text').attr('class', 'correct');
+
+          if(!readyToMoveOn()){
+            resetAll();
+            stopwatch.reset();
+            stopwatch.start();
+            nextQuizQuestion();
+          }
+          else {
+            advanceQuiz();
           }
         }
-        console.log("match! " + chords[chords.length - 1].toBinary() + " == " + quizChord.toBinary());
-        $('#feedback-text').html('Correct! ' + encouragement);
-        $('#feedback-text').attr('class', 'correct');
-        
-        if(!readyToMoveOn()){
-          resetAll();
-          stopwatch.reset();
-          stopwatch.start();
-          nextQuizQuestion();
-        }
         else {
-          advanceQuiz();
+          // extend the number of correct responses needed
+          // makes it tough!
+          // record = quizChord.toBinary();
+          // if (record.length > 1) record.pop();
         }
-      }
-      else {
-        // extend the number of correct responses needed
-        // makes it tough!
-        // record = quizChord.toBinary();
-        // if (record.length > 1) record.pop();
-      }
+
     default:
       if (chords.length) {
         console.log("no match! " + chords[chords.length - 1].toBinary() + " != " + quizChord.toBinary());
@@ -741,31 +784,44 @@ function match(conversion) {
 
 function advanceQuiz() {
     var link;
-  
+
+
+
     if(currentLesson == 1) {
       currentLesson++;
     }
     else {
-      if(isReview == 'True') { 
-        currentLesson++; 
+      if(isReview == 'True') {
+        currentLesson++;
       }
       var link = "/quiz?unit=" + currentLesson;
       link += "&stage="+ ((isReview == 'False') ? 'review' : 'quiz');
     }
-    
-    link = "/";
-    
-    $.ajax({
-      type: "POST",
-      url: '/quiz',
-      data: {
-      'current_lesson': currentLesson, 
-      'stage': isReview ? 'review' : 'quiz'},
-      success: function() { 
-        window.location.href = link;
-      }
+
+    $('#finished-dialog-modal').dialog({
+        height: 140,
+        modal: true,
+        resizable: false,
+        closeOnEscape: true,
+        open: function(event, ui) { },
+        close: function() {
+            link = "/";
+
+            $.ajax({
+                type: "POST",
+                url: '/quiz',
+                data: {
+                    'current_lesson': currentLesson,
+                    'stage': isReview ? 'review' : 'quiz'},
+                success: function() {
+                    window.location.href = link;
+                }
+            });
+        }
     });
-    
+
+
+
 }
 
 // todo: remove this in production
@@ -776,17 +832,17 @@ function readyToMoveOn() {
   var ready = true;
   for(var key in responseLog) {
     // haven't proven yourself
-    if(responseLog[key].length < EVALUATED_RECORD_LENGTH) {
+    if(responseLog.length === testdata.length && responseLog[key] === null && responseLog[key].length < EVALUATED_RECORD_LENGTH) {
       return false;
     }
-    
+
     // if you have enough records, then make sure that they are all within the milliseconds
     for(var r in responseLog[key]) {
       ready &= responseLog[key][r] < RESPONSE_TIME_STANDARD;
       if(!ready) return ready;
     }
   }
-  
+
   return true;
 }
 
@@ -1015,7 +1071,7 @@ function Chord(keysParam) {
       return rtfcre.replace('--', '.').replace(/-/g, '').replace('.', '-');
     }
   }
-  
+
   /**
    * Converts the list of Keys from RTF/CRE format.
    * @param newRTFCRE A new RTFCRE representation for the list of Keys.
@@ -1040,8 +1096,8 @@ function Chord(keysParam) {
       return rtfcre.replace('--', '.').replace(/-/g, '').replace('.', '-');
     }
   }
-  
-  
+
+
   /**
    * Converts the list of Keys to a list of key codes.
    * @return The list of key codes.
@@ -1065,7 +1121,7 @@ function Chord(keysParam) {
       newKey.fromKeyCode(keyCode);
       newKeys[newKey] = newKey;
     }
-  
+
     keys = jQuery.extend({}, newKeys);
   }
 
@@ -1092,7 +1148,7 @@ function Chord(keysParam) {
       newKey.fromQwerty(key);
       newKeys[newKey] = newKey;
     }
-  
+
     keys = jQuery.extend({}, newKeys);
   }
 
@@ -1119,10 +1175,10 @@ function Chord(keysParam) {
       newKey.fromSteno(key);
       newKeys[newKey] = newKey;
     }
-  
+
     keys = jQuery.extend({}, newKeys);
   }
-  
+
   /**
    * Converts from binary to pseudo steno, if applicable.
    * Note: Not to be used for word output (since that would depend on the dictionary being used.
@@ -1132,7 +1188,7 @@ function Chord(keysParam) {
 	var result = binaryToPseudoSteno[binary];
 	return result;
   }
-  
+
   /**
    * Adds a key to the stroke.
    */
@@ -1407,30 +1463,30 @@ $(document).keyup(function (event) {
       for (i = 0; i < words.length; i++) {
         translatedString += words[i].toEnglish() + ' ';
       }
-      
+
       $('#user-response-output-text').html(word.toEnglish());
-      
+
       $('#user-response-input-text').html(chord.toRTFCRE());
-      
+
       //$('#output').html(demetafy(translatedString));
       //document.getElementById('output').scrollTop = document.getElementById('output').scrollHeight; //scroll the textarea to the bottom
 
       //showUserInput();
       console.log("keyup event fired!");
       match("chord-binary");
-      
+
     }
 
 
     // Handle potential conflicts
     event.preventDefault(); // will prevent potential conflicts with browser hotkeys like firefox's hotkey for quicklinks (')
     //event.stopPropagation();
-    
+
     $('#user-response').show();
     delay(function(){
       $('#user-response').fadeOut();
     }, 5000);
-    
+
   }
 });
 

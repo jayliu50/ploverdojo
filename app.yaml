@@ -17,7 +17,7 @@ handlers:
 - url: /webfonts
   static_dir: webfonts
 
-- url: /quiz
+- url: /quiz.*
   script: quiz.app
 
 - url: /tutor

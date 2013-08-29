@@ -25,11 +25,14 @@
     
     <div id="content">
     
-    <div id="dialog-modal" title="Get ready!" style="display: none">
+    <div id="countdown-dialog-modal" title="Get ready!" style="display: none">
       <p>Your quiz starts in ... </p>
       <div id="countdown"></div>
     </div>
-    
+
+    <div id="finished-dialog-modal" title="Finished!" style="display: none">
+      <p>GOOD JOB!</p>
+    </div>
       <h1 id="content-title">Quiz #{{ current_lesson }} {% if is_review and current_lesson != 1 %}(REVIEW) {% endif %}</h1>  
       
       <div id="quiz-prompt">
