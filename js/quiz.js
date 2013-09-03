@@ -157,7 +157,7 @@ for (var i = 0; i < cookies.length; i++) {
   var cookieValue = cookies[i].split('=')[1].trim();
   if(cookieName === 'quiz_config') {
     $.ajax({
-        url: 'quiz/data?' + cookieValue,
+        url: 'quiz/data' + cookies[i].substring(cookies[i].indexOf("=") + 1).trim(),
         async: false,
         dataType: 'json',
         success: function(data) {

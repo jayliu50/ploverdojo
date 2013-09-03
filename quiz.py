@@ -109,7 +109,7 @@ class QuizPage(BaseHandler):
                 
                 config = "?keys=%s" % keys
                 if self.request.get('require'):
-                    config += "&%s" % self.request.get('require')
+                    config += "&require=%s" % self.request.get('require')
                 
                 self.set_cookie('quiz_config', str(config))
                 self.set_cookie('quiz_mode', 'WORD')    
