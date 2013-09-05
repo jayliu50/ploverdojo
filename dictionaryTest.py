@@ -9,39 +9,74 @@ class DictionaryTest(unittest.TestCase):
     def setUp(self):
         None
         
-    def test_filter(self):
-        """ Simple filter """
-        dictionary = Dictionary(json.loads('{ "TK": "did", "K": "can", "T": "it", "TKOPBT": "don\'t", "TK-P/EPBT": "dependent", "TKEUFT/TREFL": "distressful", "PWUL/-BS": "bulbs"}'))
+    def test_filter_left_hand(self):
+        """ Simple filter for the left hand"""
+        dictionary = Dictionary(json.loads('{ "TK": "did", "K": "can", "T": "it", "TKOPBT": "don\'t", "-T": "the", "TK-P/EPBT": "dependent", "TKEUFT/TREFL": "distressful", "PWUL/-BS": "bulbs"}'))
         
         result = dictionary.filter("TK")
+
+        self.assertTrue("K" in result, 'Doesn\'t contain K')     
+        self.assertTrue("T" in result, 'Doesn\'t contain T') 
+        self.assertTrue("TK" in result, 'Doesn\'t contain TK')
+        self.assertFalse("TKOPBT" in result, 'should not have contained TKOPBT')
+        self.assertFalse("-T" in result, 'should not have contained -T')
         
-        self.assertTrue(len(result) is 3, 'Returned wrong number of elements. Expected: 3, Actual: %d' % len(result))
-        self.assertTrue(result["K"], 'Doesn\'t contain K')     
-        self.assertTrue(result["T"], 'Doesn\'t contain T') 
-        self.assertTrue(result["TK"], 'Doesn\'t contain TK') 
+        self.check_count(result, 3)
         
-    def test_filter_required(self):
-        """ Simple filter with required entries """
-        dictionary = Dictionary(json.loads('{ "TK": "did", "K": "can", "T": "it", "KO": "could", "S": "is"}'))
+    def test_filter_right_hand(self):
+        """ Simple filter for right hand """
+        dictionary = Dictionary(json.loads('{ "TK": "did", "K": "can", "T": "it", "TKOPBT": "don\'t", "-T": "the", "TK-P/EPBT": "dependent", "TKEUFT/TREFL": "distressful", "PWUL/-BS": "bulbs"}'))
+        
+        result = dictionary.filter("-T")
+        
+        self.assertTrue("TKOPBT" in result, 'should have contained TKOPBT')
+        self.assertTrue("-T" in result, 'should have contained -T')
+        
+        self.check_count(result, 1)
+        
+        
+    def test_filter_required_and(self):
+        """ Simple filter with required entries in AND configuration """
+        dictionary = Dictionary(json.loads('{ "STKOE": "stow", "TK": "did", "TKO": "do", "K": "can", "T": "it", "KO": "could", "S": "is", "O": "to"}'))
         
         result = dictionary.filter("TKO", "TK")
         
-        self.assertTrue(len(result) is 4, 'Returned wrong number of elements. Expected: 4, Actual: %d' % len(result))
-        self.assertTrue(result["K"], 'Doesn\'t contain K')     
-        self.assertTrue(result["T"], 'Doesn\'t contain T') 
-        self.assertTrue(result["TK"], 'Doesn\'t contain TK')
-        self.assertTrue(result["KO"], 'Doesn\'t contain KO')
+        self.assertFalse("K" in result, 'should not have contained K')     
+        self.assertFalse("T" in result, 'should not have contained T') 
+        self.assertTrue("TK" in result, 'Doesn\'t contain TK')
+        self.assertTrue("TKO" in result, 'should have contained TKO')
+        self.assertFalse("KO" in result, 'should not have contained KO')
+        self.assertFalse("O" in result, 'should not have contained O')
+        self.assertFalse("STKOE" in result, 'should not have contained STKOE')
+        
+        self.check_count(result, 2)
+        
+        
+    def test_filter_required_or(self):
+        """ Simple filter with required entries, in OR configuration """
+        dictionary = Dictionary(json.loads('{ "TK": "did", "K": "can", "T": "it", "KO": "could", "S": "is", "O": "to"}'))
+        
+        result = dictionary.filter("TKO", "T,K")
+        
+        self.assertTrue("K" in result, 'Doesn\'t contain K')     
+        self.assertTrue("T" in result, 'Doesn\'t contain T') 
+        self.assertTrue("TK" in result, 'Doesn\'t contain TK')
+        self.assertTrue("KO" in result, 'Doesn\'t contain KO')
+        self.assertFalse("O" in result, 'should not have contained O')
+        
+        self.check_count(result, 4)
         
     def test_common(self):
         """ Simple Filter with check for common word """
         
-        dictionary = Dictionary(json.loads('{"TKOPBT": "don\'t", "TKOEPBT": "doesn\'t" }'),\
+        dictionary = Dictionary(json.loads('{"TKOPBT": "don\'t", "TKOEPBT": "doesn\'t" }'), \
                                 json.loads('[ { "Rank":"17", "Word":"don\'t", "Percentage": "0.780360782"} ]'))
         
         result = dictionary.filter("TKOPBT")
         
-        self.assertTrue(len(result) is 1, 'Returned wrong number of elements. Expected: 1, Actual: %d' % len(result))
-        self.assertTrue(result["TKOPBT"], 'Doesn\'t contain TKOPBT')     
+        self.assertTrue("TKOPBT" in result, 'Doesn\'t contain TKOPBT')     
+        
+        self.check_count(result, 1)
         
     def test_expand_brief_right_explicit(self):
         """Basic case for expanding a brief from the right hand, explicit"""
@@ -101,4 +136,6 @@ class DictionaryTest(unittest.TestCase):
         
         self.assertEquals(result, "*", "Expected to find #, but found %s instead" % result)
         
+    def check_count(self, result, expected):
+        self.assertTrue(len(result) is expected, 'Returned wrong number of elements. Expected: %d, Actual: %d' % (expected, len(result)))
         
