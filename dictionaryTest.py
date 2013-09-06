@@ -29,11 +29,21 @@ class DictionaryTest(unittest.TestCase):
         
         result = dictionary.filter("-T")
         
-        self.assertTrue("TKOPBT" in result, 'should have contained TKOPBT')
         self.assertTrue("-T" in result, 'should have contained -T')
         
         self.check_count(result, 1)
         
+    def test_filter_right_hand_required(self):
+        """ Simple filter for right hand """
+        dictionary = Dictionary(json.loads('{ "TK": "did", "K": "can", "T": "it", "TKOPBT": "don\'t", "PWHAO*URP": "whoknows", "TK-P/EPBT": "dependent", "TKEUFT/TREFL": "distressful", "PWUL/-BS": "bulbs"}'))
+        
+        result = dictionary.filter("PWHRAO*EUFRP", '-P')
+        
+        self.assertTrue("PWHAO*URP" in result, 'should have contained PWHAO*URP')
+        
+        self.check_count(result, 1)
+        
+
         
     def test_filter_required_and(self):
         """ Simple filter with required entries in AND configuration """
@@ -83,32 +93,50 @@ class DictionaryTest(unittest.TestCase):
         
         dictionary = Dictionary()
         result = dictionary.expand_brief("-FR")
-        expected = "-F-R"
-        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+        self.check_strings(result, "-F-R")
+        
+        result = dictionary.condense_brief(result)
+        self.check_strings(result, 'fr')
     
     def test_expand_brief_right_implicit(self):
         """Basic case for expanding a brief from the right hand, implicit"""
         
         dictionary = Dictionary()
         result = dictionary.expand_brief("EU")
-        expected = "-E-U"
-        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+        self.check_strings(result, "-E-U")
+        
+        result = dictionary.condense_brief(result)
+        self.check_strings(result, 'eu')
         
     def test_expand_brief_left(self):
         """Basic case for expanding a brief from the left hand"""
         
         dictionary = Dictionary()
         result = dictionary.expand_brief("TK")
-        expected = "T-K-"
-        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+        self.check_strings(result, 'T-K-')
+        
+        result = dictionary.condense_brief(result)
+        self.check_strings(result, 'TK')
 
     def test_expand_brief_mix(self):
         """Basic case for expanding a brief from the both hands"""
         
         dictionary = Dictionary()
         result = dictionary.expand_brief("WAUL")
-        expected = "W-A--U-L"
-        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+        self.check_strings(result, "W-A--U-L")
+        
+        result = dictionary.condense_brief(result)
+        self.check_strings(result, 'WAul')
+        
+    def test_expand_brief_mix_2(self):
+        """Basic case for expanding a brief from the both hands"""
+        
+        dictionary = Dictionary()
+        result = dictionary.expand_brief("TKOPBT")
+        self.check_strings(result, "T-K-O--P-B-T")
+        
+        result = dictionary.condense_brief(result)
+        self.check_strings(result, 'TKOpbt')
     
         
     def test_expand_brief_all(self):
@@ -116,8 +144,11 @@ class DictionaryTest(unittest.TestCase):
         
         dictionary = Dictionary()
         result = dictionary.expand_brief("#STKPWHRAO*EUFRPBLGTSDZ")
-        expected = "#S-T-K-P-W-H-R-A-O-*-E-U-F-R-P-B-L-G-T-S-D-Z"
-        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
+        
+        self.check_strings(result, "#S-T-K-P-W-H-R-A-O-*-E-U-F-R-P-B-L-G-T-S-D-Z")
+        
+        result = dictionary.condense_brief(result)
+        self.check_strings(result, "#STKPWHRAO*eufrpblgtsdz")
         
             
     def test_expand_brief_hash(self):
@@ -126,7 +157,9 @@ class DictionaryTest(unittest.TestCase):
         dictionary = Dictionary()
         result = dictionary.expand_brief("#")
         
-        self.assertEquals(result, "#", "Expected to find #, but found %s instead" % result)
+        self.check_strings(result, '#')
+        result = dictionary.condense_brief(result)
+        self.check_strings(result, '#')
                    
     def test_expand_brief_star(self):
         """Basic case for expanding star"""
@@ -134,8 +167,13 @@ class DictionaryTest(unittest.TestCase):
         dictionary = Dictionary()
         result = dictionary.expand_brief("*")
         
-        self.assertEquals(result, "*", "Expected to find #, but found %s instead" % result)
+        self.check_strings(result, '*')
+        result = dictionary.condense_brief('*')
+        self.check_strings(result, '*')
         
     def check_count(self, result, expected):
         self.assertTrue(len(result) is expected, 'Returned wrong number of elements. Expected: %d, Actual: %d' % (expected, len(result)))
+        
+    def check_strings(self, result, expected):
+        self.assertEquals(result, expected, "Expected to find %s, but found %s instead" % (expected, result))
         

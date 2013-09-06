@@ -1,14 +1,17 @@
 import json
 import os
 import itertools
+import copy
 
 
 class Dictionary():
     """Tools for interacting with Plover dictionary"""
     
     
-    def __init__(self, json=None, common=None, conversion=None, threshold=None):
-        self.data = json
+    def __init__(self, dictionary=None, common=None, conversion=None, threshold=None):
+        
+        if dictionary:
+            self.data = dict((self.condense_brief(self.expand_brief(k)), dictionary[k]) for k in dictionary)
         
         if common:
             self.common = list(v["Word"] for i, v in enumerate(common)) if threshold is None else \
@@ -28,7 +31,9 @@ class Dictionary():
         # if self.test_bool_exp(match_string, k, None))
                                   
         ''' 
-        result = dict((k, self.data[k]) for k in self.data)
+        result = copy.deepcopy(self.data)
+        match_string = self.condense_brief(self.expand_brief(match_string))
+        
         
         # monosyllabic
         if not include_multisyllabic:
@@ -40,7 +45,7 @@ class Dictionary():
 
         combos = self.combinations(match_string, require_string)
        
-        result = dict((k, result[k]) for k in result if k in combos)
+        result = dict((self.uncondense_brief(k), result[k]) for k in result if k in combos)
 
         return result
     
@@ -54,15 +59,17 @@ class Dictionary():
     def combinations(self, match_string, require_string=None):
         result = set()
         
-        if(len(match_string) > 2):
+        if len(match_string) > 2:
             for i in range(2, len(match_string) + 1):
                 for x in itertools.combinations(match_string, i): result.add(''.join(x))
             for x in match_string: result.add(x)
-        else:
+        elif len(match_string) is 2:
             result = set([match_string, match_string[0], match_string[1]])
+        else:
+            result = set(match_string)
         
         if(require_string):
-            requires = set(require_string.split(','))
+            requires = set(self.condense_brief(self.expand_brief(s)) for s in require_string.split(','))
             result = set(k for k in result if self.__filter(k, requires))
         
         return result
@@ -94,8 +101,13 @@ class Dictionary():
         return binary
         
     def expand_brief(self, brief):
+        """Account for handedness in the briefs"""
+        
+        if brief is None:
+            return None
+        
         right_hand = False
-        left_hand_visited = False
+        vowel_visited = False
         output = ''
         for x in brief:
             if x == '-':
@@ -107,22 +119,65 @@ class Dictionary():
                 right_hand = True
             else:
                 if x in 'EU':
-                    left_hand_visited = True
                     right_hand = True
-                if left_hand_visited and x in 'EUFBLGDZ':
-                    right_hand = True
-                    left_hand_visited = True
                 if right_hand:
                     output = output + "-" + x
                 else:
-                    left_hand_visited = True
-                    output = output + x + "-"
+                    if x in 'AO':
+                        vowel_visited = True
+                        output = output + x + "-"
+                    elif vowel_visited:
+                        right_hand = True
+                        output = output + '-' + x
+                    else:
+                        output = output + x + "-"
             
+        return output
+    
+    def condense_brief(self, brief):
+        """Just another representation of steno keys. Condenses all hyphenated keys of the expanded form into lower case"""
+        output = ''
+        
+        right_hand = False
+        brief = str(brief)
+        
+        i = 0
+        while i < len(brief):
+            if str.isalpha(brief[i]):
+                output = output + brief[i]
+                i = i + 1
+            elif brief[i] is '-' and i + 1 < len(brief) and str.isalpha(brief[i + 1]):
+                output = output + str.lower(brief[i + 1])
+                i = i + 1
+            else:
+                output = output + brief[i]
+            
+            i = i + 1
+                
+            
+        return output
+    
+    def uncondense_brief(self, brief):
+        output = ''
+        hyphen_added = False
+        seen_vowel = False
+        for c in brief:
+            if c in 'AO':
+                seen_vowel = True
+            if str.islower(c) and not hyphen_added:
+                if not seen_vowel:
+                    output = output + "-"
+                hyphen_added = True
+            output = output + str.upper(c)
+        
         return output
 
     def wordlist(self, match_string, required_string=None):
         filtered = dictionary.filter(match_string, required_string)
         return list(set(filtered.values()))
+    
+    def lesson(self, description, match_string, required_string):
+        return '*** %s ***\n [%s]\n' % (description, '\t'.join(dictionary.wordlist(match_string, required_string)))
 
 
 if __name__ == "__main__":
@@ -133,22 +188,68 @@ if __name__ == "__main__":
         with open(os.path.join(assets_dir, 'common.json'), 'r') as commonfile:
             with open(os.path.join(assets_dir, 'binaryToSteno.json'), 'r') as conversionfile:
                 dictionary = Dictionary(json.load(dictfile), json.load(commonfile), json.load(conversionfile), 5000)
+    print dictionary.lesson('H', 'HAO*EU', 'H')
+    print dictionary.lesson('R', 'RAO*EU', 'R')       
+    print dictionary.lesson('HR = L', 'HRAO*EUFR', 'HR')
+    print dictionary.lesson('Ending R', 'HRAO*EUFR', '-R')
+    print dictionary.lesson('Ending F', 'HRAO*EUF', '-F')
     
-    print 'Lesson 1'
-    print '\t'.join(dictionary.wordlist('HAE*OUFR', 'H'))
-    print '\t'.join(dictionary.wordlist('RAE*OUFR', 'R'))
-    print '\t'.join(dictionary.wordlist('HRAE*OUFR', 'HR'))
-    print
+    print dictionary.lesson('W', 'WHRAO*EUFR', 'W')
+    print dictionary.lesson('PW = B', 'PWHRA*EUFR', 'PW')
+    print dictionary.lesson('PH = M', 'PHA*EUFR', 'PH') # more words!    
+    print dictionary.lesson('Ending P', 'PWHRAO*EUP', '-P')
+    print dictionary.lesson('Ending B', 'PWHRAO*EUB', '-B')
+    print dictionary.lesson('Ending PB = N', 'PWHRAO*EUPB', '-PB')
+    print dictionary.lesson('Ending F', 'PWHRAO*EUF', '-F')
+    print dictionary.lesson('Ending FP = CH', 'PWHRAO*EUFP', '-FP')
+    print dictionary.lesson('Ending RB = SH', 'PWHRAO*EURB', '-RB')
+    print dictionary.lesson('Vowels Supplement: AOE = long E', 'PWHRAO*EFRPB', 'AOE')
+    print dictionary.lesson('Vowels Supplement: AEU = long A', 'PWHRA*EUFRPB', 'AEU')
+    print dictionary.lesson('Vowels Supplement: AU = ahl, alk', 'PWHRA*URPBLG', 'AU')
     
-    print 'Lesson 2'
-    print '\t'.join(dictionary.wordlist('PRAE*OUFR', 'P'))
-    print '\t'.join(dictionary.wordlist('WHRAE*OUFR', 'W'))
-    print '\t'.join(dictionary.wordlist('PWHRAE*OUFR', 'PW'))
-    print
+    print dictionary.lesson('T', 'TAO*EUFRPB', 'T')
+    print dictionary.lesson('K', 'KAO*EUFRPB', 'K')
+    print dictionary.lesson('TK = D', 'TKAO*EUFRPB', 'TK')
+    print dictionary.lesson('TP = F', 'TPAO*EUFRPB', 'TP')
+    print dictionary.lesson('KW = Q', 'KWAO*EUFRPB', 'KW') # needs more words
+    print dictionary.lesson('Vowels Supplement: OEU = Oy!', 'TKPWHRO*EUFRPBLG', 'OEU')
+    print dictionary.lesson('Vowels Supplement: AOU = long U', 'TKPWHRAO*UFRPBLG', 'AOU')
+    print dictionary.lesson('Vowels Supplement: OU = ow', 'TKPWHRO*UFRPBLG', 'OU')
+    print dictionary.lesson('Vowels Supplement AO = oo', 'TKPWHRAO*FRPBLG', 'AO')
+    print dictionary.lesson('Vowels Supplement: AUF = of', 'STKPWHRA*UFRPBLGTSDZ', 'AUF')
     
-    print 'Lesson 3'
-    print '\t'.join(dictionary.wordlist('PWHRAE*OUFRP', '-P'))
+    print dictionary.lesson('TPH = N', 'TPHAO*EUFRPB', 'TPH')
+    print dictionary.lesson('KWR = Y', 'KWRAO*EUFRPB', 'KWR')
+    print dictionary.lesson('TKPW = G', 'TKPWRAO*EUFRPB', 'TKPW')
+    print dictionary.lesson('Ending L', 'TKPWHRAO*EUL', '-L')
+    print dictionary.lesson('Ending G', 'TKPWHRAO*EUG', '-G')
+    print dictionary.lesson('Ending -PL = M', 'TKPWHRAO*EUPL', '-PL')
+    print dictionary.lesson('Ending -BG = K', 'TKPWHRAO*EUBG', '-BG')
+    print dictionary.lesson('Ending -PBG', 'TKPWHRAO*EUPBG', '-PBG')
     
+    print dictionary.lesson('S', 'STKPWHAO*EUFRPBLG', 'S')
+    print dictionary.lesson('SKWR = J', 'SKWRAO*EUFRPBLG', 'SKWR')
+    print dictionary.lesson('SR = V', 'SRAO*EUFRPBLG', 'SR') #needs more words
+    print dictionary.lesson('Ending T', 'STKPWHRAO*EUT', '-T')
+    print dictionary.lesson('Ending NT', 'STKPWHRAO*EUPBT', '-PBT')
+    print dictionary.lesson('Ending LT', 'STKPWHRAO*EULT', '-LT')
+    print dictionary.lesson('Ending TH (bug with filter, so nothing shows yet)', 'STKPWHRAO*EUPBLT', '*-T') # ADDED
+    print dictionary.lesson('Ending S', 'STKPWHRAO*EUS', '-S')
+    print dictionary.lesson('-F Revisited', 'STKPWHRAO*EUFPB', '-FPB') # ADDED
+    print dictionary.lesson('-FT can be st or ft', 'STKPWHRAO*EUFPBT', '-FT') # ADDED
+    
+    #print dictionary.lesson('Ending TS', 'STKPWHRAO*EUTS', '-TS') # ADDED
+    print dictionary.lesson('Ending -BGS = X', 'STKPWHRAO*EUBGS', '-BGS') 
+    print dictionary.lesson('Ending -GS = tion, sion, xion ', 'STKPWHRAO*EUFGS', '-GS') # ADDED
+    print dictionary.lesson('Ending D', 'STKPWHRAO*EUD', '-D') #
+    print dictionary.lesson('Ending Z', 'STKPWHRAO*EUZ', '-Z')
+    print dictionary.lesson('KP = X', 'KPAO*EUFRPBLGTS', 'KP')
+    print dictionary.lesson('STKPB = Z', 'STKPBAO*EUFRPBLGTS', 'STKPB')
+    
+    
+    
+    
+    print 'Done.'
     # print json.dumps(returned)
 
 #    for (k, v) in returned:
