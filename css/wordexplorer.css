@@ -1,0 +1,31 @@
+.toggle-state-0 {
+    /* Color */
+    color: #679c9f;
+    background-color: white;
+}
+
+.toggle-state-1 {
+    /* Color */
+    color: white;
+    background: green;
+}
+
+.toggle-state-2 {
+    /* Color */
+    color: white;
+    background: #000000;
+}
+
+.wordlist {
+    max-width: 600px;
+    text-align: justify;
+    word-wrap: break-word;
+}
+
+.wordlist span:before {
+    content: ' ';
+}
+
+.controls {
+    clear: both;
+}

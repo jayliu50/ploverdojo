@@ -9,6 +9,20 @@ class DictionaryTest(unittest.TestCase):
     def setUp(self):
         None
         
+    def test_filter_empty(self):
+        """ Empty filter should return all """
+        dictionary = Dictionary(json.loads('{ "TK": "did", "K": "can", "T": "it", "TKOPBT": "don\'t", "-T": "the", "TK-P/EPBT": "dependent", "TKEUFT/TREFL": "distressful", "PWUL/-BS": "bulbs"}'))
+        
+        result = dictionary.filter("")
+
+        self.assertTrue("K" in result, 'Doesn\'t contain K')     
+        self.assertTrue("T" in result, 'Doesn\'t contain T') 
+        self.assertTrue("TK" in result, 'Doesn\'t contain TK')
+        self.assertTrue("TKOPBT" in result, 'should have contained TKOPBT')
+        self.assertTrue("-T" in result, 'should have contained -T')
+        
+        self.check_count(result, 5)
+        
     def test_filter_left_hand(self):
         """ Simple filter for the left hand"""
         dictionary = Dictionary(json.loads('{ "TK": "did", "K": "can", "T": "it", "TKOPBT": "don\'t", "-T": "the", "TK-P/EPBT": "dependent", "TKEUFT/TREFL": "distressful", "PWUL/-BS": "bulbs"}'))
@@ -95,7 +109,7 @@ class DictionaryTest(unittest.TestCase):
         result = dictionary.expand_brief("-FR")
         self.check_strings(result, "-F-R")
         
-        result = dictionary.condense_brief(result)
+        result = dictionary.encode_brief(result)
         self.check_strings(result, 'fr')
     
     def test_expand_brief_right_implicit(self):
@@ -105,7 +119,7 @@ class DictionaryTest(unittest.TestCase):
         result = dictionary.expand_brief("EU")
         self.check_strings(result, "-E-U")
         
-        result = dictionary.condense_brief(result)
+        result = dictionary.encode_brief(result)
         self.check_strings(result, 'eu')
         
     def test_expand_brief_left(self):
@@ -115,7 +129,7 @@ class DictionaryTest(unittest.TestCase):
         result = dictionary.expand_brief("TK")
         self.check_strings(result, 'T-K-')
         
-        result = dictionary.condense_brief(result)
+        result = dictionary.encode_brief(result)
         self.check_strings(result, 'TK')
 
     def test_expand_brief_mix(self):
@@ -125,7 +139,7 @@ class DictionaryTest(unittest.TestCase):
         result = dictionary.expand_brief("WAUL")
         self.check_strings(result, "W-A--U-L")
         
-        result = dictionary.condense_brief(result)
+        result = dictionary.encode_brief(result)
         self.check_strings(result, 'WAul')
         
     def test_expand_brief_mix_2(self):
@@ -135,7 +149,7 @@ class DictionaryTest(unittest.TestCase):
         result = dictionary.expand_brief("TKOPBT")
         self.check_strings(result, "T-K-O--P-B-T")
         
-        result = dictionary.condense_brief(result)
+        result = dictionary.encode_brief(result)
         self.check_strings(result, 'TKOpbt')
     
         
@@ -147,7 +161,7 @@ class DictionaryTest(unittest.TestCase):
         
         self.check_strings(result, "#S-T-K-P-W-H-R-A-O-*-E-U-F-R-P-B-L-G-T-S-D-Z")
         
-        result = dictionary.condense_brief(result)
+        result = dictionary.encode_brief(result)
         self.check_strings(result, "#STKPWHRAO*eufrpblgtsdz")
         
             
@@ -158,7 +172,7 @@ class DictionaryTest(unittest.TestCase):
         result = dictionary.expand_brief("#")
         
         self.check_strings(result, '#')
-        result = dictionary.condense_brief(result)
+        result = dictionary.encode_brief(result)
         self.check_strings(result, '#')
                    
     def test_expand_brief_star(self):
@@ -168,7 +182,7 @@ class DictionaryTest(unittest.TestCase):
         result = dictionary.expand_brief("*")
         
         self.check_strings(result, '*')
-        result = dictionary.condense_brief('*')
+        result = dictionary.encode_brief('*')
         self.check_strings(result, '*')
         
     def check_count(self, result, expected):

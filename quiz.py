@@ -5,8 +5,6 @@ import os
 import re
 import webapp2
 import json
-import sys
-import traceback
 
 from google.appengine.api import users
 
@@ -14,6 +12,7 @@ from models.disciple import Disciple
 
 from dictionary import Dictionary
 
+from helpers import Exceptions
 
 template_directory = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_environment = jinja2.Environment(
@@ -151,7 +150,7 @@ class QuizPage(BaseHandler):
 
     def post(self):
         user = users.get_current_user()
-        #stage = self.request.get('stage')
+        # stage = self.request.get('stage')
         
         disciple = Disciple.get_current(user)
         disciple.tutor_max_lesson = int(self.request.get('current_lesson'))
@@ -164,34 +163,9 @@ class QuizData(BaseHandler):
         self.initialize(request, response)
         self.errorMsg = ''
         try:
-            
-            resources_directory = os.path.join(os.path.dirname(__file__), 'resources')
-            dictfile = open(os.path.join(resources_directory, 'dict.json'), 'r')
-            commonfile = open(os.path.join(resources_directory, 'common.json'), 'r') 
-            conversionfile = open(os.path.join(resources_directory, 'binaryToSteno.json'), 'r')
-            self.dictionary = Dictionary(json.load(dictfile), json.load(commonfile), json.load(conversionfile))
-            dictfile.close()
-            commonfile.close()
-            conversionfile.close()
+            self.dictionary = Dictionary.create_default()
         except Exception as e:
-            #"Printing only the traceback above the current stack frame"
-            self.errorMsg += ''.join(traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2]))
-            
-            #"Printing the full traceback as if we had not caught it here..."
-            self.errorMsg += self.format_exception(e)
-    
-    def format_exception(self, e):
-        exception_list = traceback.format_stack()
-        exception_list = exception_list[:-2]
-        exception_list.extend(traceback.format_tb(sys.exc_info()[2]))
-        exception_list.extend(traceback.format_exception_only(sys.exc_info()[0], sys.exc_info()[1]))
-    
-        exception_str = "Traceback (most recent call last):\n"
-        exception_str += "".join(exception_list)
-        # Removing the last \n
-        exception_str = exception_str[:-1]
-    
-        return exception_str
+            self.errorMsg += Exceptions.format_exception(e)
         
     def get(self):
         user = users.get_current_user()
@@ -201,7 +175,7 @@ class QuizData(BaseHandler):
                     filtered = self.dictionary.prepare_for_quiz(self.dictionary.filter(self.request.get('keys'), self.request.get('require')))
                     
                 except Exception, e:
-                    self.errorMsg += self.format_exception(e)
+                    self.errorMsg += Exceptions.format_exception(e)
                 
                 if self.errorMsg is not '':
                     self.set_cookie('error', str(self.errorMsg))

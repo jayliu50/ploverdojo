@@ -22,6 +22,9 @@ handlers:
 
 - url: /tutor
   script: tutor.app
+  
+- url: /disciple.*
+  script: disciple.app
 
 - url: /.*
   script: main.app
