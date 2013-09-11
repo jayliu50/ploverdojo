@@ -1,0 +1,35 @@
+nav {
+    clear: both;
+}
+
+/*nav li {*/
+    /*display: inline;*/
+    /*position: relative;*/
+
+/*}*/
+
+#steno-keyboard {
+    float: left;
+    position: static;
+}
+
+.word-list {
+    float: left;
+    margin: 30px;
+    columns:100px 3;
+    -webkit-columns:100px 3; /* Safari and Chrome */
+    -moz-columns:100px 3; /* Firefox */
+    height: 114px; /* the height of the steno keyboard minus the margins*/
+}
+
+.tag {
+    font-size: 0.8em;
+}
+
+.tag:before {
+    content: '#';
+}
+
+.tag:after {
+    content: ' ';
+}

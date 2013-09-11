@@ -291,6 +291,12 @@ body {
 }
 
 
+/*** OVERRIDES ***/
+#steno-keyboard {
+    left: 640px;
+    top: 360px;
+}
+
 
 /*** MISC ***/
 

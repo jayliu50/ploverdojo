@@ -12,7 +12,7 @@ from helpers import Exceptions
 
 # ## HANDLERS
 
-class Lookup(webapp2.RequestHandler):
+class BaseHandler(webapp2.RequestHandler):
     def __init__(self, request=None, response=None):
         self.initialize(request, response)
         self.error_msg = ''
@@ -20,6 +20,10 @@ class Lookup(webapp2.RequestHandler):
             self.dictionary = Dictionary.create_default()
         except Exception, e:
             self.error_msg += Exceptions.print_exception(e)
+
+class Lookup(BaseHandler):
+    def __init__(self, request=None, response=None):
+        BaseHandler.__init__(self, request, response)
             
     def set_cookie(self, name, value):
         """Function to set an http cookie"""
@@ -50,9 +54,18 @@ class Lookup(webapp2.RequestHandler):
             self.redirect(users.create_login_url(self.request.uri))  
             
 
+class Debug(BaseHandler):
+    def __init__(self, request=None, response=None):
+        BaseHandler.__init__(self, request, response)
+    
+    def get(self):
+        data = self.dictionary.debug_list_missing_words()
+        self.response.out.write(json.dumps(data))
+
 # ## ROUTER
 
 app = webapp2.WSGIApplication([
-                               ('/disciple/dictionary', Lookup)
+                               ('/disciple/dictionary', Lookup),
+                               ('/disciple/debug/dictionary', Debug)
                                ],
                               debug=True)

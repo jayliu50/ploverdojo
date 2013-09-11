@@ -10,25 +10,36 @@ $(document).ready(function () {
 });
 
 // Declare app level module which depends on filters, and services
-angular.module('ploverdojo', ['ploverdojo.controllers'])
+angular.module('ploverdojo', ['ploverdojo.controllers', 'ploverdojo.services', 'ploverdojo.directives'])
     .config(function ($interpolateProvider) {
         $interpolateProvider.startSymbol('//');
         $interpolateProvider.endSymbol('//');
     });
 
+angular.module('ploverdojo.directives', [])
+    .directive('stenokey', function () {
+        return {
+            restrict: 'E',
+            scope: {}, // do not share scope with other stenokey objects
+            template: '<a href="" ><div class="// class //" id="// id //" ng-transclude></div></a>',
+            controller: function ($scope) {
 
-//    .
-//    config(['$routeProvider', function ($routeProvider) {
-//        $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
-//        $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
-//        $routeProvider.otherwise({redirectTo: '/view1'});
-//    }])
+            },
+            link: function (scope, element, attrs) {
+                element.addClass(attrs[key]);
+            }
+        };
+    })
+;
+
+angular.module('ploverdojo.controllers', ['ploverdojo.wordexplorer', 'ploverdojo.lessonbrowser']);
+
 
 /* Controllers */
 
-angular.module('ploverdojo.controllers', []).
-    controller('WordExplorerCtrl', ['$scope', '$http',
-        function (sc, http) {
+angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
+    .controller('WordExplorerCtrl', ['$scope', 'WordService', 'UserDataService', 'StenoService',
+        function (sc, wordService, userDataService, stenoService) {
 
             var KeyStateEnum = {
                 'None': 0,
@@ -42,55 +53,28 @@ angular.module('ploverdojo.controllers', []).
                 2: 'Required'
             };
 
-            sc.filter = {}; // the object representing the filter for the dictionary
-
-            sc.words = []; //  {'value': 'my word', 'stroke': 'STROKE', 'mastery': 0}
-
+            sc.wordFilter = {}; // the object representing the filter for the dictionary
             var includeParamString = '';
             var requiredParamString = '';
 
-            var busy = false;
+            sc.words = []; //  {'value': 'my word', 'stroke': 'STROKE', 'mastery': 0}
+            sc.busy = false;
 
-            sc.status = function () {
-                if (!sc.words.length) {
-                    if (!busy) {
-                        return "No matches found.";
-                    }
-                    else
-                        return "Please wait.";
+            sc.queryString = function () {
+                var queryString = 'keys=' + includeParamString;
+
+                if (requiredParamString !== '') {
+                    queryString += '&require=' + requiredParamString;
                 }
-                return "";
-            }
 
-            sc.runQuery = function () {
-                var wordService = function (include, required) {
-
-                    var getString = 'disciple/dictionary?keys=' + include;
-
-                    if (required !== '') {
-                        getString += '&require=' + required;
-                    }
-
-                    busy = true;
-
-                    http({method: 'GET', url: getString }).
-                        success(function (data, status, headers, config) {
-                            sc.words = data;
-                            busy = false;
-                        }).
-                        error(function (data, status, headers, config) {
-                            // called asynchronously if an error occurs
-                            // or server returns response with an error status.
-                            busy = false;
-                        });
-
-                };
-
-
-                sc.words = wordService(includeParamString, requiredParamString);
+                return queryString;
             };
 
-            sc.updateWords = function () {
+            sc.runQuery = function () {
+                wordService(sc.queryString(), sc);
+            };
+
+            sc.buildParamStrings = function () {
                 includeParamString = '';
                 requiredParamString = '';
 
@@ -99,15 +83,15 @@ angular.module('ploverdojo.controllers', []).
 
 
                 var testExistenceInFilter = function (key, code, isLeftHand) {
-                    if (sc.filter.hasOwnProperty(key)) {
-                        if (sc.filter[key] === KeyStateEnum.Include) {
+                    if (sc.wordFilter.hasOwnProperty(key)) {
+                        if (sc.wordFilter[key] === KeyStateEnum.Include) {
                             includeParamString += code;
 
                             if (isLeftHand) {
                                 includeParamStringShouldPrepend = false;
                             }
                         }
-                        else if (sc.filter[key] === KeyStateEnum.Required) {
+                        else if (sc.wordFilter[key] === KeyStateEnum.Required) {
                             includeParamString += code;
                             requiredParamString += code;
 
@@ -153,54 +137,85 @@ angular.module('ploverdojo.controllers', []).
                 }
             };
 
+            sc.$on('updateLesson', function () {
+                includeParamString = userDataService.currentLesson.include;
+                requiredParamString = userDataService.currentLesson.require;
+
+                // update UI keyboard
+                sc.wordFilter = [];
+                var keys = [];
+                keys = stenoService.expandBrief(includeParamString);
+                for (var i = 0; i < keys.length; i++) {
+                    sc.wordFilter[keys[i]] = KeyStateEnum.Include;
+
+                }
+
+                keys = stenoService.expandBrief(requiredParamString);
+                for (var i = 0; i < keys.length; i++) {
+                    sc.wordFilter[keys[i]] = KeyStateEnum.Required;
+                }
+
+                sc.runQuery();
+            });
+
+            sc.customMode = true;
+            sc.asterisk = false;
+
+            sc.$on('updateCustomMode', function () {
+                sc.customMode = userDataService.customMode;
+            });
+
             sc.toggle = function (code) {
-                if (sc.filter.hasOwnProperty(code)) {
-                    switch (sc.filter[code]) {
+
+                if (!sc.customMode) {
+                    return;
+                }
+
+                if (sc.wordFilter.hasOwnProperty(code)) {
+                    switch (sc.wordFilter[code]) {
                         case KeyStateEnum.None:
-                            sc.filter[code] = KeyStateEnum.Include;
+                            sc.wordFilter[code] = KeyStateEnum.Include;
                             break;
                         case KeyStateEnum.Include:
-                            sc.filter[code] = KeyStateEnum.Required;
+                            sc.wordFilter[code] = KeyStateEnum.Required;
                             break;
                         default:
-                            sc.filter[code] = KeyStateEnum.None;
+                            sc.wordFilter[code] = KeyStateEnum.None;
                     }
 
                 }
                 else {
-                    sc.filter[code] = KeyStateEnum.Include;
+                    sc.wordFilter[code] = KeyStateEnum.Include;
                 }
 
 
-                sc.updateWords();
+                sc.buildParamStrings();
             };
 
             sc.clear = function (codes) {
-                for(var i=0; i < codes.length; i++){
-                    sc.filter[codes[i]] = KeyStateEnum.None;
+                for (var i = 0; i < codes.length; i++) {
+                    sc.wordFilter[codes[i]] = KeyStateEnum.None;
                 }
-                sc.updateWords();
+                sc.buildParamStrings();
             };
 
             sc.include = function (codes) {
-                for(var i=0; i < codes.length; i++){
-                    sc.filter[codes[i]] = KeyStateEnum.Include;
+                for (var i = 0; i < codes.length; i++) {
+                    sc.wordFilter[codes[i]] = KeyStateEnum.Include;
                 }
-                sc.updateWords();
+                sc.buildParamStrings();
             };
 
             sc.require = function (codes) {
-                for(var i=0; i < codes.length; i++){
-                    sc.filter[codes[i]] = KeyStateEnum.Required;
+                for (var i = 0; i < codes.length; i++) {
+                    sc.wordFilter[codes[i]] = KeyStateEnum.Required;
                 }
-                sc.updateWords();
+                sc.buildParamStrings();
             };
 
-
-
             sc.title = function (code) {
-                if (sc.filter.hasOwnProperty(code)) {
-                    return KeyStateLookup[sc.filter[code]];
+                if (sc.wordFilter.hasOwnProperty(code)) {
+                    return KeyStateLookup[sc.wordFilter[code]];
                 }
                 else {
                     return KeyStateLookup[0];
@@ -208,14 +223,19 @@ angular.module('ploverdojo.controllers', []).
             };
 
             sc.class = function (code) {
-                if (sc.filter.hasOwnProperty(code)) {
-                    return sc.filter[code];
+                if (sc.wordFilter.hasOwnProperty(code)) {
+                    return sc.wordFilter[code];
                 }
                 else {
                     return KeyStateEnum.None;
                 }
             };
 
-        }
 
-    ]);
+        }
+    ])
+;
+
+
+
+

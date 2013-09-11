@@ -1,0 +1,314 @@
+[
+	{
+		"title": "H",
+		"include": "HAO*EU",
+		"require": "H",
+		"tags": "left-hand single-key upper-row alphabet column-1 group-1"
+	},
+	{
+		"title": "R",
+		"include": "RAO*EU",
+		"require": "R",
+		"tags": "left-hand single-key lower-row alphabet column-1 group-1"
+	},
+	{
+		"title": "Ending F",
+		"include": "HRAO*EUF",
+		"require": "-F",
+		"tags": "right-hand single-key upper-row alphabet column-1 group-1"
+	},
+	{
+		"title": "Ending R",
+		"include": "HRAO*EUFR",
+		"require": "-R",
+		"tags": "right-hand single-key lower-row alphabet column-1 group-1"
+	},
+	{
+		"title": "HR = L",
+		"include": "HRAO*EUFR",
+		"require": "HR",
+		"tags": "left-hand multi-key alphabet column-1 group-1"
+	},
+	{
+		"title": "W",
+		"include": "WHRAO*EUFR",
+		"require": "W",
+		"tags": "left-hand single-key lower-row alphabet column-2 group-2"
+	},
+	{
+		"title": "PW = B",
+		"include": "PWHRAO*EUFR",
+		"require": "PW",
+		"tags": "left-hand multi-key alphabet column-2 group-2"
+	},
+	{
+		"title": "PH = M",
+		"include": "PHAO*EUFR",
+		"require": "PH",
+		"tags": "left-hand multi-key upper-row alphabet group-2"
+	},
+	{
+		"title": "Ending P",
+		"include": "PWHRAO*EUP",
+		"require": "-P",
+		"tags": "right-hand single-key upper-row alphabet column-2 group-2"
+	},
+	{
+		"title": "Ending B",
+		"include": "PWHRAO*EUB",
+		"require": "-B",
+		"tags": "right-hand single-key lower-row alphabet column-2 group-2"
+	},
+	{
+		"title": "Ending PB = N",
+		"include": "PWHRAO*EUPB",
+		"require": "-PB",
+		"tags": "right-hand multi-key alphabet column-2 group-2"
+	},
+	{
+		"title": "Ending F",
+		"include": "PWHRAO*EUF",
+		"require": "-F",
+		"tags": "right-hand single-key upper-row alphabet column-1 group-2"
+	},
+	{
+		"title": "Ending FP = CH",
+		"include": "PWHRAO*EUFP",
+		"require": "-FP",
+		"tags": "right-hand multi-key upper-row group-2"
+	},
+	{
+		"title": "Ending RB = SH",
+		"include": "PWHRAO*EURB",
+		"require": "-RB",
+		"tags": "right-hand multi-key lower-row group-2"
+	},
+	{
+		"title": "Vowels Supplement: AOE = long E",
+		"include": "PWHRAO*EFRPB",
+		"require": "AOE",
+		"tags": "thumbs multi-key vowel-row group-2"
+	},
+	{
+		"title": "Vowels Supplement: AEU = long A",
+		"include": "PWHRA*EUFRPB",
+		"require": "AEU",
+		"tags": "thumbs multi-key vowel-row group-2"
+	},
+	{
+		"title": "Vowels Supplement: AU = ahl, alk",
+		"include": "PWHRA*URPBLG",
+		"require": "AU",
+		"tags": "thumbs multi-key vowel-row group-2"
+	},
+	{
+		"title": "T",
+		"include": "TAO*EUFRPB",
+		"require": "T",
+		"tags": "left-hand single-key upper-row alphabet column-3 group-3"
+	},
+	{
+		"title": "K",
+		"include": "KAO*EUFRPB",
+		"require": "K",
+		"tags": "left-hand single-key lower-row alphabet column-3 group-3"
+	},
+	{
+		"title": "TK = D",
+		"include": "TKAO*EUFRPB",
+		"require": "TK",
+		"tags": "left-hand multi-key alphabet column-3 group-3"
+	},
+	{
+		"title": "TP = F",
+		"include": "TPAO*EUFRPB",
+		"require": "TP",
+		"tags": "left-hand multi-key alphabet group-3"
+	},
+	{
+		"title": "Vowels Supplement: OU = ow",
+		"include": "TKPWHRO*UFRPBLG",
+		"require": "OU",
+		"tags": "thumbs multi-key vowel-row group-3"
+	},
+	{
+		"title": "Vowels Supplement AO = oo",
+		"include": "TKPWHRAO*FRPBLG",
+		"require": "AO",
+		"tags": "thumbs multi-key vowel-row group-3"
+	},
+	{
+		"title": "Vowels Supplement: OEU = Oy!",
+		"include": "TKPWHRO*EUFRPBLG",
+		"require": "OEU",
+		"tags": "thumbs multi-key vowel-row group-3"
+	},
+	{
+		"title": "Vowels Supplement: AOU = long U",
+		"include": "TKPWHRAO*UFRPBLG",
+		"require": "AOU",
+		"tags": "thumbs multi-key vowel-row group-3"
+	},
+	{
+		"title": "Vowels Supplement: AUF = of",
+		"include": "STKPWHRA*UFRPBLGTSDZ",
+		"require": "AUF",
+		"tags": "thumbs multi-key vowel-row group-3"
+	},
+	{
+		"title": "TPH = N",
+		"include": "TPHAO*EUFRPB",
+		"require": "TPH",
+		"tags": "left-hand multi-key upper-row alphabet group-4"
+	},
+	{
+		"title": "KWR = Y",
+		"include": "KWRAO*EUFRPB",
+		"require": "KWR",
+		"tags": "left-hand multi-key lower-row alphabet group-4"
+	},
+	{
+		"title": "TKPW = G",
+		"include": "TKPWRAO*EUFRPB",
+		"require": "TKPW",
+		"tags": "left-hand multi-key alphabet group-4"
+	},
+	{
+		"title": "Ending L",
+		"include": "TKPWHRAO*EUL",
+		"require": "-L",
+		"tags": "right-hand single-key upper-row alphabet column-3 group-4"
+	},
+	{
+		"title": "Ending G",
+		"include": "TKPWHRAO*EUG",
+		"require": "-G",
+		"tags": "right-hand single-key lower-row alphabet column-3 group-4"
+	},
+	{
+		"title": "Ending -PL = M",
+		"include": "TKPWHRAO*EUPL",
+		"require": "-PL",
+		"tags": "right-hand multi-key upper-row alphabet group-4"
+	},
+	{
+		"title": "Ending -BG = K",
+		"include": "TKPWHRAO*EUBG",
+		"require": "-BG",
+		"tags": "right-hand multi-key lower-row alphabet group-4"
+	},
+	{
+		"title": "Ending -PBG",
+		"include": "TKPWHRAO*EUPBG",
+		"require": "-PBG",
+		"tags": "right-hand multi-key group-4"
+	},
+	{
+		"title": "S",
+		"include": "STKPWHAO*EUFRPBLG",
+		"require": "S",
+		"tags": "left-hand single-key upper-row alphabet column-4 group-5"
+	},
+	{
+		"title": "SKWR = J",
+		"include": "SKWRAO*EUFRPBLG",
+		"require": "SKWR",
+		"tags": "left-hand multi-key lower-row alphabet group-5"
+	},
+	{
+		"title": "SR = V",
+		"include": "SRAO*EUFRPBLG",
+		"require": "SR",
+		"tags": "left-hand multi-key lower-row alphabet group-5"
+	},
+	{
+		"title": "Ending T",
+		"include": "STKPWHRAO*EUT",
+		"require": "-T",
+		"tags": "right-hand single-key upper-row alphabet column-4 group-5"
+	},
+	{
+		"title": "Ending NT",
+		"include": "STKPWHRAO*EUPBT",
+		"require": "-PBT",
+		"tags": "right-hand multi-key group-5"
+	},
+	{
+		"title": "Ending LT",
+		"include": "STKPWHRAO*EULT",
+		"require": "-LT",
+		"tags": "right-hand multi-key upper-row group-5"
+	},
+	{
+		"title": "Ending TH",
+		"include": "STKPWHRAO*EUPBLT",
+		"require": "*-T",
+		"tags": "right-hand multi-key asterisk group-5"
+	},
+	{
+		"title": "Ending S",
+		"include": "STKPWHRAO*EUS",
+		"require": "-S",
+		"tags": "right-hand single-key lower-row alphabet column-4 group-5"
+	},
+	{
+		"title": "-F Revisited",
+		"include": "STKPWHRAO*EUFPB",
+		"require": "-FPB",
+		"tags": "right-hand single-key upper-row alphabet group-5"
+	},
+	{
+		"title": "-FT can be st or ft",
+		"include": "STKPWHRAO*EUFPBT",
+		"require": "-FT",
+		"tags": "right-hand multi-key upper-row group-5"
+	},
+	{
+		"title": "Ending -TS",
+		"include": "STKPWHRAO*EUTS",
+		"require": "-TS",
+		"tags": "right-hand multi-key group-6"
+	},
+	{
+		"title": "Ending -BGS = X",
+		"include": "STKPWHRAO*EUBGS",
+		"require": "-BGS",
+		"tags": "right-hand multi-key lower-row group-6"
+	},
+	{
+		"title": "Ending -GS = tion, sion, xion ",
+		"include": "STKPWHRAO*EUFGS",
+		"require": "-GS",
+		"tags": "right-hand multi-key lower-row group-6"
+	},
+	{
+		"title": "Ending D",
+		"include": "STKPWHRAO*EUD",
+		"require": "-D",
+		"tags": "right-hand single-key upper-row alphabet column-5 group-6"
+	},
+	{
+		"title": "Ending Z",
+		"include": "STKPWHRAO*EUZ",
+		"require": "-Z",
+		"tags": "right-hand single-key lower-row alphabet column-5 group-6"
+	},
+	{
+		"title": "KP = X",
+		"include": "KPAO*EUFRPBLGTS",
+		"require": "KP",
+		"tags": "left-hand multi-key alphabet group-6"
+	},
+	{
+		"title": "STKPB = Z",
+		"include": "STKPBAO*EUFRPBLGTS",
+		"require": "STKPB",
+		"tags": "left-hand multi-key alphabet group-6"
+	},
+	{
+		"title": "KW = Q",
+		"include": "KWAO*EUFRPBLGTSDZ",
+		"require": "KW",
+		"tags": "left-hand multi-key lower-row alphabet group-6"
+	}
+]

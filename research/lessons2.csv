@@ -1,0 +1,57 @@
+title,include,require,tags
+H,HAO*EU,H,left-hand single-key upper-row alphabet column-1 group-1
+R,RAO*EU,R,left-hand single-key lower-row alphabet column-1 group-1
+HR = L,HRAO*EUFR,HR,left-hand multi-key  alphabet column-1 group-1
+Ending R,HRAO*EUFR,-R,right-hand single-key lower-row alphabet column-1 group-1
+Ending F,HRAO*EUF,-F,right-hand single-key upper-row alphabet column-1 group-1
+W,WHRAO*EUFR,W,left-hand single-key lower-row alphabet column-2 group-2
+PW = B,PWHRA*EUFR,PW,left-hand multi-key  alphabet column-2 group-2
+PH = M,PHA*EUFR,PH,left-hand multi-key upper-row alphabet  group-2
+Ending P,PWHRAO*EUP,-P,right-hand single-key upper-row alphabet column-2 group-2
+Ending B,PWHRAO*EUB,-B,right-hand single-key lower-row alphabet column-2 group-2
+Ending PB = N,PWHRAO*EUPB,-PB,right-hand multi-key  alphabet column-2 group-2
+Ending F,PWHRAO*EUF,-F,right-hand single-key upper-row alphabet column-1 group-2
+Ending FP = CH,PWHRAO*EUFP,-FP,right-hand multi-key upper-row   group-2
+Ending RB = SH,PWHRAO*EURB,-RB,right-hand multi-key lower-row   group-2
+Vowels Supplement: AOE = long E,PWHRAO*EFRPB,AOE,thumbs multi-key vowel-row   group-2
+Vowels Supplement: AEU = long A,PWHRA*EUFRPB,AEU,thumbs multi-key vowel-row   group-2
+"Vowels Supplement: AU = ahl, alk",PWHRA*URPBLG,AU,thumbs multi-key vowel-row   group-2
+T,TAO*EUFRPB,T,left-hand single-key upper-row alphabet column-3 group-3
+K,KAO*EUFRPB,K,left-hand single-key lower-row alphabet column-3 group-3
+TK = D,TKAO*EUFRPB,TK,left-hand multi-key  alphabet column-3 group-3
+TP = F,TPAO*EUFRPB,TP,left-hand multi-key  alphabet  group-3
+KW = Q,KWAO*EUFRPB,KW,left-hand multi-key lower-row alphabet  group-3
+Vowels Supplement: OU = ow,TKPWHRO*UFRPBLG,OU,thumbs multi-key vowel-row   group-3
+Vowels Supplement AO = oo,TKPWHRAO*FRPBLG,AO,thumbs multi-key vowel-row   group-3
+Vowels Supplement: OEU = Oy!,TKPWHRO*EUFRPBLG,OEU,thumbs multi-key vowel-row   group-3
+Vowels Supplement: AOU = long U,TKPWHRAO*UFRPBLG,AOU,thumbs multi-key vowel-row   group-3
+Vowels Supplement: AUF = of,STKPWHRA*UFRPBLGTSDZ,AUF,thumbs multi-key vowel-row   group-3
+TPH = N,TPHAO*EUFRPB,TPH,left-hand multi-key upper-row alphabet  group-4
+KWR = Y,KWRAO*EUFRPB,KWR,left-hand multi-key lower-row alphabet  group-4
+TKPW = G,TKPWRAO*EUFRPB,TKPW,left-hand multi-key  alphabet  group-4
+Ending L,TKPWHRAO*EUL,-L,right-hand single-key upper-row alphabet column-3 group-4
+Ending G,TKPWHRAO*EUG,-G,right-hand single-key lower-row alphabet column-3 group-4
+Ending -PL = M,TKPWHRAO*EUPL,-PL,right-hand multi-key upper-row alphabet  group-4
+Ending -BG = K,TKPWHRAO*EUBG,-BG,right-hand multi-key lower-row alphabet  group-4
+Ending -PBG,TKPWHRAO*EUPBG,-PBG,right-hand multi-key    group-4
+S,STKPWHAO*EUFRPBLG,S,left-hand single-key upper-row alphabet column-4 group-5
+SKWR = J,SKWRAO*EUFRPBLG,SKWR,left-hand multi-key lower-row alphabet  group-5
+SR = V,SRAO*EUFRPBLG,SR,left-hand multi-key lower-row alphabet  group-5
+Ending T,STKPWHRAO*EUT,-T,right-hand single-key upper-row alphabet column-4 group-5
+Ending NT,STKPWHRAO*EUPBT,-PBT,right-hand multi-key    group-5
+Ending LT,STKPWHRAO*EULT,-LT,right-hand multi-key upper-row   group-5
+Ending TH,STKPWHRAO*EUPBLT,*-T,right-hand multi-key asterisk   group-5
+Ending S,STKPWHRAO*EUS,-S,right-hand single-key lower-row alphabet column-4 group-5
+-F Revisited,STKPWHRAO*EUFPB,-FPB,right-hand single-key upper-row alphabet  group-5
+-FT can be st or ft,STKPWHRAO*EUFPBT,-FT,right-hand multi-key upper-row   group-5
+Ending -TS,STKPWHRAO*EUTS,-TS,right-hand multi-key    group-6
+Ending -BGS = X,STKPWHRAO*EUBGS,-BGS,right-hand multi-key lower-row   group-6
+"Ending -GS = tion, sion, xion ",STKPWHRAO*EUFGS,-GS,right-hand multi-key lower-row   group-6
+Ending D,STKPWHRAO*EUD,-D,right-hand single-key upper-row alphabet column-5 group-6
+Ending Z,STKPWHRAO*EUZ,-Z,right-hand single-key lower-row alphabet column-5 group-6
+KP = X,KPAO*EUFRPBLGTS,KP,left-hand multi-key  alphabet  group-6
+STKPB = Z,STKPBAO*EUFRPBLGTS,STKPB,left-hand multi-key  alphabet  group-6
+,,,
+,,,
+,,,
+,,,

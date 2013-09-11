@@ -5,8 +5,6 @@
 #steno-keyboard {
   /* Position */
   position: absolute;
-  left: 640px;
-  top: 360px;
   
   /* Box */
   width: 348px;

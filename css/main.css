@@ -43,8 +43,8 @@ html {
 
 body {
   height: 100%;  /* fixes background not showing */
-  width: 70%;
-  max-width: 800px;
+  width: 85%;
+  max-width: 1280px;
   margin: 0 auto;
 
   /* Colors */
@@ -59,7 +59,6 @@ body {
 
   /* Text */
   font-family: "MuseoSlab500", arial, sans-serif;
-  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5); /* letterpress effect */
   color: white;
   overflow: hidden;
 }
@@ -80,6 +79,8 @@ header {
   display: block;
   text-align: center;
   padding: 60px;
+
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5); /* letterpress effect */
 }
 
 header > img {
@@ -106,9 +107,11 @@ figure {
 }
 
 .two-column {
-  column-count: 2;
+  /*column-count: 2;
   -moz-column-count: 2;
-  -webkit-column-count: 2;
+  -webkit-column-count: 2;*/
+  margin-bottom: 20px;
+  padding: 20px;
 }
 
 .home_link_img {
@@ -117,6 +120,14 @@ figure {
 
 .logout_link {
   float: right;
+}
+
+.float_left {
+    float: left;
+}
+
+.float_right {
+    float: right;
 }
 
 /*** TEXT STYLES ***/
@@ -170,18 +181,20 @@ h2 {
   margin-top: 1em;
   margin-bottom: 0.5em;
 
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5); /* letterpress effect */
 }
 
 h3 {
   /* Colors */
-  color: #BDBEC1; /* gray */
+  color: #ffffff; /* white */
 
   /* Text */
   font-size: 1.5em;
   font-weight: bold;
   text-transform: uppercase;
-  margin-top: 0.5em;
-  margin-bottom: 0.25em;
+  margin-top: 0.75em;
+  margin-bottom: 0.5em;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5); /* letterpress effect */
 
 }
 

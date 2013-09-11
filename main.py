@@ -38,6 +38,7 @@ class BaseHandler(webapp2.RequestHandler):
 
 
 class MainPage(BaseHandler):
+    
     """Meant to serve the generic pages, not user-specific"""
     def get(self, *args):
         specific_page_requested = len(args) > 0
@@ -63,8 +64,9 @@ class MainPage(BaseHandler):
             
             self.write_static_template('home.html', **template_values)     
             
-class DashboardPage(BaseHandler):
-    """User comes here to see her progress, and to choose the next activity"""
+            
+class LessonBrowserPage(BaseHandler):
+    """User comes here to see which lesson to go to next"""
     def get(self, *args):
         user = users.get_current_user()
         template_values = {}
@@ -72,7 +74,7 @@ class DashboardPage(BaseHandler):
             logout_url = users.create_logout_url('home.html')
             disciple = Disciple.get_current(user)
             template_values['logout_url'] = logout_url;
-            self.write_static_template('dashboard.html', **template_values)
+            self.write_template('lessonbrowser.html', **template_values)
         else:
             loginURL = users.create_login_url(self.request.uri)
             self.redirect(loginURL)
@@ -80,7 +82,7 @@ class DashboardPage(BaseHandler):
 ### ROUTER
 
 app = webapp2.WSGIApplication([
-                               ('/dashboard', DashboardPage),
+                               ('/lessons', LessonBrowserPage),
                                ('/?', MainPage), 
                                ('/(.+)', MainPage)],
                               debug=True)

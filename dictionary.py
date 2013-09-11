@@ -177,7 +177,7 @@ class Dictionary():
         hyphen_added = False
         seen_vowel = False
         for c in brief:
-            if c in 'AO':
+            if c in 'AO*':
                 seen_vowel = True
             if str.islower(c) and not hyphen_added:
                 if not seen_vowel:
@@ -194,6 +194,14 @@ class Dictionary():
     def lesson(self, description, match_string, required_string):
         return '*** %s ***\n [%s]\n' % (description, '\t'.join(dictionary.wordlist(match_string, required_string)))
 
+    def debug_list_missing_words(self):
+        """Returns a list of the words that are in common but not in the dictionary"""
+        
+        #assume that dict.json is much bigger than common.json
+        search = set(self.data.values())
+        data = list((k) for k in self.common if k not in search)
+        
+        return data
 
 if __name__ == "__main__":
     """running some tests here"""
@@ -204,57 +212,7 @@ if __name__ == "__main__":
             with open(os.path.join(assets_dir, 'binaryToSteno.json'), 'r') as conversionfile:
                 dictionary = Dictionary(json.load(dictfile), json.load(commonfile), json.load(conversionfile), 5000)
     
-    
-    #print dictionary.lesson('H', 'HAO*EU', 'H')
-    #print dictionary.lesson('R', 'RAO*EU', 'R')       
-    #print dictionary.lesson('HR = L', 'HRAO*EUFR', 'HR')
-    #print dictionary.lesson('Ending R', 'HRAO*EUFR', '-R')
-    #print dictionary.lesson('Ending F', 'HRAO*EUF', '-F')
-    
-    #print dictionary.lesson('W', 'WHRAO*EUFR', 'W')
-    #print dictionary.lesson('PW = B', 'PWHRA*EUFR', 'PW')
-    #print dictionary.lesson('PH = M', 'PHA*EUFR', 'PH') # more words!    
-    #print dictionary.lesson('Ending P', 'PWHRAO*EUP', '-P')
-    #print dictionary.lesson('Ending B', 'PWHRAO*EUB', '-B')
-    #print dictionary.lesson('Ending PB = N', 'PWHRAO*EUPB', '-PB')
-    #print dictionary.lesson('Ending F', 'PWHRAO*EUF', '-F')
-    #print dictionary.lesson('Ending FP = CH', 'PWHRAO*EUFP', '-FP')
-    #print dictionary.lesson('Ending RB = SH', 'PWHRAO*EURB', '-RB')
-    #print dictionary.lesson('Vowels Supplement: AOE = long E', 'PWHRAO*EFRPB', 'AOE')
-    #print dictionary.lesson('Vowels Supplement: AEU = long A', 'PWHRA*EUFRPB', 'AEU')
-    #print dictionary.lesson('Vowels Supplement: AU = ahl, alk', 'PWHRA*URPBLG', 'AU')
-    
-    #print dictionary.lesson('T', 'TAO*EUFRPB', 'T')
-    #print dictionary.lesson('K', 'KAO*EUFRPB', 'K')
-    #print dictionary.lesson('TK = D', 'TKAO*EUFRPB', 'TK')
-    #print dictionary.lesson('TP = F', 'TPAO*EUFRPB', 'TP')
-    #print dictionary.lesson('KW = Q', 'KWAO*EUFRPB', 'KW') # needs more words
-    #print dictionary.lesson('Vowels Supplement: OU = ow', 'TKPWHRO*UFRPBLG', 'OU')
-    #print dictionary.lesson('Vowels Supplement AO = oo', 'TKPWHRAO*FRPBLG', 'AO')
-    #print dictionary.lesson('Vowels Supplement: OEU = Oy!', 'TKPWHRO*EUFRPBLG', 'OEU')
-    #print dictionary.lesson('Vowels Supplement: AOU = long U', 'TKPWHRAO*UFRPBLG', 'AOU')
-    #print dictionary.lesson('Vowels Supplement: AUF = of', 'STKPWHRA*UFRPBLGTSDZ', 'AUF')
-    
-    #print dictionary.lesson('TPH = N', 'TPHAO*EUFRPB', 'TPH')
-    #print dictionary.lesson('KWR = Y', 'KWRAO*EUFRPB', 'KWR')
-    #print dictionary.lesson('TKPW = G', 'TKPWRAO*EUFRPB', 'TKPW')
-    #print dictionary.lesson('Ending L', 'TKPWHRAO*EUL', '-L')
-    #print dictionary.lesson('Ending G', 'TKPWHRAO*EUG', '-G')
-    #print dictionary.lesson('Ending -PL = M', 'TKPWHRAO*EUPL', '-PL')
-    #print dictionary.lesson('Ending -BG = K', 'TKPWHRAO*EUBG', '-BG')
-    #print dictionary.lesson('Ending -PBG', 'TKPWHRAO*EUPBG', '-PBG')
-    
-    #print dictionary.lesson('S', 'STKPWHAO*EUFRPBLG', 'S')
-    #print dictionary.lesson('SKWR = J', 'SKWRAO*EUFRPBLG', 'SKWR')
-    #print dictionary.lesson('SR = V', 'SRAO*EUFRPBLG', 'SR') #needs more words
-    #print dictionary.lesson('Ending T', 'STKPWHRAO*EUT', '-T')
-    #print dictionary.lesson('Ending NT', 'STKPWHRAO*EUPBT', '-PBT')
-    #print dictionary.lesson('Ending LT', 'STKPWHRAO*EULT', '-LT')
-    #print dictionary.lesson('Ending TH (bug with filter, so nothing shows yet)', 'STKPWHRAO*EUPBLT', '*-T') # ADDED
-    #print dictionary.lesson('Ending S', 'STKPWHRAO*EUS', '-S')
-    #print dictionary.lesson('-F Revisited', 'STKPWHRAO*EUFPB', '-FPB') # ADDED
-    #print dictionary.lesson('-FT can be st or ft', 'STKPWHRAO*EUFPBT', '-FT') # ADDED
-    
+
     ##print dictionary.lesson('Ending TS', 'STKPWHRAO*EUTS', '-TS') # ADDED
     #print dictionary.lesson('Ending -BGS = X', 'STKPWHRAO*EUBGS', '-BGS') 
     #print dictionary.lesson('Ending -GS = tion, sion, xion ', 'STKPWHRAO*EUFGS', '-GS') # ADDED
@@ -271,23 +229,3 @@ if __name__ == "__main__":
 #    for (k, v) in returned:
 #        print "%s=%s" % (k, v)
 
-
-
-    #===========================================================================
-    # # just a little script to process incategory.json to a regular dictionary file
-    # 
-    # with open(os.path.join(assets_dir, 'incategory.json'), 'r') as catfile:
-    #     something = json.load(catfile)
-    #     
-    #     goods = {}
-    #     for s in something:
-    #         if 'canon' in s[2] or 'phonetic' in s[2]:
-    #             print 'canonical %s %s' % (s[0], s[1])
-    #             goods[s[1]] = s[0]
-    #         
-    #     with open('result-dict.json', 'w') as outfile:
-    #         outfile.write(json.dumps(goods))
-    #         
-    #     
-    # print 'done'
-    #===========================================================================

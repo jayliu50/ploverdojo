@@ -165,7 +165,7 @@ class QuizData(BaseHandler):
         try:
             self.dictionary = Dictionary.create_default()
         except Exception as e:
-            self.errorMsg += Exceptions.format_exception(e)
+            print Exceptions.format_exception(e)
         
     def get(self):
         user = users.get_current_user()
@@ -175,7 +175,7 @@ class QuizData(BaseHandler):
                     filtered = self.dictionary.prepare_for_quiz(self.dictionary.filter(self.request.get('keys'), self.request.get('require')))
                     
                 except Exception, e:
-                    self.errorMsg += Exceptions.format_exception(e)
+                    print Exceptions.format_exception(e)
                 
                 if self.errorMsg is not '':
                     self.set_cookie('error', str(self.errorMsg))

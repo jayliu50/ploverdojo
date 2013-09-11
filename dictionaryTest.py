@@ -90,6 +90,20 @@ class DictionaryTest(unittest.TestCase):
         
         self.check_count(result, 4)
         
+    def test_filter_required_asterisk(self):
+        """ Simple filter with required asterisk entry """
+        dictionary = Dictionary(json.loads('{ "TK*": "did", "K": "can", "T": "it", "KO": "could", "S": "is", "*GS": "action"}'))
+        
+        result = dictionary.filter("TK*GS", "*")
+        
+        self.assertFalse("K" in result, 'should have not contained K')     
+        self.assertFalse("T" in result, 'should have not contained T') 
+        self.assertTrue("TK*" in result, 'Doesn\'t contain TK')
+        self.assertFalse("KO" in result, 'should have not contained KO')
+        self.assertTrue("*GS" in result, 'should have contained *GS')
+        
+        self.check_count(result, 2)
+        
     def test_common(self):
         """ Simple Filter with check for common word """
         

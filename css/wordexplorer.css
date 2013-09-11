@@ -20,6 +20,7 @@
     max-width: 600px;
     text-align: justify;
     word-wrap: break-word;
+    font-size: 2em;
 }
 
 .wordlist span:before {
