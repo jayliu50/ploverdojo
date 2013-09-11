@@ -72,7 +72,7 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
 
             sc.runQuery = function () {
 
-                wordService(queryString(), sc);
+                wordService.populateWords(queryString(), sc);
 
             };
 
@@ -235,16 +235,25 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
 
             sc.practice = function () {
 
+                wordService.appendWithRanking(sc.words);
+
                 var testdata = [];
+                // convert to testdata format
                 for (var w in sc.words) {
-                    // todo: prioritize this list before sending
                     var d = [];
                     d[0] = sc.words[w].word;
                     d[1] = sc.words[w].stroke;
+                    d[2] = sc.words[w].ranking;
                     testdata.push(d);
                 }
 
-                cookies.testdata = JSON.stringify(testdata);
+                testdata.sort(function(a, b) {
+                    return a[2] - b[2];
+                });
+
+                var limit = 10;
+
+                cookies.testdata = JSON.stringify(testdata.splice(0, limit));
                 cookies.quiz_mode = 'WORD';
 
                 window.location.href = '/quiz?mode=word';

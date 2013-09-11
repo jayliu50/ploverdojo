@@ -1,8 +1,9 @@
-
 angular.module('ploverdojo.services', [])
     .factory('WordService', ['$http', function (http) {
 
-        var wordService = function (queryString, sc) {
+        var wordService = {};
+
+        wordService.populateWords = function (queryString, sc) {
             // not sure if I should be using the sc (scope) in here, but I didn't know what else I could do
 
             sc.busy = true;
@@ -10,16 +11,16 @@ angular.module('ploverdojo.services', [])
             var mastery = null; // {}
 
             http({method: 'GET', url: 'disciple/profile?item=mastery&timestamp=' + new Date().getTime() })
-                .success(function(data, status, headers, config) {
+                .success(function (data, status, headers, config) {
                     mastery = data;
                 });
 
             http({method: 'GET', url: 'disciple/dictionary?' + queryString }).
                 success(function (data, status, headers, config) {
 
-                    if(mastery !== null) {
-                        for(var item in data) {
-                            if(mastery.hasOwnProperty(data[item].word)) {
+                    if (mastery !== null) {
+                        for (var item in data) {
+                            if (mastery.hasOwnProperty(data[item].word)) {
                                 data[item].mastery = mastery[data[item].word];
                             }
                         }
@@ -35,38 +36,61 @@ angular.module('ploverdojo.services', [])
                 });
         };
 
+        var commonWords = null;
+
+        // if (!commonWords) {
+
+        http({method: 'GET', url: 'assets/common.json' }).
+            success(function (data, status, headers, config) {
+                commonWords = data;
+            }).
+            error(function (data, status, headers, config) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+            });
+        // }
+
+        wordService.appendWithRanking = function (words) {
+            if(commonWords) {
+            for (word in words) {
+                words[word].ranking = commonWords[words[word].word].Rank;
+            }}
+        };
+
         return wordService;
     }])
 
     .factory('LessonService', ['$http', function (http) {
 
+        var lessonData = null;
+
+        http({method: 'GET', url: 'assets/lessons.json'})
+            .success(function (data, status, headers, config) {
+                lessonData = data;
+            })
+            .error(function (data, status, headers, config) {
+
+            });
+
         var lessonService = function (sc, filterTags) {
 
             var result = [];
 
-            http({method: 'GET', url: 'assets/lessons.json'})
-                .success(function (data, status, headers, config) {
-
-                    if (filterTags) {
-
-                        filterTags = filterTags.split(' ');
-                        for (var i = 0; i < data.length; i++) {
-                            for (var j = 0; j < filterTags.length; j++) {
-                                if (data[i].tags.indexOf(filterTags[j]) > -1) {
-                                    result.push(data[i]);
-                                    break;
-                                }
-                            }
-
+            if (filterTags) {
+                filterTags = filterTags.split(' ');
+                for (var i = 0; i < lessonData.length; i++) {
+                    for (var j = 0; j < filterTags.length; j++) {
+                        if (lessonData[i].tags.indexOf(filterTags[j]) > -1) {
+                            result.push(lessonData[i]);
+                            break;
                         }
                     }
-                    else {
-                        result = data;
-                    }
-                })
-                .error(function (data, status, headers, config) {
+                }
+            }
+            else {
+                result = data;
+            }
 
-                });
 
             return result;
         };

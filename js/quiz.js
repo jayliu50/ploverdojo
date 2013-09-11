@@ -52,6 +52,9 @@
 
     var quizMode = quizModeEnum.WORD;
 
+    /** as the learner goes through the word list, add these to the ones that they have mastered */
+    var masteredList = {};
+
 // IMPORT ASSETS
 
     /**
@@ -685,7 +688,7 @@
         });
 
         timer(
-            5000,
+            3000,
             function (timeLeft) {
                 $('#countdown').html(timeLeft + 1);
             },
@@ -695,6 +698,14 @@
                 // commence with the initialization of the rest of it
                 stopwatch.start();
                 nextQuizQuestion();
+
+                // lay out the words
+                var innerHtml = '';
+                for (item in testdata) {
+                    innerHtml += '<li class="target-word-' + testdata[item][0] + '" title="' + testdata[item][1] + '">' + testdata[item][0] + '</li> '; // don't forget the space
+                }
+
+                $('#progress').html(innerHtml);
             }
         );
 
@@ -706,7 +717,7 @@
             var candidateIndex = 0;
             do {
                 candidateIndex = Math.floor(Math.random() * testdata.length);
-            } while (candidateIndex === currentQuizIndex);
+            } while (candidateIndex === currentQuizIndex || masteredList.hasOwnProperty(testdata[candidateIndex][0]));
             currentQuizIndex = candidateIndex;
         }
         else if (testdata.length === 1) {
@@ -762,7 +773,8 @@
 
                 record = responseLog[key];
 
-                correct = dictionary[bChord.toRTFCRE()] === testdata[currentQuizIndex][0]; // not sure what to use here
+                correct = dictionary[bChord.toRTFCRE()] === key; // not sure what to use here
+
                 break;
 
             case (quizModeEnum.KEY):
@@ -847,7 +859,7 @@
                 updateMastery.push(r);
             }
 
-            data.update_mastery = JSON.stringify(updateMastery);
+            data.update_mastery = JSON.stringify(Object.keys(masteredList));
 
             link = '/main';
             url += 'item=mastery';
@@ -899,8 +911,7 @@
     $('#debug-advance-quiz').click(advanceQuiz);
 
     function readyToMoveOn() {
-        // is ready if the past N tries in responding to each key was done in T milliseconds or less
-        var ready = true;
+        // is ready if the past N-1 tries in responding to each key was done in T milliseconds or less
         for (var key in responseLog) {
             // haven't proven yourself
             if (responseLog.length === testdata.length && responseLog[key] === null && responseLog[key].length < EVALUATED_RECORD_LENGTH) {
@@ -908,13 +919,24 @@
             }
 
             // if you have enough records, then make sure that they are all within the milliseconds
+            var wordReady = true;
             for (var r in responseLog[key]) {
-                ready &= responseLog[key][r] < RESPONSE_TIME_STANDARD;
-                if (!ready) return ready;
+                wordReady &= responseLog[key][r] < RESPONSE_TIME_STANDARD;
+                if (!wordReady) break;
+            }
+
+            if (wordReady) {
+                $('#progress .target-word-' + key).removeClass('tried').addClass('mastered');
+                masteredList[key] = true;
+            }
+            else {
+                if (!masteredList[key]) {
+                    $('#progress .target-word-' + key).addClass('tried');
+                }
             }
         }
 
-        return true;
+        return Object.keys(masteredList).length >= testdata.length - 1;
     }
 
     function showUserInput() {
@@ -934,7 +956,7 @@
 
         // show keys
         userInputHTML = "";
-        for (var i = 0; i < chords.length; i++) {
+        for (var i in chords) {
             userInputHTML += chords[i].toHTMLTable();
         }
         $('#uiChords').html(userInputHTML);

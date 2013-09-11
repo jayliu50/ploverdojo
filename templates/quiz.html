@@ -25,9 +25,6 @@
     
     <div id="content">
 
-    <div id="progress">
-        <!-- a list of the words they need to get will show up here -->
-    </div>
     
     <div id="countdown-dialog-modal" title="Get ready!" style="display: none">
       <p>Your quiz starts in ... </p>
@@ -37,8 +34,12 @@
     <div id="finished-dialog-modal" title="Finished!" style="display: none">
       <p>GOOD JOB!</p>
     </div>
-      <h1 id="content-title">Quiz #{{ current_lesson }} {% if is_review and current_lesson != 1 %}(REVIEW) {% endif %}</h1>  
-      
+      <!--<h1 id="content-title">Quiz #{{ current_lesson }} {% if is_review and current_lesson != 1 %}(REVIEW) {% endif %}</h1>-->
+
+        <ul id="progress">
+            <!-- a list of the words they need to get will show up here -->
+        </ul>
+
       <div id="quiz-prompt">
         <h2>Please Type:</h2>
         <div id="quiz-prompt-text"></div>
