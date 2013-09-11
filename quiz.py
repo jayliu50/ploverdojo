@@ -104,7 +104,7 @@ class QuizPage(BaseHandler):
                              'login_content': 'Logout'}
             
             mode = self.request.get('mode')
-            if mode is 'filter':
+            if mode == 'filter':
                 
                 keys = self.request.get('keys')
                 config = "?keys=%s" % keys
@@ -112,9 +112,10 @@ class QuizPage(BaseHandler):
                     config += "&require=%s" % self.request.get('require')
                 
                 self.set_cookie('quiz_config', str(config))
-                self.set_cookie('quiz_mode', 'WORD')    
+                
+                self.write_template('quiz-word.html', **template_args)
             
-            elif mode is 'key':
+            elif mode == 'key':
                 stage = self.request.get('stage')
                 current_lesson = 1
                 # unit number from the URL should override that from the database
@@ -136,19 +137,21 @@ class QuizPage(BaseHandler):
                 self.set_cookie('quiz_config', str(config))
                 self.set_cookie('current_lesson', current_lesson)
                 self.set_cookie('is_review', isReview)
-                self.set_cookie('quiz_mode', 'KEY')
                 
                 template_args.update({
                     'current_lesson': current_lesson,
                     'is_review': isReview,
                     'lessonDescription': LESSONS[current_lesson - 1]["description"]
                 })
-            elif mode is 'word':
+                
+                
+                self.write_template('quiz-key.html', **template_args)
+            elif mode == 'word':
                 # the words to be quizzed should have already been loaded into the cookie
-                self.set_cookie('quiz_mode', 'WORD')
+                
+                self.write_template('quiz-word.html', **template_args)
                 
                 
-            self.write_template('quiz.html', **template_args)
         else:
             self.redirect(users.create_login_url(self.request.uri))
 

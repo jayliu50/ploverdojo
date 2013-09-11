@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Plover Dojo</title>
+    <meta charset="utf-8">
+
+    <!-- import jquery stuff -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+    <!-- import style sheets -->
+    <link rel="stylesheet" type="text/css" href="css/webfonts.css">
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/quiz-key.css">
+    <link rel="stylesheet" type="text/css" href="css/qwertyKeyboard.css">
+    <link rel="stylesheet" type="text/css" href="css/stenoKeyboard.css">
+    
+  </head>
+  <body>
+    <div id="header">
+      <a href="/" id="header-logo"><img src="assets/logo.png" alt="Plover Dojo" height="71px"></a>
+      <a href="{{ login_href }}" id="header-login">{{ login_content }}</a>
+    </div>
+    
+    <div id="content">
+    
+    <div id="dialog-modal" title="Get ready!" style="display: none">
+      <p>Your quiz starts in ... </p>
+      <div id="countdown"></div>
+    </div>
+    
+      <h1 id="content-title">Quiz #{{ current_lesson }} {% if is_review and current_lesson != 1 %}(REVIEW) {% endif %}</h1>  
+      
+      <div id="quiz-prompt">
+        <h2>Please Type:</h2>
+        <span id="quiz-prompt-text"></span>
+      </div>
+
+      <div id="user-response">
+        <h2>Your Input:</h2>
+        <span id="user-response-input-text"></span>
+        <h2>Output:</h2>
+        <span id="user-response-output-text"></span>
+
+        <div id="feedback-text"></div>        
+      </div>
+
+
+      <!-- STANDARD KEYBOARD (This keyboard is based on the IBM PC Windows 104 keyboard) -->
+      <div id="standard-keyboard">
+        <div class="standard-row">
+          <div class="standard-key code-192" id="standard-key-grave-accent"><span class="upper-key-text">~</span><span class="lower-key-text">`</span></div>
+          <div class="standard-key code-49" id="standard-key-1"><span class="upper-key-text">!</span><span class="lower-key-text">1</span></div>
+          <div class="standard-key code-50" id="standard-key-2"><span class="upper-key-text">@</span><span class="lower-key-text">2</span></div>
+          <div class="standard-key code-51" id="standard-key-3"><span class="upper-key-text">#</span><span class="lower-key-text">3</span></div>
+          <div class="standard-key code-52" id="standard-key-4"><span class="upper-key-text">$</span><span class="lower-key-text">4</span></div>
+          <div class="standard-key code-53" id="standard-key-5"><span class="upper-key-text">%</span><span class="lower-key-text">5</span></div>
+          <div class="standard-key code-54" id="standard-key-6"><span class="upper-key-text">^</span><span class="lower-key-text">6</span></div>
+          <div class="standard-key code-55" id="standard-key-7"><span class="upper-key-text">&amp;</span><span class="lower-key-text">7</span></div>
+          <div class="standard-key code-56" id="standard-key-8"><span class="upper-key-text">*</span><span class="lower-key-text">8</span></div>
+          <div class="standard-key code-57" id="standard-key-9"><span class="upper-key-text">(</span><span class="lower-key-text">9</span></div>
+          <div class="standard-key code-48" id="standard-key-0"><span class="upper-key-text">)</span><span class="lower-key-text">0</span></div>
+          <div class="standard-key code-109 code-189" id="standard-key-dash"><span class="upper-key-text">_</span><span class="lower-key-text">-</span></div>
+          <div class="standard-key code-107 code-187" id="standard-key-equal-sign"><span class="upper-key-text">+</span><span class="lower-key-text">=</span></div>
+          <div class="standard-key code-8" id="standard-key-backspace">Backspace</div>
+        </div>
+        <div class="standard-row">
+          <div class="standard-key code-9" id="standard-key-tab">Tab</div>
+          <div class="standard-key code-81" id="standard-key-q">Q</div>
+          <div class="standard-key code-87" id="standard-key-w">W</div>
+          <div class="standard-key code-69" id="standard-key-e">E</div>
+          <div class="standard-key code-82" id="standard-key-r">R</div>
+          <div class="standard-key code-84" id="standard-key-t">T</div>
+          <div class="standard-key code-89" id="standard-key-y">Y</div>
+          <div class="standard-key code-85" id="standard-key-u">U</div>
+          <div class="standard-key code-73" id="standard-key-i">I</div>
+          <div class="standard-key code-79" id="standard-key-o">O</div>
+          <div class="standard-key code-80" id="standard-key-p">P</div>
+          <div class="standard-key code-219" id="standard-key-open-bracket"><span class="upper-key-text">{</span><span class="lower-key-text">[</span></div>
+          <div class="standard-key code-221" id="standard-key-close-bracket"><span class="upper-key-text">}</span><span class="lower-key-text">]</span></div>
+          <div class="standard-key code-220" id="standard-key-backslash"><span class="upper-key-text">|</span><span class="lower-key-text">\</span></div>
+        </div>
+        <div class="standard-row">
+          <div class="standard-key code-20" id="standard-key-caps-lock">Caps Lock</div>
+          <div class="standard-key code-65" id="standard-key-a">A</div>
+          <div class="standard-key code-83" id="standard-key-s">S</div>
+          <div class="standard-key code-68" id="standard-key-d">D</div>
+          <div class="standard-key code-70" id="standard-key-f">F</div>
+          <div class="standard-key code-71" id="standard-key-g">G</div>
+          <div class="standard-key code-72" id="standard-key-h">H</div>
+          <div class="standard-key code-74" id="standard-key-j">J</div>
+          <div class="standard-key code-75" id="standard-key-k">K</div>
+          <div class="standard-key code-76" id="standard-key-l">L</div>
+          <div class="standard-key code-59 code-186" id="standard-key-semicolon"><span class="upper-key-text">:</span><span class="lower-key-text">;</span></div>
+          <div class="standard-key code-222" id="standard-key-single-quote"><span class="upper-key-text">"</span><span class="lower-key-text">'</span></div>
+          <div class="standard-key code-13" id="standard-key-enter">Enter</div>
+        </div>
+        <div class="standard-row">
+          <div class="standard-key code-16" id="standard-key-left-shift">Shift</div>
+          <div class="standard-key code-90" id="standard-key-z">Z</div>
+          <div class="standard-key code-88" id="standard-key-x">X</div>
+          <div class="standard-key code-67" id="standard-key-c">C</div>
+          <div class="standard-key code-86" id="standard-key-v">V</div>
+          <div class="standard-key code-66" id="standard-key-b">B</div>
+          <div class="standard-key code-78" id="standard-key-n">N</div>
+          <div class="standard-key code-77" id="standard-key-m">M</div>
+          <div class="standard-key code-188" id="standard-key-comma"><span class="upper-key-text">&lt;</span><span class="lower-key-text">,</span></div>
+          <div class="standard-key code-190" id="standard-key-period"><span class="upper-key-text">&gt;</span><span class="lower-key-text">.</span></div>
+          <div class="standard-key code-191" id="standard-key-slash"><span class="upper-key-text">?</span><span class="lower-key-text">/</span></div>
+          <div class="standard-key code-16" id="standard-key-right-shift">Shift</div>
+        </div>
+        <div class="standard-row">
+          <div class="standard-key code-17" id="standard-key-left-control">Ctrl</div>
+          <div class="standard-key code-91" id="standard-key-left-windows">Win</div>
+          <div class="standard-key code-18" id="standard-key-left-alt">Alt</div>
+          <div class="standard-key code-32" id="standard-key-space">Space</div>
+          <div class="standard-key code-18" id="standard-key-right-alt">Alt</div>
+          <div class="standard-key code-92" id="standard-key-right-window">Win</div>
+          <div class="standard-key code-93" id="standard-key-menu">Menu</div>
+          <div class="standard-key code-17" id="standard-key-right-control">Ctrl</div>
+        </div>
+      </div>
+
+      <!-- STENO KEYBOARD -->
+      <div id="steno-keyboard">
+        <div class="steno-number-bar">
+          <div class="steno-key number-bar code-48 code-49 code-50 code-51 code-52 code-53 code-54 code-55 code-56 code-57" id="steno-key-number-bar"></div>
+        </div>
+        <div class="steno-upper-bank">
+          <div class="steno-key square code-81 code-65" id="steno-key-s-1">S</div>
+          <div class="steno-key square code-87" id="steno-key-t-">T</div>
+          <div class="steno-key square code-69" id="steno-key-p-">P</div>
+          <div class="steno-key square code-82" id="steno-key-h-">H</div>
+          <div class="steno-key square code-71 code-72 code-84 code-89" id="steno-key-asterisk-1">*</div>
+          <div class="steno-key square code-85" id="steno-key--f">F</div>
+          <div class="steno-key square code-73" id="steno-key--p">P</div>
+          <div class="steno-key square code-79" id="steno-key--l">L</div>
+          <div class="steno-key square code-80" id="steno-key--t">T</div>
+          <div class="steno-key square code-219" id="steno-key--d">D</div>
+        </div>
+        <div class="steno-lower-bank">
+          <div class="steno-key rounded code-81 code-65" id="steno-key-s-2">S</div>
+          <div class="steno-key rounded code-83" id="steno-key-k-">K</div>
+          <div class="steno-key rounded code-68" id="steno-key-w-">W</div>
+          <div class="steno-key rounded code-70" id="steno-key-r-">R</div>
+          <div class="steno-key rounded code-71 code-72 code-84 code-89" id="steno-key-asterisk-2">*</div>
+          <div class="steno-key rounded code-74" id="steno-key--r">R</div>
+          <div class="steno-key rounded code-75" id="steno-key--b">B</div>
+          <div class="steno-key rounded code-76" id="steno-key--g">G</div>
+          <div class="steno-key rounded code-59 code-186" id="steno-key--s">S</div>
+          <div class="steno-key rounded code-222" id="steno-key--z">Z</div>
+        </div>
+        <div class="steno-vowel-keys">
+          <div class="steno-key rounded code-67" id="steno-key-a-">A</div>
+          <div class="steno-key rounded code-86" id="steno-key-o-">O</div>
+          <div class="steno-key rounded code-78" id="steno-key--e">E</div>
+          <div class="steno-key rounded code-77" id="steno-key--u">U</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- make elements draggable and resizable -->
+    <script type="text/javascript" src="js/uielements.js"></script>
+
+    <!-- load required stopwatch -->
+    <script type="text/javascript" src="js/stopwatch.js"></script>    
+    
+    <!-- do the steno thing! -->
+    <script type="text/javascript" src="js/quiz-key.js"></script>
+    
+    <p id='debug-advance-quiz'>next!</p>
+  </body>
+</html>

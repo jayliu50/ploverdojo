@@ -1,0 +1,318 @@
+/*** RESET BOX FOR ALL ELEMENTS ***/
+
+html, body, div, h1, h2, h3, h4, h5, h6, p, img, dl, dt, dd, ol, ul, li, table, tr, td,
+form, object, embed, article, aside, canvas, command, details, fieldset, figcaption,
+figure, footer, group, header, hgroup, legend, mark, menu, meter, nav, output,
+progress, section, summary, time, audio, video, a {
+    padding: 0;
+    border: 0;
+    margin: 0;
+}
+
+/* css skeleton
+  /* Position - put things that affect things outside the box
+  display: block;
+  
+  /* Box - put styles that affect the box
+  width: 100%;
+  height: 100%;
+  
+  padding: 0px;
+  border: 0px;
+  margin: 0px;
+
+  -webkit-border-radius: 12px;
+  -moz-border-radius: 12px;
+  border-radius: 12px;
+  
+  /* Colors - put the colors for the content of the box
+  color: #000000;
+  background-color: #FFFFFF;
+  
+  /* Text - put styles that affect the content text
+  font-family: 'MuseoSlab500', arial, sans-serif;
+  font-size: 1em;
+  text-align: center;
+*/
+
+/*** HEADER ***/
+
+#header {
+    /* Position */
+    position: relative; /* create new positional context */
+
+    /* Box */
+    width: 100%;
+    height: 71px; /* height of standard google headers */
+    border-bottom: 6px solid white;
+
+    /* Colors */
+    background-color: #7bc1bc; /* blue-green */
+}
+
+#header-logo {
+    /* Position */
+    position: absolute;
+    bottom: 0px;
+    left: 24px;
+}
+
+#header-login {
+    /* Position */
+    position: absolute;
+    bottom: 40px;
+    right: 24px;
+
+    /* Colors */
+    color: white;
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 0.65em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+body {
+    background-color: #76bbb6;
+}
+
+/*** CONTENT ***/
+#content {
+    /* Position */
+    position: relative; /* create new positional context */
+
+    /* Box */
+    width: 100%;
+    height: 0px; /* this will be altered via javascript to fill out the rest of the document */
+
+    /* Colors */
+    background-color: #76bbb6; /* TODO: insert gradient */
+}
+
+#content-title {
+    /* Position */
+    position: absolute;
+    top: 24px;
+    left: 34px;
+
+    /* Colors */
+    color: white;
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 4em; /* standard h1 size is 2.15em */
+    font-weight: normal; /* standard h1 weight is bold */
+    text-transform: uppercase;
+}
+
+/****** Countdown ******/
+#dialog-modal .ui-dialog-titlebar {
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 1em; /* standard h2 size is 1.85em */
+    font-weight: normal; /* standard h2 weight is bold */
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#countdown {
+    font-size: 2em; /* standard h2 size is 1.85em */
+}
+
+/****** Quiz Prompt ******/
+
+#quiz-prompt {
+    /* Position */
+    position: absolute;
+    top: 60px;
+    left: 37px;
+
+    /* Box */
+    padding: 12px;
+    border: 6px solid white;
+    min-width: 500px;
+    display: none;
+
+    /* Colors */
+    background-color: #faa951; /* orange */
+}
+
+#quiz-prompt > h2 {
+    /* Colors */
+    color: white;
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 1em; /* standard h2 size is 1.85em */
+    font-weight: normal; /* standard h2 weight is bold */
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#quiz-prompt-text {
+    /* Position */
+    display: block;
+
+    /* Box */
+    margin: 36px;
+    border: 1px solid #a7a9ab; /* dark gray */
+    margin: 6px auto 24px auto; /* use standard css center block trick with auto*/
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+
+    /* Colors */
+    background-color: #e6e7e8; /* light gray */
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 3em;
+    text-align: center;
+}
+
+#quiz-prompt-text aside {
+    /* Position */
+    display: block;
+
+    /* Colors */
+    color: #76bbb6; /* blue-green */
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 0.4em;
+    text-align: center;
+    letter-spacing: 88;
+}
+
+
+#quiz-prompt-text aside:before {
+    content: '(';
+}
+
+#quiz-prompt-text aside:after {
+    content: ')';
+}
+
+/****** User Response ******/
+
+#user-response {
+    /* Position */
+    position: absolute;
+    top: 120px;
+    left: 480px;
+
+    /* Box */
+    padding: 12px;
+    border: 6px solid white;
+    display: none; /* hidden until user provides input */
+    min-width: 350px;
+    height: 230px;
+
+    /* Colors */
+    background-color: #bbbdc0; /* gray */
+}
+
+#user-response > h2 {
+    /* Colors */
+    color: white;
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 1em; /* standard h2 size is 1.85em */
+    font-weight: normal; /* standard h2 weight is bold */
+    text-transform: uppercase;
+    text-align: center;
+}
+
+#user-response-input-text {
+    /* Position */
+    display: block;
+
+    /* Box */
+    padding: 6px;
+
+    /* Colors */
+    color: white;
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 3em;
+    text-align: center;
+    letter-spacing: 88;
+}
+
+
+/****** Feedback ******/
+#feedback-text {
+    /* Position */
+    display: block;
+
+    /* Box */
+    margin: 6px auto 0px auto; /* use standard css center block trick with auto*/
+    border: 1px solid #a7a9ab; /* dark gray */
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 1em;
+    text-transform: uppercase;
+    text-align: center;
+
+}
+
+.correct {
+    /* Colors */
+    color: #76bbb6; /* blue-green */
+    background-color: white;
+    background-image: url('../assets/correct.png');
+    background-repeat: no-repeat;
+}
+
+.incorrect {
+    /* Colors */
+    color: white;
+    background-color: #faa951; /* orange */
+    background-image: url('../assets/incorrect.png');
+    background-repeat: no-repeat;
+}
+
+#progress {
+
+    /* Box */
+    margin: 30px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #ffffff;
+
+
+    /* Text */
+    font-family: 'MuseoSlab500', arial, sans-serif;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#progress li {
+    display: inline;
+}
+
+.mastered {
+    color: #ffffff;
+    background-color: green;
+}
+
+.tried {
+    color: #76bbb6;
+}
+
+/*** OVERRIDES ***/
+#steno-keyboard {
+    left: 640px;
+    top: 360px;
+}
+
+/*** MISC ***/
