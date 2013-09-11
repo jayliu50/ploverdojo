@@ -103,9 +103,10 @@ class QuizPage(BaseHandler):
                              'login_href': users.create_logout_url('/'),
                              'login_content': 'Logout'}
             
-            keys = self.request.get('keys')
-            if keys:
+            mode = self.request.get('mode')
+            if mode is 'filter':
                 
+                keys = self.request.get('keys')
                 config = "?keys=%s" % keys
                 if self.request.get('require'):
                     config += "&require=%s" % self.request.get('require')
@@ -113,7 +114,7 @@ class QuizPage(BaseHandler):
                 self.set_cookie('quiz_config', str(config))
                 self.set_cookie('quiz_mode', 'WORD')    
             
-            else:
+            elif mode is 'key':
                 stage = self.request.get('stage')
                 current_lesson = 1
                 # unit number from the URL should override that from the database
@@ -142,20 +143,16 @@ class QuizPage(BaseHandler):
                     'is_review': isReview,
                     'lessonDescription': LESSONS[current_lesson - 1]["description"]
                 })
+            elif mode is 'word':
+                # the words to be quizzed should have already been loaded into the cookie
+                self.set_cookie('quiz_mode', 'WORD')
+                
                 
             self.write_template('quiz.html', **template_args)
         else:
             self.redirect(users.create_login_url(self.request.uri))
 
 
-    def post(self):
-        user = users.get_current_user()
-        # stage = self.request.get('stage')
-        
-        disciple = Disciple.get_current(user)
-        disciple.tutor_max_lesson = int(self.request.get('current_lesson'))
-        disciple.put()
-        
 
 class QuizData(BaseHandler):
     """In charge of querying the quiz data, with user-specific metadata attached"""
@@ -172,7 +169,12 @@ class QuizData(BaseHandler):
         if user:
             if self.request.get('keys'):
                 try:
-                    filtered = self.dictionary.prepare_for_quiz(self.dictionary.filter(self.request.get('keys'), self.request.get('require')))
+                    filtered = self.dictionary.filter(self.request.get('keys'), self.request.get('require'))
+                    
+                    # 
+                    self.dictionary.augment_with_rank(filtered)
+                    
+                    material = self.dictionary.prepare_for_quiz(filtered)
                     
                 except Exception, e:
                     print Exceptions.format_exception(e)
@@ -182,10 +184,15 @@ class QuizData(BaseHandler):
                 
                 self.set_cookie('display_keys_in_prompt', False)    
             
-                self.response.out.write(json.dumps(filtered))    
+                self.response.out.write(json.dumps(material))    
             elif self.request.get('unit'):
                 material = self.get_material(int(self.request.get('unit')) - 1, self.request.get('stage') == 'review')
                 self.response.out.write(material)
+            elif self.request.get('recent'):
+                disciple = Disciple.get_current(user)
+                material = self.dictionary.prepare_for_quiz(json.loads(disciple.recent_mastered))
+                self.set_cookie('display_keys_in_prompt', False)
+                self.response.out.write(json.dumps(material))
         else:
             self.redirect(users.create_login_url(self.request.uri))
             

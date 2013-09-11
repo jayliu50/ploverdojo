@@ -10,7 +10,7 @@ $(document).ready(function () {
 });
 
 // Declare app level module which depends on filters, and services
-angular.module('ploverdojo', ['ploverdojo.controllers', 'ploverdojo.services', 'ploverdojo.directives'])
+angular.module('ploverdojo', ['ploverdojo.controllers', 'ploverdojo.services', 'ploverdojo.directives', 'ngCookies'])
     .config(function ($interpolateProvider) {
         $interpolateProvider.startSymbol('//');
         $interpolateProvider.endSymbol('//');
@@ -37,9 +37,9 @@ angular.module('ploverdojo.controllers', ['ploverdojo.wordexplorer', 'ploverdojo
 
 /* Controllers */
 
-angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
-    .controller('WordExplorerCtrl', ['$scope', 'WordService', 'UserDataService', 'StenoService',
-        function (sc, wordService, userDataService, stenoService) {
+angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
+    .controller('WordExplorerCtrl', ['$scope', '$cookies', 'WordService', 'UserDataService', 'StenoService',
+        function (sc, cookies, wordService, userDataService, stenoService) {
 
             var KeyStateEnum = {
                 'None': 0,
@@ -57,10 +57,10 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
             var includeParamString = '';
             var requiredParamString = '';
 
-            sc.words = []; //  {'value': 'my word', 'stroke': 'STROKE', 'mastery': 0}
+            sc.words = []; //  {'word': 'my word', 'stroke': 'STROKE', 'mastery': 0}
             sc.busy = false;
 
-            sc.queryString = function () {
+            var queryString = function () {
                 var queryString = 'keys=' + includeParamString;
 
                 if (requiredParamString !== '') {
@@ -71,7 +71,9 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
             };
 
             sc.runQuery = function () {
-                wordService(sc.queryString(), sc);
+
+                wordService(queryString(), sc);
+
             };
 
             sc.buildParamStrings = function () {
@@ -151,8 +153,8 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
                 }
 
                 keys = stenoService.expandBrief(requiredParamString);
-                for (var i = 0; i < keys.length; i++) {
-                    sc.wordFilter[keys[i]] = KeyStateEnum.Required;
+                for (var j = 0; j < keys.length; j++) {
+                    sc.wordFilter[keys[j]] = KeyStateEnum.Required;
                 }
 
                 sc.runQuery();
@@ -231,6 +233,22 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
                 }
             };
 
+            sc.practice = function () {
+
+                var testdata = [];
+                for (var w in sc.words) {
+                    // todo: prioritize this list before sending
+                    var d = [];
+                    d[0] = sc.words[w].word;
+                    d[1] = sc.words[w].stroke;
+                    testdata.push(d);
+                }
+
+                cookies.testdata = JSON.stringify(testdata);
+                cookies.quiz_mode = 'WORD';
+
+                window.location.href = '/quiz?mode=word';
+            };
 
         }
     ])

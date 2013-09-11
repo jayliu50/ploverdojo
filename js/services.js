@@ -4,12 +4,26 @@ angular.module('ploverdojo.services', [])
 
         var wordService = function (queryString, sc) {
             // not sure if I should be using the sc (scope) in here, but I didn't know what else I could do
-            var getString = 'disciple/dictionary?' + queryString;
 
             sc.busy = true;
 
-            http({method: 'GET', url: getString }).
+            var mastery = null; // {}
+
+            http({method: 'GET', url: 'disciple/profile?item=mastery&timestamp=' + new Date().getTime() })
+                .success(function(data, status, headers, config) {
+                    mastery = data;
+                });
+
+            http({method: 'GET', url: 'disciple/dictionary?' + queryString }).
                 success(function (data, status, headers, config) {
+
+                    if(mastery !== null) {
+                        for(var item in data) {
+                            if(mastery.hasOwnProperty(data[item].word)) {
+                                data[item].mastery = mastery[data[item].word];
+                            }
+                        }
+                    }
 
                     sc.words = data;
                     sc.busy = false;

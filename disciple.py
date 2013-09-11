@@ -20,26 +20,27 @@ class BaseHandler(webapp2.RequestHandler):
             self.dictionary = Dictionary.create_default()
         except Exception, e:
             self.error_msg += Exceptions.print_exception(e)
-
-class Lookup(BaseHandler):
-    def __init__(self, request=None, response=None):
-        BaseHandler.__init__(self, request, response)
             
     def set_cookie(self, name, value):
         """Function to set an http cookie"""
         self.response.headers.add_header('Set-Cookie', '%s=%s; Path=/' % (name, value))
+
+class Lookup(BaseHandler):
+    def __init__(self, request=None, response=None):
+        BaseHandler.__init__(self, request, response)
     
-    """Performs lookup on dictionary"""
     def get(self):
+        """Performs lookup on dictionary, augmenting with user's data"""
         user = users.get_current_user()
         if user:
             if self.request.get('keys'):
                 try:
                     filtered = []
                     data = self.dictionary.filter(self.request.get('keys'), self.request.get('require'))
+
                     
                     for k in data:
-                        filtered.append({'value': data[k], 'stroke': k, 'mastery': 0})
+                        filtered.append({'word': data[k], 'stroke': k})
                         
                     
                 except Exception, e:
@@ -51,8 +52,43 @@ class Lookup(BaseHandler):
                 else:
                     self.response.out.write(json.dumps(filtered))
         else:
-            self.redirect(users.create_login_url(self.request.uri))  
+            self.redirect(users.create_login_url(self.request.uri))
+
+class Profile(BaseHandler):
+    def __init__(self, request=None, response=None):
+        BaseHandler.__init__(self, request, response)
+    
+    def get(self):
+        """Returns user profile information"""
+        user = users.get_current_user()
+        if user:
+            disciple = Disciple.get_current(user)
+            item_requested = self.request.get('item')
+            if item_requested == 'mastery': # is doesn't work here?
+                self.response.out.write(disciple.word_mastery_json)
+            else:
+                self.response.out.write('error?')
+        else:
+            self.redirect(users.create_login_url(self.request.uri))
             
+    def post(self):
+        """Updates user profile information"""
+        
+        user = users.get_current_user()
+        if user:
+            disciple = Disciple.get_current(user)
+            item_saving = self.request.get('item')
+            
+            if item_saving == 'mastery':
+                disciple.update_mastery(json.loads(self.request.get('update_mastery')))
+            elif item_saving == 'key':
+                # stage = self.request.get('stage')
+                
+                disciple = Disciple.get_current(user)
+                disciple.tutor_max_lesson = int(self.request.get('current_lesson'))
+            
+            disciple.put()
+                
 
 class Debug(BaseHandler):
     def __init__(self, request=None, response=None):
@@ -65,6 +101,7 @@ class Debug(BaseHandler):
 # ## ROUTER
 
 app = webapp2.WSGIApplication([
+                               ('/disciple/profile/?', Profile),
                                ('/disciple/dictionary', Lookup),
                                ('/disciple/debug/dictionary', Debug)
                                ],

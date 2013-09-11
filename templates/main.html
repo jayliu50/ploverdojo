@@ -4,6 +4,7 @@
     <title>Word Explorer</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-cookies.js"></script>
     <script src="js/lessonbrowser.js"></script>
     <script src="js/wordexplorer.js"></script>
     <script src="js/services.js"></script>
@@ -72,7 +73,7 @@
         <div class="word-list">
             <div ng-show="busy">Please Wait</div>
             <div ng-show="!words.length && !busy">No results found</div>
-            <div ng-repeat="word in words" title="// word.stroke //">// word.value //</div>
+            <div ng-repeat="word in words" title="// word.stroke //" class="mastery-// word.mastery //">// word.word //</div>
         </div>
         <div class="custom" ng-show="customMode">
             <div class="controls">
@@ -95,7 +96,7 @@
             </div>
         </div>
         <div class="controls">
-            <a href="/quiz?// queryString() //" ng-show="words.length"><button type="button" title="Practice" >Practice on these words</button></a>
+            <a ng-show="words.length" ng-click="practice()"><button type="button" title="Practice" >Practice these words</button></a>
         </div>
     </div>
 

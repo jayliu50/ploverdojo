@@ -90,10 +90,12 @@ class Dictionary():
         return result
     
     def prepare_for_quiz(self, dictionary):
+        """Gets the data into a form that is consumable by the quiz.js on the client. currently, this means an array of binary keys to press"""
         result = []
         for x in dictionary.keys():
             # old way
             # result[self.convert_to_binary(x)] = "binary"        
+            
             result.append(self.convert_to_binary(x))
         return result
 

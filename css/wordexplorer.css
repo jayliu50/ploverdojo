@@ -27,6 +27,16 @@
     content: ' ';
 }
 
+.mastery-0 {
+
+}
+
+.mastery-100 {
+    background: green;
+    color: white;
+}
+
 .controls {
     clear: both;
 }
+

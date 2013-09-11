@@ -7,7 +7,7 @@
     <!-- import jquery stuff -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-    <script src="uiElements.js"></script>
+
 
     <!-- import style sheets -->
     <link rel="stylesheet" type="text/css" href="css/webfonts.css">
@@ -24,6 +24,10 @@
     </div>
     
     <div id="content">
+
+    <div id="progress">
+        <!-- a list of the words they need to get will show up here -->
+    </div>
     
     <div id="countdown-dialog-modal" title="Get ready!" style="display: none">
       <p>Your quiz starts in ... </p>
@@ -37,7 +41,8 @@
       
       <div id="quiz-prompt">
         <h2>Please Type:</h2>
-        <span id="quiz-prompt-text"></span>
+        <div id="quiz-prompt-text"></div>
+        <div id="quiz-hint-text"></div>
       </div>
 
       <div id="user-response">
