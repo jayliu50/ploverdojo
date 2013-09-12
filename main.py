@@ -55,7 +55,7 @@ class Introduction(BaseHandler):
                 self.error(404)
                 self.write_static_template("error.html", **template_values) 
         elif user:
-            self.redirect('/dashboard')
+            self.redirect('/main')
         else:
             loginURL = users.create_login_url(self.request.uri)
 

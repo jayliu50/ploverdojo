@@ -24,6 +24,7 @@
     /** This string will store the final translated string. */
     var translatedString = '';
 
+    /** The item in the array to ask the user to input */
     var currentQuizIndex = -1;
 
     /** This is used to keep track of the response time */
@@ -37,20 +38,6 @@
 
     /** the acceptable response time */
     var RESPONSE_TIME_STANDARD = 1500;
-
-    /** the unit the user is currently on */
-    var currentLesson = 1;
-
-    /** whether the incoming test data will contain the strokes from previous units */
-    var isReview = 'True';
-
-    /** the mode of the quiz */
-    var quizModeEnum = {
-        WORD: 0, // tests by dictionary word
-        KEY: 1  // tests by steno key
-    };
-
-    var quizMode = quizModeEnum.WORD;
 
     /** as the learner goes through the word list, add these to the ones that they have mastered */
     var masteredList = {};
@@ -174,20 +161,6 @@
             catch (SyntaxError) {
                 // angular js must have encoded it
                 testdata = JSON.parse(decodeURIComponent(cookieValue));
-            }
-        }
-        else if (cookieName === 'is_review') {
-            isReview = cookieValue;
-        }
-        else if (cookieName === 'current_lesson') {
-            currentLesson = cookieValue;
-        }
-        else if (cookieName === 'quiz_mode') {
-            if (cookieValue === 'WORD') {
-                quizMode = quizModeEnum.WORD;
-            }
-            else if (cookieValue === 'KEY') {
-                quizMode = quizModeEnum.KEY;
             }
         }
     }
@@ -718,16 +691,37 @@
 
 
     function nextQuizQuestion() {
-        if (testdata.length >= 2) {
+
+        // if there are only two questions to choose from, be random but turn off uniqueness
+        if (testdata.length === 2 || testdata.length === Object.keys(masteredList).length + 2) {
+            do {
+                currentQuizIndex = Math.floor(Math.random() * testdata.length);
+            } while (masteredList.hasOwnProperty(testdata[currentQuizIndex][0]));
+        }
+
+        // be random without repeating if there are more than three left
+        else if (testdata.length > 2 && testdata.length > Object.keys(masteredList).length + 1) {
             var candidateIndex = 0;
             do {
                 candidateIndex = Math.floor(Math.random() * testdata.length);
             } while (candidateIndex === currentQuizIndex || masteredList.hasOwnProperty(testdata[candidateIndex][0]));
             currentQuizIndex = candidateIndex;
         }
+
+        // well, it's going to be a very boring quiz
         else if (testdata.length === 1) {
-            // well, it's going to be a very boring quiz
             currentQuizIndex = 0;
+        }
+
+        // just repeat the one they haven't mastered. not sure what else to do
+        else if (testdata.length === Object.keys(masteredList).length + 1) {
+            // find the one they haven't mastered
+            for (var i in testdata) {
+                if (!masteredList.hasOwnProperty(testdata[i][0])) {
+                    currentQuizIndex = i;
+                    break;
+                }
+            }
         }
 
         var newQuestion = testdata[currentQuizIndex][0];  // random question, has to be a different one than the one before
@@ -738,20 +732,10 @@
 
         quizChord = new Chord();
 
-        if (quizMode === quizModeEnum.KEY) {
-            //if (testdata[newQuestion] === "binary") {   // it will always be "binary", per architectural decision
+        var stroke = testdata[currentQuizIndex][1];
+        quizChord.fromRTFCRE(stroke);
+        $('#quiz-prompt-text').html(newQuestion);
 
-            quizChord.fromBinary(newQuestion);
-            console.log("quizChord is " + quizChord.toBinary());
-            //}
-            $('#quiz-prompt-text').html(quizChord.toRTFCRE());
-        }
-        else {
-            // old way: using binary        $('#quiz-prompt-text').html(dictionary[quizChord.toRTFCRE()]).attr('title', quizChord.toRTFCRE());
-            var stroke = testdata[currentQuizIndex][1];
-            quizChord.fromRTFCRE(stroke);
-            $('#quiz-prompt-text').html(newQuestion);
-        }
     }
 
     function match(conversion) {
@@ -786,7 +770,12 @@
             record.push(time);
             if (record.length > EVALUATED_RECORD_LENGTH) record.shift();
 
-            if (time > RESPONSE_TIME_STANDARD) encouragement = 'You are getting it';
+            if (testdata.length === Object.keys(masteredList).length + 1) {
+                encouragement = 'FINISH HIM!!!';
+            }
+            else if (time > RESPONSE_TIME_STANDARD) {
+                encouragement = 'Correct! You are getting it';
+            }
             else {
 
                 switch (record.length) {
@@ -797,10 +786,13 @@
                         encouragement = 'Good job';
                         break;
                 }
+
             }
 
+
+
             $('#user-response-input-text').css('display', 'none');
-            $('#feedback-text').html('Correct! ' + encouragement);
+            $('#feedback-text').html(encouragement);
             $('#feedback-text').attr('class', 'correct');
 
             if (!readyToMoveOn()) {
@@ -819,7 +811,7 @@
             // record = quizChord.toBinary();
             // if (record.length > 1) record.pop();
             $('#user-response-input-text').html(bChord.toRTFCRE()).css('display', 'block');
-            $('#quiz-prompt-text').html( key + ' <aside>' + testdata[currentQuizIndex][1] + '</aside>');
+            $('#quiz-prompt-text').html(key + ' <aside>' + testdata[currentQuizIndex][1] + '</aside>');
 
             $('#feedback-text').html('Sorry, try again');
             $('#feedback-text').attr('class', 'incorrect');
@@ -832,34 +824,15 @@
         var data = {};
         var url = '/disciple/profile?';
         var updateMastery = [];
-        if (quizMode === quizModeEnum.WORD) {
 
-            for (var r in responseLog) {
-                updateMastery.push(r);
-            }
-
-            data.update_mastery = JSON.stringify(Object.keys(masteredList));
-
-            link = '/main';
-            url += 'item=mastery';
+        for (var r in responseLog) {
+            updateMastery.push(r);
         }
-        else {
 
-            if (currentLesson === 1) {
-                currentLesson++;
-            }
-            else {
-                if (isReview === 'True') {
-                    currentLesson++;
-                }
-                link = "/quiz?unit=" + currentLesson;
-                link += "&stage=" + ((isReview === 'False') ? 'review' : 'quiz');
-            }
-            data.current_lesson = currentLesson;
-            data.stage = isReview ? 'review' : 'quiz';
+        data.update_mastery = JSON.stringify(Object.keys(masteredList));
 
-            url += 'item=key';
-        }
+        link = '/main';
+        url += 'item=mastery';
 
 
         $.ajax({
@@ -915,7 +888,7 @@
             }
         }
 
-        return Object.keys(masteredList).length >= testdata.length - 1;
+        return Object.keys(masteredList).length >= testdata.length;
     }
 
     function showUserInput() {
@@ -1295,7 +1268,6 @@
     /**
      * Creates a new Word.
      * @class Represents a word.
-     * @param {Object} strokesParam A list of strokes.
      */
     function Word(strokesParam) {
         /** @private */

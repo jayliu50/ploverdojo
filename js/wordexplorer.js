@@ -235,23 +235,45 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
 
             sc.practice = function () {
 
+                // which words will be the ones that get sent? Well, let's favored the ones that have not been mastered
+                // we'll also favor the ones with higher frequency ranking
+
                 wordService.appendWithRanking(sc.words);
 
                 var testdata = [];
+                var masteredTestData = [];
+
                 // convert to testdata format
                 for (var w in sc.words) {
+                    var thisWord = sc.words[w];
+
                     var d = [];
-                    d[0] = sc.words[w].word;
-                    d[1] = sc.words[w].stroke;
-                    d[2] = sc.words[w].ranking;
-                    testdata.push(d);
+                    d[0] = thisWord.word;
+                    d[1] = thisWord.stroke;
+                    d[2] = thisWord.ranking;
+
+
+                    if (thisWord.mastery === 100) {
+                        masteredTestData.push(d);
+                    }
+                    else {
+                        testdata.push(d);
+                    }
+
                 }
 
-                testdata.sort(function(a, b) {
+                var sortFn = function (a, b) {
                     return a[2] - b[2];
-                });
+                };
+
+                testdata.sort(sortFn);
+                masteredTestData.sort(sortFn);
 
                 var limit = 10;
+
+                while (testdata.length < limit) {
+                    testdata.push(masteredTestData.pop());
+                }
 
                 cookies.testdata = JSON.stringify(testdata.splice(0, limit));
                 cookies.quiz_mode = 'WORD';
