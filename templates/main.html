@@ -22,7 +22,7 @@
         </ul>
         <p>Lessons</p>
         <ol>
-            <li ng-repeat="lesson in currentSection.lessons" ng-click="loadlesson(lesson)" title="// lesson.title //">[// $index + 1 //]</li>
+            <li ng-repeat="lesson in currentSection.lessons" ng-click="loadFilter(lesson)" title="// lesson.title //">[// $index + 1 //]</li>
         </ol>
     </nav>
     <div>
@@ -31,6 +31,12 @@
         <ul>
             <span ng-repeat="tag in currentLesson.tags.split(' ')" class="tag">// tag //</span>
         </ul>
+    </div>
+    <div class="history-browser">
+        <ul>
+            <li ng-repeat="filter in history" ng-click="loadFilter(filter)">[*] <span class="timestamp">Last accessed: // filter.timestamp //</span></li>
+        </ul>
+
     </div>
     <div ng-controller="WordExplorerCtrl">
         <div class="filter">

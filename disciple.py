@@ -54,41 +54,91 @@ class Lookup(BaseHandler):
         else:
             self.redirect(users.create_login_url(self.request.uri))
 
+def check_user(handler):
+    """Returns user profile information"""
+    user = users.get_current_user()
+    disciple = None
+    if user:
+        disciple = Disciple.get_current(user)        
+    else:
+        self.redirect(users.create_login_url(handler.request.uri))
+        
+    return disciple
+            
+
 class Profile(BaseHandler):
     def __init__(self, request=None, response=None):
         BaseHandler.__init__(self, request, response)
     
-    def get(self):
+    def check_user(self):
         """Returns user profile information"""
         user = users.get_current_user()
+        disciple = None
         if user:
-            disciple = Disciple.get_current(user)
-            item_requested = self.request.get('item')
-            if item_requested == 'mastery': # is doesn't work here?
-                self.response.out.write(disciple.word_mastery_json)
-            else:
-                self.response.out.write('error?')
+            disciple = Disciple.get_current(user)        
         else:
             self.redirect(users.create_login_url(self.request.uri))
             
+        return disciple
+                
+    def get(self):
+        self.error(404)
+
+            
     def post(self):
-        """Updates user profile information"""
+        """OBSOLETE Updates user profile information"""
         
         user = users.get_current_user()
         if user:
             disciple = Disciple.get_current(user)
+            
             item_saving = self.request.get('item')
             
-            if item_saving == 'mastery':
-                disciple.update_mastery(json.loads(self.request.get('update_mastery')))
-            elif item_saving == 'key':
+            if item_saving == 'key':
                 # stage = self.request.get('stage')
                 
                 disciple = Disciple.get_current(user)
                 disciple.tutor_max_lesson = int(self.request.get('current_lesson'))
+                
+            else:
+                self.error(404)
             
             disciple.put()
-                
+
+    
+class History(Profile):
+    """Manages user filter history"""
+    def __init__(self, request=None, response=None):
+        Profile.__init__(self, request, response)
+        
+    def get(self):
+        disciple = check_user(self)
+        if disciple:
+            self.response.out.write(disciple.filter_history_json)
+
+    def post(self):
+        disciple = check_user(self)
+        if disciple:
+            disciple.update_filter_history(self.request.body)
+            disciple.put()
+            
+            
+class Mastery(Profile):
+    """Manages the word mastery list"""
+    def __init__(self, request=None, response=None):
+        Profile.__init__(self, request, response)
+        
+    def get(self):
+        disciple = check_user(self)
+        if disciple:
+            self.response.out.write(disciple.word_mastery_json)
+
+    def post(self):
+        disciple = check_user(self)
+        if disciple:
+            disciple.update_mastery(json.loads(self.request.get('update_mastery')))
+            
+            disciple.put()
 
 class Debug(BaseHandler):
     def __init__(self, request=None, response=None):
@@ -102,6 +152,8 @@ class Debug(BaseHandler):
 
 app = webapp2.WSGIApplication([
                                ('/disciple/profile/?', Profile),
+                               ('/disciple/profile/mastery/?', Mastery),
+                               ('/disciple/profile/history/?', History),
                                ('/disciple/dictionary', Lookup),
                                ('/disciple/debug/dictionary', Debug)
                                ],

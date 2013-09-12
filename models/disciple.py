@@ -20,6 +20,9 @@ class Disciple(db.Model):
     
     # holds the entire user mastery record in the format { 'word' : 100 } where 100 is fully mastered, and 0 or missing key is unvisited.
     word_mastery_json = db.TextProperty()
+    
+    # holds the filters that the user has used in the past { 'filter' : 'timestamp since last accessed' }
+    filter_history_json = db.TextProperty()
 
     @staticmethod
     def get_current(user):
@@ -70,4 +73,22 @@ class Disciple(db.Model):
         
         self.put()
                 
+    def update_filter_history(self, filter):
+        """ adds this filter (just use url?) to the history"""
         
+        filter_history = None
+        
+        if self.filter_history_json:
+            filter_history = json.loads(self.filter_history_json)
+            
+        if not filter_history:
+            filter_history = {}
+            
+        timestamp = str(int(time.time()))
+        
+        filter_history[filter] = timestamp
+        
+        self.filter_history_json = json.dumps(filter_history)
+        
+        self.put()
+                

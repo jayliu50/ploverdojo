@@ -3,17 +3,21 @@ angular.module('ploverdojo.services', [])
 
         var wordService = {};
 
+
+        var mastery = null; // {}
+        http({method: 'GET', url: 'disciple/profile/mastery?timestamp=' + new Date().getTime() })
+            .success(function (data, status, headers, config) {
+                mastery = data;
+            })
+            .error(function (data, status, headers, config) {
+                console.error('getting mastery list for user failed');
+            });
+
+
         wordService.populateWords = function (queryString, sc) {
             // not sure if I should be using the sc (scope) in here, but I didn't know what else I could do
 
             sc.busy = true;
-
-            var mastery = null; // {}
-
-            http({method: 'GET', url: 'disciple/profile?item=mastery&timestamp=' + new Date().getTime() })
-                .success(function (data, status, headers, config) {
-                    mastery = data;
-                });
 
             http({method: 'GET', url: 'disciple/dictionary?' + queryString }).
                 success(function (data, status, headers, config) {
@@ -33,6 +37,7 @@ angular.module('ploverdojo.services', [])
                     // called asynchronously if an error occurs
                     // or server returns response with an error status.
                     sc.busy = false;
+                    console.error('getting custom dictionary failed')
                 });
         };
 
@@ -47,14 +52,16 @@ angular.module('ploverdojo.services', [])
             error(function (data, status, headers, config) {
                 // called asynchronously if an error occurs
                 // or server returns response with an error status.
+                console.error('getting common word list failed');
             });
         // }
 
         wordService.appendWithRanking = function (words) {
-            if(commonWords) {
-            for (word in words) {
-                words[word].ranking = commonWords[words[word].word].Rank;
-            }}
+            if (commonWords) {
+                for (word in words) {
+                    words[word].ranking = commonWords[words[word].word].Rank;
+                }
+            }
         };
 
         return wordService;
@@ -69,7 +76,7 @@ angular.module('ploverdojo.services', [])
                 lessonData = data;
             })
             .error(function (data, status, headers, config) {
-
+                console.error('getting list of lessons failed');
             });
 
         var lessonService = function (sc, filterTags) {
@@ -98,27 +105,73 @@ angular.module('ploverdojo.services', [])
         return lessonService;
     }])
 
-    .factory('UserDataService', function ($rootScope) {
+    .factory('UserDataService', ['$http', function (http) {
 
         var userDataService = {};
 
-        userDataService.userData = {};
+        userDataService.updateFilterHistory = function (include, require) {
 
-        userDataService.currentLesson = {};
+            http({
+                method: 'POST',
+                url: 'disciple/profile/history',
+                data: include + '|' + require
+            })
+                .success(function (data, status, headers, config) {
+                })
+                .error(function (data, status, headers, config) {
+                    // not sure why but this was always erroring, even when a 200 is passed back
+                    //console.error('posting filter history failed');
+                });
 
-        userDataService.customMode = false;
+        };
 
-        userDataService.updateCurrentLesson = function (data) {
+        userDataService.getFilterHistory = function () {
+
+            var filterData = [];
+            http({method: 'GET', url: 'disciple/profile/history?timestamp=' + new Date().getTime() })
+                .success(function (data, status, headers, config) {
+                    for (var i in data) {
+                        var newFilterData = {};
+                        var filter = i.split('|');
+                        newFilterData.include = filter[0];
+                        newFilterData.require = filter[1];
+                        newFilterData.timestamp = new Date(parseInt(data[i], 10) * 1000).toLocaleString();
+
+                        filterData.push(newFilterData);
+                    }
+                })
+                .error(function (data, status, headers, config) {
+                    console.error('getting filter history failed');
+                });
+
+            return filterData;
+        };
+
+        return userDataService;
+
+    }])
+
+    .factory('ControllerSyncService', function ($rootScope) {
+
+        var controllerSyncService = {};
+
+        controllerSyncService.userData = {};
+
+        controllerSyncService.currentLesson = {};
+
+        controllerSyncService.customMode = false;
+
+        controllerSyncService.updateCurrentLesson = function (data) {
             this.currentLesson = data;
             $rootScope.$broadcast('updateLesson');
         };
 
-        userDataService.updateCustomMode = function (mode) {
+        controllerSyncService.updateCustomMode = function (mode) {
             this.customMode = mode;
             $rootScope.$broadcast('customMode');
         };
 
-        return userDataService;
+        return controllerSyncService;
 
     })
 

@@ -104,18 +104,7 @@ class QuizPage(BaseHandler):
                              'login_content': 'Logout'}
             
             mode = self.request.get('mode')
-            if mode == 'filter':
-                
-                keys = self.request.get('keys')
-                config = "?keys=%s" % keys
-                if self.request.get('require'):
-                    config += "&require=%s" % self.request.get('require')
-                
-                self.set_cookie('quiz_config', str(config))
-                
-                self.write_template('quiz-word.html', **template_args)
-            
-            elif mode == 'key':
+            if mode == 'key':
                 stage = self.request.get('stage')
                 current_lesson = 1
                 # unit number from the URL should override that from the database

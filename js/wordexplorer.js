@@ -38,8 +38,8 @@ angular.module('ploverdojo.controllers', ['ploverdojo.wordexplorer', 'ploverdojo
 /* Controllers */
 
 angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
-    .controller('WordExplorerCtrl', ['$scope', '$cookies', 'WordService', 'UserDataService', 'StenoService',
-        function (sc, cookies, wordService, userDataService, stenoService) {
+    .controller('WordExplorerCtrl', ['$scope', '$cookies', 'WordService', 'ControllerSyncService', 'StenoService', 'UserDataService',
+        function (sc, cookies, wordService, controllerSyncService, stenoService, userDataService) {
 
             var KeyStateEnum = {
                 'None': 0,
@@ -140,8 +140,8 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
             };
 
             sc.$on('updateLesson', function () {
-                includeParamString = userDataService.currentLesson.include;
-                requiredParamString = userDataService.currentLesson.require;
+                includeParamString = controllerSyncService.currentLesson.include;
+                requiredParamString = controllerSyncService.currentLesson.require;
 
                 // update UI keyboard
                 sc.wordFilter = [];
@@ -164,7 +164,7 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
             sc.asterisk = false;
 
             sc.$on('updateCustomMode', function () {
-                sc.customMode = userDataService.customMode;
+                sc.customMode = controllerSyncService.customMode;
             });
 
             sc.toggle = function (code) {
@@ -271,12 +271,18 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
 
                 var limit = 10;
 
-                while (testdata.length < limit) {
-                    testdata.push(masteredTestData.pop());
+                while (testdata.length < limit && masteredTestData.length > 0) {
+                    var mastered = masteredTestData.pop();
+                    if (mastered) {
+                        testdata.push(mastered);
+                    }
                 }
 
                 cookies.testdata = JSON.stringify(testdata.splice(0, limit));
                 cookies.quiz_mode = 'WORD';
+
+
+                userDataService.updateFilterHistory(includeParamString, requiredParamString);
 
                 window.location.href = '/quiz?mode=word';
             };

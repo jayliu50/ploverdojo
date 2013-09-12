@@ -822,7 +822,6 @@
     function advanceQuiz() {
         var link;
         var data = {};
-        var url = '/disciple/profile?';
         var updateMastery = [];
 
         for (var r in responseLog) {
@@ -832,12 +831,11 @@
         data.update_mastery = JSON.stringify(Object.keys(masteredList));
 
         link = '/main';
-        url += 'item=mastery';
 
 
         $.ajax({
             type: "POST",
-            url: url,
+            url: '/disciple/profile/mastery',
             data: data,
             success: function () {
                 window.location.href = link;
@@ -863,7 +861,7 @@
     $('#debug-advance-quiz').click(advanceQuiz);
 
     function readyToMoveOn() {
-        // is ready if the past N-1 tries in responding to each key was done in T milliseconds or less
+        // is ready if the past N tries in responding to each key was done in T milliseconds or less
         for (var key in responseLog) {
             // haven't proven yourself
             if (responseLog.length === testdata.length && responseLog[key] === null && responseLog[key].length < EVALUATED_RECORD_LENGTH) {
