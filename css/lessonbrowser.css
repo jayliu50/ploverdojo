@@ -13,12 +13,17 @@ nav {
     position: static;
 }
 
-.word-list {
+.word-area {
     float: left;
     margin: 30px;
+}
+
+.word-list {
+    max-width: 800px;
     columns:100px 3;
     -webkit-columns:100px 3; /* Safari and Chrome */
     -moz-columns:100px 3; /* Firefox */
+
     height: 114px; /* the height of the steno keyboard minus the margins*/
 }
 
@@ -33,3 +38,4 @@ nav {
 .tag:after {
     content: ' ';
 }
+

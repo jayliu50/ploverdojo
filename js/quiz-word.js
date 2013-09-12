@@ -733,9 +733,10 @@
         quizChord = new Chord();
 
         var stroke = testdata[currentQuizIndex][1];
-        quizChord.fromRTFCRE(stroke);
-        $('#quiz-prompt-text').html(newQuestion);
-
+        if (stroke) {
+            quizChord.fromRTFCRE(stroke);
+            $('#quiz-prompt-text').html(newQuestion);
+        }
     }
 
     function match(conversion) {
@@ -788,7 +789,6 @@
                 }
 
             }
-
 
 
             $('#user-response-input-text').css('display', 'none');

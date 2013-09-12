@@ -1,45 +1,8 @@
-'use strict';
-
-$(document).ready(function () {
-
-//    $(".steno-key").click(function (something) {
-//        alert('here: ' + something);
-//    });
-
-
-});
-
-// Declare app level module which depends on filters, and services
-angular.module('ploverdojo', ['ploverdojo.controllers', 'ploverdojo.services', 'ploverdojo.directives', 'ngCookies'])
-    .config(function ($interpolateProvider) {
-        $interpolateProvider.startSymbol('//');
-        $interpolateProvider.endSymbol('//');
-    });
-
-angular.module('ploverdojo.directives', [])
-    .directive('stenokey', function () {
-        return {
-            restrict: 'E',
-            scope: {}, // do not share scope with other stenokey objects
-            template: '<a href="" ><div class="// class //" id="// id //" ng-transclude></div></a>',
-            controller: function ($scope) {
-
-            },
-            link: function (scope, element, attrs) {
-                element.addClass(attrs[key]);
-            }
-        };
-    })
-;
-
-angular.module('ploverdojo.controllers', ['ploverdojo.wordexplorer', 'ploverdojo.lessonbrowser']);
-
-
 /* Controllers */
 
-angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
-    .controller('WordExplorerCtrl', ['$scope', '$cookies', 'WordService', 'ControllerSyncService', 'StenoService', 'UserDataService',
-        function (sc, cookies, wordService, controllerSyncService, stenoService, userDataService) {
+angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
+    .controller('WordExplorerCtrl', ['$scope', 'ControllerSyncService', 'StenoService',
+        function (sc, controllerSyncService, stenoService) {
 
             var KeyStateEnum = {
                 None: 0,
@@ -53,34 +16,9 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 2: 'Required'
             };
 
-
             sc.wordFilter = {}; // the object representing the filter for the dictionary
 
             var filter = {};
-
-            sc.words = []; //  {'word': 'my word', 'stroke': 'STROKE', 'mastery': 0}
-            sc.busy = false;
-
-            var queryString = function () {
-
-                var queryString = '';
-                if (filter.include) {
-
-                    queryString = 'keys=' + filter.include;
-
-                    if (filter.require !== '') {
-                        queryString += '&require=' + filter.require;
-                    }
-                }
-                return queryString;
-            };
-
-            sc.runQuery = function () {
-
-                sc.words = [];
-
-                wordService.populateWordsFromFilter(queryString(), sc);
-            };
 
             sc.buildParamStrings = function () {
                 filter.include = '';
@@ -143,6 +81,10 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 if (requiredParamStringShouldPrepend && filter.require !== '') {
                     filter.require = '-' + filter.require;
                 }
+
+                filter.title = "Custom";
+
+                controllerSyncService.updateCurrentFilter(filter);
             };
 
             sc.$on('updateFilter', function () {
@@ -161,16 +103,10 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 for (var j = 0; j < keys.length; j++) {
                     sc.wordFilter[keys[j]] = KeyStateEnum.Required;
                 }
-
-                sc.runQuery();
             });
 
             sc.customMode = true;
             sc.asterisk = false;
-
-            sc.$on('updateCustomMode', function () {
-                sc.customMode = controllerSyncService.customMode;
-            });
 
             sc.toggle = function (code) {
 
@@ -211,6 +147,7 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                     sc.wordFilter[codes[i]] = KeyStateEnum.Include;
                 }
                 sc.buildParamStrings();
+
             };
 
             sc.require = function (codes) {
@@ -218,6 +155,7 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                     sc.wordFilter[codes[i]] = KeyStateEnum.Required;
                 }
                 sc.buildParamStrings();
+
             };
 
             sc.title = function (code) {
@@ -238,56 +176,6 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 }
             };
 
-            sc.practice = function () {
-
-                // which words will be the ones that get sent? Well, let's favored the ones that have not been mastered
-                // we'll also favor the ones with higher frequency ranking
-
-                var testdata = [];
-                var masteredTestData = [];
-
-                // convert to testdata format
-                for (var w in sc.words) {
-                    var thisWord = sc.words[w];
-
-                    var d = [];
-                    d[0] = thisWord.word;
-                    d[1] = thisWord.stroke;
-                    d[2] = thisWord.ranking;
-
-
-                    if (thisWord.mastery === 100) {
-                        masteredTestData.push(d);
-                    }
-                    else {
-                        testdata.push(d);
-                    }
-
-                }
-
-                var sortFn = function (a, b) {
-                    return a[2] - b[2];
-                };
-
-                testdata.sort(sortFn);
-                masteredTestData.sort(sortFn);
-
-                var limit = 10;
-
-                while (testdata.length < limit && masteredTestData.length > 0) {
-                    var mastered = masteredTestData.pop();
-                    if (mastered) {
-                        testdata.push(mastered);
-                    }
-                }
-
-                cookies.testdata = JSON.stringify(testdata.splice(0, limit));
-                cookies.quiz_mode = 'WORD';
-
-                userDataService.updateFilterHistory(filter);
-
-                window.location.href = '/quiz?mode=word';
-            };
 
         }
     ])

@@ -7,7 +7,8 @@ angular.module('ploverdojo.lessonbrowser', ['ploverdojo.services'])
 
             sc.currentSection = {};
 
-            sc.history = userDataService.getFilterHistory();
+            sc.history = userDataService.getFilterHistory(sc);
+
 
             sc.loadSection = function (section) {
                 sc.currentSection.lessons = lessonService(sc, "group-" + section);
@@ -16,10 +17,6 @@ angular.module('ploverdojo.lessonbrowser', ['ploverdojo.services'])
             sc.loadFilter = function (filter) {
                 sc.currentFilter = filter;
                 controllerSyncService.updateCurrentFilter(filter);
-            };
-
-            sc.scaffold_enterCustomMode = function () {
-                controllerSyncService.updateCustomMode(true);
             };
         }
     ])

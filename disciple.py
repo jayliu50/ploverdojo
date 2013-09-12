@@ -114,7 +114,7 @@ class FilterHistory(Profile):
         
     def get(self):
         disciple = check_user(self)
-        if disciple:
+        if disciple and disciple.filter_history_json:
             self.response.out.write(disciple.filter_history_json)
 
     def post(self):
@@ -130,8 +130,7 @@ class WordHistory(Profile):
         
     def get(self):
         disciple = check_user(self)
-        if disciple:
-            
+        if disciple and disciple.recent_mastered_json:
             export = []
             
             mastered = json.loads(disciple.recent_mastered_json)

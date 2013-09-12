@@ -5,44 +5,60 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-cookies.js"></script>
+    <!--<script src="js/lib/ui-bootstrap-0.6.0.js"></script>-->
     <script src="js/lessonbrowser.js"></script>
-    <script src="js/wordexplorer.js"></script>
+    <script src="js/wordlist.js"></script>
     <script src="js/services.js"></script>
+    <script src="js/wordexplorer.js"></script>
+    <script src="js/main.js"></script>
     <link rel="stylesheet" type="text/css" href="css/webfonts.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/stenoKeyboard.css">
     <link rel="stylesheet" href="css/lessonbrowser.css"/>
     <link rel="stylesheet" href="css/wordexplorer.css">
 <body ng-app="ploverdojo">
+<div ng-controller="MainCtrl">
+
 <div ng-controller="LessonBrowserCtrl">
     <nav>
         <p>Sections:</p>
         <ul>
-            <li ng-repeat="section in [1,2,3,4,5,6]" ng-click="loadSection(section)" title="// section //">[// section //]</li>
+            <li ng-repeat="section in [1,2,3,4,5,6]" ng-click="loadSection(section)" title="// section //">[//
+                section //]
+            </li>
         </ul>
         <p>Lessons</p>
         <ol>
-            <li ng-repeat="lesson in currentSection.lessons" ng-click="loadFilter(lesson)" title="// lesson.title //">[// $index + 1 //]</li>
+            <li ng-repeat="lesson in currentSection.lessons" ng-click="loadFilter(lesson)"
+                title="// lesson.title //">[// $index + 1 //]
+            </li>
         </ol>
     </nav>
-    <div>
+    <div class="lesson-info">
         <h1>// section //</h1>
+
         <h2>// currentFilter.title //</h2>
-        <ul>
-            <span ng-repeat="tag in currentLesson.tags.split(' ')" class="tag">// tag //</span>
-        </ul>
+        <!--<ul>
+            <span ng-repeat="tag in currentFilter.tags.split(' ')" class="tag">// tag //</span>
+        </ul>-->
     </div>
     <div class="history-browser">
         <ul>
-            <li ng-repeat="filter in history | orderBy:'timestamp':true" ng-click="loadFilter(filter)">// filter.title // <span class="timestamp">Last accessed: // filter.timestamp //</span></li>
+            <li ng-repeat="filter in history | orderBy:'timestamp':true" ng-click="loadFilter(filter)">//
+                filter.title // <span class="timestamp">Last accessed: // filter.timestamp //</span></li>
         </ul>
 
     </div>
+    <!--<tabset direction="below">-->
+    <!--<tab heading="History">-->
 
-    <div ng-controller="WordExplorerCtrl">
+    <!--</tab>-->
+    <!--</tabset>-->
+</div>
+<div ng-controller="WordExplorerCtrl" class="filter">
 
-        <div class="filter">
-            <div id="steno-keyboard">
+    <div>
+	<div id="steno-keyboard">
                 <div class="steno-number-bar">
                     <div class="steno-key number-bar code-48 code-49 code-50 code-51 code-52 code-53 code-54 code-55 code-56 code-57" id="steno-key-number-bar"></div>
                 </div>
@@ -78,36 +94,76 @@
                 </div>
             </div>
         </div>
-        <div class="word-list">
-            <div ng-show="busy">Please Wait</div>
-            <div ng-show="!words.length && !busy">No results found</div>
-            <div ng-repeat="word in words" title="// word.stroke //" class="mastery-// word.mastery //">// word.word //</div>
-        </div>
-        <div class="custom" ng-show="customMode">
-            <div class="controls">
-                <button ng-click="clear(['S-', 'T-', 'P-', 'H-', 'K-', 'W-', 'R-']); " type="button" title="Clear Left Hand" >Clear Left Hand</button>
-                <button ng-click="require(['S-', 'T-', 'P-', 'H-', 'K-', 'W-', 'R-']);" type="button" title="Require Left Hand" >Require Left Hand</button>
-                <button ng-click="include(['S-', 'T-', 'P-', 'H-', 'K-', 'W-', 'R-']);" type="button" title="Include Left Hand" >Include Left Hand</button>
-            </div>
-            <div class="controls">
-                <button ng-click="clear(['-F', '-P', '-L', '-T', '-D', '-R', '-B', '-G', '-S', '-Z']); " type="button" title="Clear Right Hand" >Clear Right Hand</button>
-                <button ng-click="require(['-F', '-P', '-L', '-T', '-D', '-R', '-B', '-G', '-S', '-Z']);" type="button" title="Require Right Hand" >Require Right Hand</button>
-                <button ng-click="include(['-F', '-P', '-L', '-T', '-D', '-R', '-B', '-G', '-S', '-Z']);" type="button" title="Include Right Hand" >Include Right Hand</button>
-            </div>
-            <div class="controls">
-                <button ng-click="clear(['A-', 'O-', '-E', '-U' ]); " type="button" title="Clear Vowels" >Clear Vowels</button>
-                <button ng-click="require(['A-', 'O-', '-E', '-U' ]);" type="button" title="Require Vowels" >Require Vowels</button>
-                <button ng-click="include(['A-', 'O-', '-E', '-U' ]);" type="button" title="Include Vowels" >Include Vowels</button>
-            </div>
-            <div class="controls">
-                <button ng-click="runQuery()" type="button" title="Run Query">Run Query</button>
-            </div>
+    </div>
+    <div class="custom" ng-show="customMode">
+        <div class="controls">
+            <button ng-click="clear(['S-', 'T-', 'P-', 'H-', 'K-', 'W-', 'R-']); " type="button"
+                    title="Clear Left Hand">Clear Left Hand
+            </button>
+            <button ng-click="require(['S-', 'T-', 'P-', 'H-', 'K-', 'W-', 'R-']);" type="button"
+                    title="Require Left Hand">Require Left Hand
+            </button>
+            <button ng-click="include(['S-', 'T-', 'P-', 'H-', 'K-', 'W-', 'R-']);" type="button"
+                    title="Include Left Hand">Include Left Hand
+            </button>
         </div>
         <div class="controls">
-            <a ng-show="words.length" ng-click="practice()"><button type="button" title="Practice" >Practice these words</button></a>
+            <button ng-click="clear(['-F', '-P', '-L', '-T', '-D', '-R', '-B', '-G', '-S', '-Z']); " type="button"
+                    title="Clear Right Hand">Clear Right Hand
+            </button>
+            <button ng-click="require(['-F', '-P', '-L', '-T', '-D', '-R', '-B', '-G', '-S', '-Z']);" type="button"
+                    title="Require Right Hand">Require Right Hand
+            </button>
+            <button ng-click="include(['-F', '-P', '-L', '-T', '-D', '-R', '-B', '-G', '-S', '-Z']);" type="button"
+                    title="Include Right Hand">Include Right Hand
+            </button>
         </div>
+        <div class="controls">
+            <button ng-click="clear(['A-', 'O-', '-E', '-U' ]); " type="button" title="Clear Vowels">Clear Vowels
+            </button>
+            <button ng-click="require(['A-', 'O-', '-E', '-U' ]);" type="button" title="Require Vowels">Require
+                Vowels
+            </button>
+            <button ng-click="include(['A-', 'O-', '-E', '-U' ]);" type="button" title="Include Vowels">Include
+                Vowels
+            </button>
+        </div>
+        <div class="controls">
+            <button ng-click="refreshFilter()" type="button" title="Refresh Filter">Refresh Filter</button>
+        </div>
+
+    </div>
+    <div class="controls">
+        <input type="checkbox" value="// customMode //"
+    </div>
+</div>
+<div class="word-area">
+    <div class="word-list">
+        <div ng-show="busy">Please Wait</div>
+        <div ng-show="!words.length && !busy">No results found</div>
+        <div ng-repeat="word in words | orderBy:predicate:reverse" title="// word.stroke //"
+             class="mastery-// word.mastery //">// word.word //
+        </div>
+
     </div>
 
+    <div class="word-list-sort">
+        <a href="" ng-click="predicate = 'mastery'; reverse = false">Mastery</a>
+        <a href="" ng-click="predicate = 'ranking'; reverse = false">Frequency</a>
+        <a href="" ng-click="predicate = 'word'; reverse = false">Alphabetical</a>
+    </div>
+
+    <div class="controls">
+        <a ng-show="words.length" ng-click="practice()">
+            <button type="button" title="Practice">Practice these words</button>
+        </a>
+    </div>
 </div>
+<div class="recent">
+    <button ng-click="loadRecent()">Review recently mastered words</button>
+</div>
+
+</div>
+
 </body>
 </html>
