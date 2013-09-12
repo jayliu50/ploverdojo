@@ -21,7 +21,7 @@ class Disciple(db.Model):
     # holds the entire user mastery record in the format { 'word' : 100 } where 100 is fully mastered, and 0 or missing key is unvisited.
     word_mastery_json = db.TextProperty()
     
-    # holds the filters that the user has used in the past { 'filter' : 'timestamp since last accessed' }
+    # holds the filters that the user has used in the past { 'filter' : { title: 'title', timestamp: 'timestamp since last accessed' }}
     filter_history_json = db.TextProperty()
 
     @staticmethod
@@ -83,10 +83,8 @@ class Disciple(db.Model):
             
         if not filter_history:
             filter_history = {}
-            
-        timestamp = str(int(time.time()))
         
-        filter_history[filter] = timestamp
+        filter_history.update(json.loads(filter))
         
         self.filter_history_json = json.dumps(filter_history)
         

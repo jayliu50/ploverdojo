@@ -27,18 +27,20 @@
     </nav>
     <div>
         <h1>// section //</h1>
-        <h2>// currentLesson.title //</h2>
+        <h2>// currentFilter.title //</h2>
         <ul>
             <span ng-repeat="tag in currentLesson.tags.split(' ')" class="tag">// tag //</span>
         </ul>
     </div>
     <div class="history-browser">
         <ul>
-            <li ng-repeat="filter in history" ng-click="loadFilter(filter)">[*] <span class="timestamp">Last accessed: // filter.timestamp //</span></li>
+            <li ng-repeat="filter in history | orderBy:'timestamp':true" ng-click="loadFilter(filter)">// filter.title // <span class="timestamp">Last accessed: // filter.timestamp //</span></li>
         </ul>
 
     </div>
+
     <div ng-controller="WordExplorerCtrl">
+
         <div class="filter">
             <div id="steno-keyboard">
                 <div class="steno-number-bar">

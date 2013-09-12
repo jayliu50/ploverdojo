@@ -33,24 +33,25 @@ class Lookup(BaseHandler):
         """Performs lookup on dictionary, augmenting with user's data"""
         user = users.get_current_user()
         if user:
-            if self.request.get('keys'):
-                try:
-                    filtered = []
+            data = None
+            export = []
+            try:
+                if self.request.get('keys'):
                     data = self.dictionary.filter(self.request.get('keys'), self.request.get('require'))
-
-                    
-                    for k in data:
-                        filtered.append({'word': data[k], 'stroke': k})
-                        
-                    
-                except Exception, e:
-                    self.error_msg += Exceptions.format_exception(e)
-                
-                if self.error_msg is not '':
-                    self.set_cookie('error', str(self.error_msg))
-                    self.response.out.write(str(self.error_msg))
                 else:
-                    self.response.out.write(json.dumps(filtered))
+                    data = self.dictionary.filter("")
+            except Exception, e:
+                self.error_msg += Exceptions.format_exception(e)
+                                    
+            for k in data:
+                export.append({'word': data[k], 'stroke': k})
+                
+            if self.error_msg is not '':
+                self.set_cookie('error', str(self.error_msg))
+                self.response.out.write(str(self.error_msg))
+            else:
+                self.response.out.write(json.dumps(export))
+                    
         else:
             self.redirect(users.create_login_url(self.request.uri))
 
@@ -106,7 +107,7 @@ class Profile(BaseHandler):
             disciple.put()
 
     
-class History(Profile):
+class FilterHistory(Profile):
     """Manages user filter history"""
     def __init__(self, request=None, response=None):
         Profile.__init__(self, request, response)
@@ -122,6 +123,24 @@ class History(Profile):
             disciple.update_filter_history(self.request.body)
             disciple.put()
             
+class WordHistory(Profile):
+    """Manages user word history"""
+    def __init__(self, request=None, response=None):
+        Profile.__init__(self, request, response)
+        
+    def get(self):
+        disciple = check_user(self)
+        if disciple:
+            
+            export = []
+            
+            mastered = json.loads(disciple.recent_mastered_json)
+            
+            for session in mastered:
+                export.extend(mastered[session])
+            
+            self.response.out.write(json.dumps(list(set(export))))
+
             
 class Mastery(Profile):
     """Manages the word mastery list"""
@@ -153,7 +172,8 @@ class Debug(BaseHandler):
 app = webapp2.WSGIApplication([
                                ('/disciple/profile/?', Profile),
                                ('/disciple/profile/mastery/?', Mastery),
-                               ('/disciple/profile/history/?', History),
+                               ('/disciple/profile/history/filters?', FilterHistory),
+                               ('/disciple/profile/history/words?', WordHistory),
                                ('/disciple/dictionary', Lookup),
                                ('/disciple/debug/dictionary', Debug)
                                ],

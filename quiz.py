@@ -162,8 +162,7 @@ class QuizData(BaseHandler):
             if self.request.get('keys'):
                 try:
                     filtered = self.dictionary.filter(self.request.get('keys'), self.request.get('require'))
-                    
-                    # 
+                            
                     self.dictionary.augment_with_rank(filtered)
                     
                     material = self.dictionary.prepare_for_quiz(filtered)
@@ -173,8 +172,6 @@ class QuizData(BaseHandler):
                 
                 if self.errorMsg is not '':
                     self.set_cookie('error', str(self.errorMsg))
-                
-                self.set_cookie('display_keys_in_prompt', False)    
             
                 self.response.out.write(json.dumps(material))    
             elif self.request.get('unit'):
@@ -183,7 +180,6 @@ class QuizData(BaseHandler):
             elif self.request.get('recent'):
                 disciple = Disciple.get_current(user)
                 material = self.dictionary.prepare_for_quiz(json.loads(disciple.recent_mastered))
-                self.set_cookie('display_keys_in_prompt', False)
                 self.response.out.write(json.dumps(material))
         else:
             self.redirect(users.create_login_url(self.request.uri))

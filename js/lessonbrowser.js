@@ -3,7 +3,7 @@ angular.module('ploverdojo.lessonbrowser', ['ploverdojo.services'])
     .controller('LessonBrowserCtrl', ['$scope', 'LessonService', 'ControllerSyncService', 'UserDataService',
         function (sc, lessonService, controllerSyncService, userDataService) {
 
-            sc.currentLesson = {};
+            sc.currentFilter = {};
 
             sc.currentSection = {};
 
@@ -13,9 +13,9 @@ angular.module('ploverdojo.lessonbrowser', ['ploverdojo.services'])
                 sc.currentSection.lessons = lessonService(sc, "group-" + section);
             };
 
-            sc.loadFilter = function (lesson) {
-                sc.currentLesson = lesson;
-                controllerSyncService.updateCurrentLesson({include: lesson['include'], require: lesson['require']});
+            sc.loadFilter = function (filter) {
+                sc.currentFilter = filter;
+                controllerSyncService.updateCurrentFilter(filter);
             };
 
             sc.scaffold_enterCustomMode = function () {

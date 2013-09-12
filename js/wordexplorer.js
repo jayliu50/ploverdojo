@@ -42,9 +42,9 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
         function (sc, cookies, wordService, controllerSyncService, stenoService, userDataService) {
 
             var KeyStateEnum = {
-                'None': 0,
-                'Include': 1,
-                'Required': 2
+                None: 0,
+                Include: 1,
+                Required: 2
             };
 
             var KeyStateLookup = {
@@ -53,32 +53,38 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 2: 'Required'
             };
 
+
             sc.wordFilter = {}; // the object representing the filter for the dictionary
-            var includeParamString = '';
-            var requiredParamString = '';
+
+            var filter = {};
 
             sc.words = []; //  {'word': 'my word', 'stroke': 'STROKE', 'mastery': 0}
             sc.busy = false;
 
             var queryString = function () {
-                var queryString = 'keys=' + includeParamString;
 
-                if (requiredParamString !== '') {
-                    queryString += '&require=' + requiredParamString;
+                var queryString = '';
+                if (filter.include) {
+
+                    queryString = 'keys=' + filter.include;
+
+                    if (filter.require !== '') {
+                        queryString += '&require=' + filter.require;
+                    }
                 }
-
                 return queryString;
             };
 
             sc.runQuery = function () {
 
-                wordService.populateWords(queryString(), sc);
+                sc.words = [];
 
+                wordService.populateWordsFromFilter(queryString(), sc);
             };
 
             sc.buildParamStrings = function () {
-                includeParamString = '';
-                requiredParamString = '';
+                filter.include = '';
+                filter.require = '';
 
                 var includeParamStringShouldPrepend = true;
                 var requiredParamStringShouldPrepend = true;
@@ -87,15 +93,15 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 var testExistenceInFilter = function (key, code, isLeftHand) {
                     if (sc.wordFilter.hasOwnProperty(key)) {
                         if (sc.wordFilter[key] === KeyStateEnum.Include) {
-                            includeParamString += code;
+                            filter.include += code;
 
                             if (isLeftHand) {
                                 includeParamStringShouldPrepend = false;
                             }
                         }
                         else if (sc.wordFilter[key] === KeyStateEnum.Required) {
-                            includeParamString += code;
-                            requiredParamString += code;
+                            filter.include += code;
+                            filter.require += code;
 
                             if (isLeftHand) {
                                 requiredParamStringShouldPrepend = false;
@@ -130,29 +136,28 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 testExistenceInFilter('-D', 'D', false);
                 testExistenceInFilter('-Z', 'Z', false);
 
-                if (includeParamStringShouldPrepend && includeParamString !== '') {
-                    includeParamString = '-' + includeParamString;
+                if (includeParamStringShouldPrepend && filter.include !== '') {
+                    filter.include = '-' + filter.include;
                 }
 
-                if (requiredParamStringShouldPrepend && requiredParamString !== '') {
-                    requiredParamString = '-' + requiredParamString;
+                if (requiredParamStringShouldPrepend && filter.require !== '') {
+                    filter.require = '-' + filter.require;
                 }
             };
 
-            sc.$on('updateLesson', function () {
-                includeParamString = controllerSyncService.currentLesson.include;
-                requiredParamString = controllerSyncService.currentLesson.require;
+            sc.$on('updateFilter', function () {
+                filter = controllerSyncService.currentFilter;
 
                 // update UI keyboard
                 sc.wordFilter = [];
                 var keys = [];
-                keys = stenoService.expandBrief(includeParamString);
+                keys = stenoService.expandBrief(filter.include);
                 for (var i = 0; i < keys.length; i++) {
                     sc.wordFilter[keys[i]] = KeyStateEnum.Include;
 
                 }
 
-                keys = stenoService.expandBrief(requiredParamString);
+                keys = stenoService.expandBrief(filter.require);
                 for (var j = 0; j < keys.length; j++) {
                     sc.wordFilter[keys[j]] = KeyStateEnum.Required;
                 }
@@ -238,8 +243,6 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 // which words will be the ones that get sent? Well, let's favored the ones that have not been mastered
                 // we'll also favor the ones with higher frequency ranking
 
-                wordService.appendWithRanking(sc.words);
-
                 var testdata = [];
                 var masteredTestData = [];
 
@@ -281,8 +284,7 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services', 'ngCookies'])
                 cookies.testdata = JSON.stringify(testdata.splice(0, limit));
                 cookies.quiz_mode = 'WORD';
 
-
-                userDataService.updateFilterHistory(includeParamString, requiredParamString);
+                userDataService.updateFilterHistory(filter);
 
                 window.location.href = '/quiz?mode=word';
             };
