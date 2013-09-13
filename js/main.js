@@ -10,10 +10,10 @@ $(document).ready(function () {
 });
 
 // Declare app level module which depends on filters, and services
-angular.module('ploverdojo', ['ploverdojo.controllers', 'ploverdojo.services', 'ploverdojo.directives', 'ngCookies'])
+angular.module('ploverdojo', ['ploverdojo.controllers', 'ploverdojo.services', 'ploverdojo.directives', 'ngCookies', 'joyride.ng'])
     .config(function ($interpolateProvider) {
-        $interpolateProvider.startSymbol('//');
-        $interpolateProvider.endSymbol('//');
+        $interpolateProvider.startSymbol('~{');
+        $interpolateProvider.endSymbol('}~');
         //$routeProvider.when("/filter",  {controller:MainCtrl});
     });
 
@@ -33,22 +33,22 @@ angular.module('ploverdojo.directives', [])
     })
 ;
 
-angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ngCookies'])
-    .controller('MainCtrl', ['$scope', '$cookies', '$route', '$location', 'ControllerSyncService', 'UserDataService', 'WordService',
-        function (sc, cookies, route, location, controllerSyncService, userDataService, wordService) {
+angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ploverdojo.wordexplorer', 'ngCookies'])
+    .controller('MainCtrl', ['$scope', '$cookies', 'ControllerSyncService', 'UserDataService', 'WordService',
+        function (sc, cookies, controllerSyncService, userDataService, wordService) {
 
             sc.filter = {};
 
 
-            sc.init = function() {
-               var stuff = userDataService.getSettings(function (data, status, headers, config) {
-                   sc.limit = data.quiz_size;
-               });
+            sc.init = function () {
+                var stuff = userDataService.getSettings(function (data, status, headers, config) {
+                    sc.limit = data.quiz_size;
+                });
             };
 
             sc.busy = false;
 
-            sc.saveSettings = function() {
+            sc.saveSettings = function () {
                 userDataService.updateSettings({ quiz_size: sc.limit });
             };
 
@@ -82,10 +82,13 @@ angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ngCookies
                 sc.words = [];
 
                 sc.filter = controllerSyncService.currentFilter;
-                wordService.populateWordsFromFilter(queryString(controllerSyncService.currentFilter), function(data) {
+                wordService.populateWordsFromFilter(queryString(controllerSyncService.currentFilter), function (data) {
                     sc.words = data;
                     sc.busy = false;
-                } );
+                });
+
+
+                cookies.currentFilter = JSON.stringify(controllerSyncService.currentFilter);
 
             });
 
@@ -159,12 +162,11 @@ angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ngCookies
                 }
 
                 var send = testdata.splice(0, sc.limit);
-                send.forEach(function(element) {
+                send.forEach(function (element) {
                     element.splice(2, 1);
                 });
                 cookies.testdata = JSON.stringify(send);
                 cookies.quiz_mode = 'WORD';
-                cookies.currentFilter = JSON.stringify(controllerSyncService.currentFilter);
 
                 window.location.href = '/quiz?mode=word';
             };
@@ -172,5 +174,10 @@ angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ngCookies
             sc.$on('updateWordList', function () {
                 sc.words = controllerSyncService.words;
             });
+
+            sc.joyride = function () {
+
+                return 'data-joyride';
+            };
 
         }]);
