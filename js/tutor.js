@@ -13,10 +13,6 @@ if (!String.prototype.trim) {
 
 
 
-
-
-
-
 // GLOBAL VARS
 
 /* constant for golden ratio conjugate, which will be used in various cases like layout and such. */
@@ -64,11 +60,11 @@ var maxLesson = 0;
 
 //// DATASTORE FUNCTIONS
 var updateDatastore = function() {
-  var postData = "";
-  postData += "current_lesson=" + currentLesson + '.' + currentSlide;
-  postData += "&";
-  postData += "max_lesson=" + maxLesson;
-  xhrPost("/tutor", postData);
+//  var postData = "";
+//  postData += "current_lesson=" + currentLesson + '.' + currentSlide;
+//  postData += "&";
+//  postData += "max_lesson=" + maxLesson;
+//  xhrPost("/tutor", postData);
 }
 
 //// HTTP REQUEST FUNCTIONS
@@ -77,13 +73,13 @@ var xhrGet = function(reqUri, callback, type) {
   var xhr = new XMLHttpRequest();
 
   xhr.open('GET', reqUri, true);
-    
+
   if (type) {
     xhr.requestType = type;
   }
-    
+
   xhr.onload = callback;
-    
+
   xhr.send();
 };
 
@@ -92,12 +88,12 @@ var xhrPost = function(reqUri, params, callback) {
   var xhr = new XMLHttpRequest();
 
   xhr.open('POST', reqUri, true);
-    
+
   if (callback) {
     xhr.onload = callback;
   }
 
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");  
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send(params);
 };
 
@@ -115,13 +111,13 @@ var fitText = function (elementID) {
 
   if (element) {
     element.style.whiteSpace = "nowrap";
-  
+
     var maxWidth = element.parentNode.offsetWidth;
     var maxHeight = element.parentNode.offsetHeight;
-      
+
     for (var fontSize = maxHeight; fontSize >= 0; fontSize--) {
       element.style.fontSize = fontSize + "px";
-      
+
       if (element.offsetWidth < maxWidth && element.offsetHeight < maxHeight) {
         return;
       }
@@ -144,7 +140,7 @@ var fontSizeForIdealLineLength = function (width) {
 
   for (var fontSize = 0; fontSize <= Math.floor(width); fontSize++) {
     testSpan.style.fontSize = fontSize + "px";
-  
+
     if (testSpan.offsetWidth > width) {
       document.body.removeChild(testSpan);
       return fontSize;
@@ -181,33 +177,28 @@ var END_SLIDE = -1;
  */
 var nextSlide = function() {
   if (lessonsLoaded) {
-  	
+
   	if(currentSlide == END_SLIDE) {
   	  maxLesson = currentLesson;
-      window.location.href = "/quiz?unit=" + currentLesson;
+
       return;
   	}
-    
+
     currentSlide++;
-    
+
     if (currentSlide < lessons[currentLesson].slides.length) {
       showSlide(currentLesson, currentSlide);
-      updateDatastore();  
+      updateDatastore();
     } else {
       currentLesson++;
       if (currentLesson < lessons.length) {
         currentSlide = 0;
         updateDatastore();
-        if (currentLesson > maxLesson) {
-          showEndSlide(currentLesson - 1, lessons[currentLesson].slides.length - 1);
-          currentSlide = END_SLIDE;
-        } else {
-          showSlide(currentLesson, currentSlide);  
-        }
+        showEndSlide(currentLesson - 1, lessons[currentLesson].slides.length - 1);
+        currentSlide = END_SLIDE;
       } else {
-        currentLesson--;
-        currentSlide--;
-        window.location.href = "/quiz?unit=" + currentLesson;
+        showEndSlide(currentLesson - 1, lessons[currentLesson - 1].slides.length - 1);
+        currentSlide = END_SLIDE;
       }
     }
   }
@@ -219,25 +210,62 @@ var nextSlide = function() {
  */
 var prevSlide = function() {
   if (lessonsLoaded) {
+
+    if(currentSlide === 0) {
+        return;
+    }
     currentSlide--;
-    
+
     if (currentSlide >= 0) {
       showSlide(currentLesson, currentSlide);
-      updateDatastore();  
+      updateDatastore();
     } else {
       currentLesson--;
-      if (currentLesson >= 0) {
-        currentSlide = lessons[currentLesson].slides.length - 1;
-        updateDatastore();
-        showSlide(currentLesson, currentSlide);      
-      } else {
-        currentLesson++;
-        currentSlide++;
-      }
+        if(currentLesson < 0) {
+            currentLesson = 0;
+            currentSlide = 0;
+            return;
+        }
+        if(currentSlide < 0) {
+          currentSlide = lessons[currentLesson].slides.length - 1;
+          updateDatastore();
+          showSlide(currentLesson, currentSlide);
+        }
+
+        // the code below will automatically take us to the previous lesson
+//      if (currentLesson >= 0) {
+//        currentSlide = lessons[currentLesson].slides.length - 1;
+//        updateDatastore();
+//        showSlide(currentLesson, currentSlide);
+//      } else {
+//        currentLesson++;
+//        currentSlide++;
+//      }
     }
   }
 }
 
+/**
+ * build the navigation
+ */
+var buildSlideNav = function(lesson) {
+    var slideNav = document.getElementById("slideNav");
+
+    // TARGET:
+//    <li class="current"><a href="">1</a></li>
+//        <li><a href="">2</a></li>
+//        <li><a href="">3</a></li>
+//        <li><a href="">4</a></li>
+//        <li><a href="">12</a></li>
+//        <li><a href="">13</a></li>
+    var html = '';
+    for(var i = 0; i < lessons[lesson].slides.length; i++) {
+        html += '<li id="slideNav_'+i+'"><a href="#" onclick="showSlide('+currentLesson+', '+i+')">'+i+'</a></li>';
+};
+
+    slideNav.innerHTML = html;
+
+};
 
 /**
  * show a particular slide.
@@ -245,92 +273,57 @@ var prevSlide = function() {
  * @param {number} slide the slide index.
  */
 var showSlide = function(lesson, slide) {
+
+    currentLesson = lesson;
+    currentSlide = slide;
   var headerDiv = document.getElementById("header");
   var htmlDiv = document.getElementById("html");
   var keyboardDiv = document.getElementById("keyboard");
-   
-  if (lessons[lesson].slides[slide].header && 
+
+    if(slide === 0) {
+        buildSlideNav(lesson);
+    }
+
+    for(var i = 0; i < lessons[lesson].slides.length; i++) {
+        document.getElementById('slideNav_' + i).className = i === slide ? 'current' : '';
+    }
+
+  if (lessons[lesson].slides[slide].header &&
       lessons[lesson].slides[slide].html &&
       lessons[lesson].slides[slide].keyboard) {
     headerDiv.style.display = "block";
-    headerDiv.style.position = "absolute";
-    headerDiv.style.top = "0px";
-    headerDiv.style.left = "0px";
-    headerDiv.style.height = (PHI * (1 - PHI) * 100) + "%";
-    headerDiv.style.width = "100%";
-    //headerDiv.style.backgroundColor = "#FF0000";
-    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';   
-    headerDiv.style.fontSize = (1 + PHI) * fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
-    placeCenterMiddle("header-text");
-    
-    htmlDiv.style.display = "block";
-    htmlDiv.style.position = "absolute";
-    htmlDiv.style.top = (PHI * (1 - PHI) * 100) + "%";
-    htmlDiv.style.left = "0px";
-    htmlDiv.style.height = (PHI * PHI * 100) + "%";
-    htmlDiv.style.width = "100%";
-    //htmlDiv.style.backgroundColor = "#00FF00";    
-    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '<br /><br />Press these keys on your keyboard. Try it out! <br /><br /><small>Arrow RIGHT to continue.</small>' + '</span>';   
-    htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
-    document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
-    placeCenterMiddle("html-text");
 
+    //headerDiv.style.backgroundColor = "#FF0000";
+    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';
+    htmlDiv.style.display = "block";
+
+    //htmlDiv.style.backgroundColor = "#00FF00";
+    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '<br /><br />Press these keys on your keyboard. Try it out! <br /><br />' + '</span>';
     keyboardDiv.style.display = "block";
-    keyboardDiv.style.position = "absolute";
-    keyboardDiv.style.top = (PHI * 100) + "%";
-    keyboardDiv.style.left = "0px";
-    keyboardDiv.style.height = ((1 - PHI) * 100) + "%";
-    keyboardDiv.style.width = "100%";
-    //keyboardDiv.style.backgroundColor = "#0000FF";    
+    //keyboardDiv.style.backgroundColor = "#0000FF";
     keyboardDiv.innerHTML = qwertyKeyboard;
     showKeys(lessons[lesson].slides[slide].keyboard);
     adjustKeyboard();
-    placeCenterMiddle("standard-keyboard");
-  
-  } else if (lessons[lesson].slides[slide].header && 
+
+  } else if (lessons[lesson].slides[slide].header &&
              lessons[lesson].slides[slide].html &&
              !lessons[lesson].slides[slide].keyboard) {
     headerDiv.style.display = "block";
-    headerDiv.style.position = "absolute";
-    headerDiv.style.top = "0px";
-    headerDiv.style.left = "0px";
-    headerDiv.style.height = ((1 - PHI) * 100) + "%";
-    headerDiv.style.width = "100%";
-    //headerDiv.style.backgroundColor = "#FF0000";
-    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';   
-    fitText("header-text");
-    placeCenterMiddle("header-text");
 
+    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';
     htmlDiv.style.display = "block";
-    htmlDiv.style.position = "absolute";
-    htmlDiv.style.top = ((1 - PHI) * 100) + "%";
-    htmlDiv.style.left = "0px";
-    htmlDiv.style.height = (PHI * 100) + "%";
-    htmlDiv.style.width = "100%";
-    //htmlDiv.style.backgroundColor = "#00FF00";    
-    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '<br /><br /><small>Arrow RIGHT to continue</small>' + '</span>';   
-    htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
-    document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
-    placeCenterMiddle("html-text");
+    //htmlDiv.style.backgroundColor = "#00FF00";
+    htmlDiv.innerHTML = '<span id="html-text">' + lessons[lesson].slides[slide].html + '<br /><br />' + '</span>';
 
-    keyboardDiv.style.display = "none";  
-  } else if (lessons[lesson].slides[slide].header && 
+    // keyboardDiv.style.display = "none";
+  } else if (lessons[lesson].slides[slide].header &&
              !lessons[lesson].slides[slide].html &&
              !lessons[lesson].slides[slide].keyboard) {
     headerDiv.style.display = "block";
-    headerDiv.style.position = "absolute";
-    headerDiv.style.top = "50%";
-    headerDiv.style.left = "0px";
-    headerDiv.style.height = "auto";
-    headerDiv.style.width = "100%";
     //headerDiv.style.backgroundColor = "#FF0000";
-    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';   
-    fitText("header-text");
-    placeCenterMiddle("header-text");
-    
+    headerDiv.innerHTML = '<span id="header-text">' + lessons[lesson].slides[slide].header + '</span>';
     htmlDiv.style.display = "none";
-    
-    keyboardDiv.style.display = "none";  
+    keyboardDiv.style.display = "none";
   }
 }
 
@@ -343,41 +336,21 @@ var showEndSlide = function(lesson, slide) {
   var headerDiv = document.getElementById("header");
   var htmlDiv = document.getElementById("html");
   var keyboardDiv = document.getElementById("keyboard");
-   
+
     headerDiv.style.display = "block";
-    headerDiv.style.position = "absolute";
-    headerDiv.style.top = "0px";
-    headerDiv.style.left = "0px";
-    headerDiv.style.height = (PHI * (1 - PHI) * 100) + "%";
-    headerDiv.style.width = "100%";
     //headerDiv.style.backgroundColor = "#FF0000";
-    headerDiv.innerHTML = '<span id="header-text">' + 'Time for a Quiz!' + '</span>';   
-    headerDiv.style.fontSize = (1 + PHI) * fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
-    placeCenterMiddle("header-text");
-    
     htmlDiv.style.display = "block";
-    htmlDiv.style.position = "absolute";
-    htmlDiv.style.top = (PHI * (1 - PHI) * 100) + "%";
-    htmlDiv.style.left = "0px";
-    htmlDiv.style.height = (PHI * PHI * 100) + "%";
-    htmlDiv.style.width = "100%";
-    //htmlDiv.style.backgroundColor = "#00FF00";    
-    htmlDiv.innerHTML = '<span id="html-text">' + 'Arrow RIGHT to start the Quiz<br>(Arrow LEFT to go back and review)<br>Go to the <a href="/dashboard">dashboard</a> to take a break' + '</span>';
-    htmlDiv.style.fontSize = fontSizeForIdealLineLength($(window).width() * 0.6180339887) + "px";
-    document.getElementById("html-text").style.width = ($(window).width() * 0.6180339887) + "px";
-    placeCenterMiddle("html-text");
+
+    headerDiv.innerHTML = '<span id="header-text">' + 'End of this section' + '</span>';
+
+    htmlDiv.innerHTML = '<span id="html-text">' + '<ul><li>Arrow LEFT to go back and review</li><li>Click here to start a <a href="/quiz?mode=key&unit='+currentLesson+'">drill</a> on what you have just learned</li></ul>';
 
     keyboardDiv.style.display = "block";
-    keyboardDiv.style.position = "absolute";
-    keyboardDiv.style.top = (PHI * 100) + "%";
-    keyboardDiv.style.left = "0px";
-    keyboardDiv.style.height = ((1 - PHI) * 100) + "%";
-    keyboardDiv.style.width = "100%";
+
     //keyboardDiv.style.backgroundColor = "#0000FF";    
     keyboardDiv.innerHTML = qwertyKeyboard;
     showKeys(lessons[lesson].slides[slide].keyboard);
     adjustKeyboard();
-    placeCenterMiddle("standard-keyboard");
 }
 
 
@@ -389,17 +362,17 @@ var showEndSlide = function(lesson, slide) {
 var adjustKeyboard = function() {
   // grab qwerty keyboard element.
   var qwertyKeyboardElement = document.getElementById("standard-keyboard");
-  
+
   // if found, set qwerty keyboard dimensions.
   if (qwertyKeyboardElement) {
     qwertyKeyboardElement.style.height = document.height * (1 - PHI) + "px";
     qwertyKeyboardElement.style.width = 3 * document.height * (1 - PHI) + "px";
   }
-  
+
   // get the height of a key on the qwerty keyboard.
-  if(document.getElementsByClassName("standard-row").length == 0) return; 
+  if(document.getElementsByClassName("standard-row").length == 0) return;
   var keyHeight = document.getElementsByClassName("standard-row")[0].offsetHeight;
-  
+
   // grab the qwerty keyboard key elements.
   var qwertyKeyElements = document.getElementsByClassName("standard-key");
 
@@ -431,11 +404,11 @@ var showKeys = function(translation) {
     var key = document.getElementById("standard-key-" + originalKeys[i]);
 
     if(!key) {
-      if(originalKeys[i] == ';')
+      if(originalKeys[i] === ';')
           key = document.getElementById("standard-key-semicolon");
-      if(originalKeys[i] == '[')
+      if(originalKeys[i] === '[')
           key = document.getElementById("standard-key-open-bracket");
-      if(originalKeys[i] == '\'')
+      if(originalKeys[i] === '\'')
           key = document.getElementById("standard-key-single-quote");
 
     }
@@ -481,10 +454,10 @@ var setup = function () {
     if (cookieName === 'max_lesson') {
       maxLesson = parseInt(cookieValue, 10);
     }
-  }  
+  }
 
   xhrGet("../assets/tutorLessons.json", loadLessonData, null);
-  xhrGet("../assets/qwertyKeyboard.html", loadBlankQwertyKeyboard, null);  
+  xhrGet("../assets/qwertyKeyboard.html", loadBlankQwertyKeyboard, null);
 
   //document.addEventListener("click", onClickEvent);
   document.addEventListener("keydown", onKeyDownEvent);
@@ -501,29 +474,24 @@ var setup = function () {
 
 // EVENT HANDLERS
 
-var onClickEvent = function() {
-  nextSlide();
-}
-
-
 var onKeyDownEvent = function(event) {
   var keyID = event.keyCode || event.which;
- 
+
   if (keyID === 37) {
     prevSlide();
-  } 
+  }
 
   if (keyID === 39) {
     nextSlide();
-  } 
+  }
 
   var elements = document.getElementsByClassName("code-" + keyID);
-  
+
   for (var i = 0; i < elements.length; i++) {
     if (!downKeyColors[keyID]) {
       downKeyColors[keyID] = window.getComputedStyle(elements[0]).backgroundColor;
     }
-    
+
     elements[i].style.backgroundColor = keyDownColor;
   }
 }
@@ -542,7 +510,7 @@ var onKeyUpEvent = function() {
 
 
 var onResizeEvent = function() {
-  showSlide(currentLesson, currentSlide);  
+  showSlide(currentLesson, currentSlide);
 }
 
 

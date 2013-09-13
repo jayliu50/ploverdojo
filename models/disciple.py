@@ -6,8 +6,6 @@ class Disciple(db.Model):
     """Models a disciple of the dojo."""
     user_id = db.StringProperty()
     
-    # farthest the disciple has gone
-    tutor_max_lesson = db.IntegerProperty()
     
     # a bookmark with the format [lesson].[slide]
     tutor_current_lesson = db.StringProperty()
@@ -23,6 +21,9 @@ class Disciple(db.Model):
     
     # holds the filters that the user has used in the past { 'filter' : { title: 'title', timestamp: 'timestamp since last accessed' }}
     filter_history_json = db.TextProperty()
+    
+    # holds how big the quiz sizes should be
+    quiz_size = db.IntegerProperty(None, None, 10)
 
     @staticmethod
     def get_current(user):

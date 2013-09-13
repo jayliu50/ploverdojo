@@ -3,18 +3,14 @@
 #standard-keyboard {
   /* Position */
   position: absolute;
-  left: 37px;
-  top: 360px;
   
   /* Box */
   width: 522px; /* will fit 15 regular-sized keys horizontally */
   height: 174px; /* will fit 5 regular-sized keys vertically */
   padding: 10px;
-  border: 6px solid white;
+  border: 3px solid #FFFEFD;
   margin: 0px;
 
-  /* Colors */
-  background-color: #679c9f;
 }
 
 .standard-row {
@@ -44,10 +40,9 @@
 
   /* Colors */
   color: #679c9f;
-  background-color: white;
+  background-color: #FFFEFD;
 
   /* Text */
-  font-family: sans-serif;
   font-size: 10.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) / 3 */
   font-weight: bold;
   line-height: 31.5px; /* 250px (stdKeyboard height) * 20% (stdRow height) * 90% (stdKey height) */

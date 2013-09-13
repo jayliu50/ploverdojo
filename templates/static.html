@@ -1,32 +1,50 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Plover Dojo | {{ title }}</title>
-        <link rel="stylesheet" type="text/css" href="css/webfonts.css">
-		<link rel="stylesheet" type="text/css" href="css/main.css">
+<head>
+    <meta charset="utf-8">
+    <title>Plover Dojo | {{ title }}</title>
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="css/vendor/normalize.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/vendor/general_enclosed_foundicons.css">
+    <link rel="stylesheet" href="css/vendor/foundation.css"/>
+    <link rel="stylesheet" type="text/css" href="css/webfonts.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
 
-    </head>
-	<body>
-		<header id="static_header">
-			<nav>
-                <a href="{{ logout_url }}" class="logout_link">Logout</a>
-                <ul>
-                    <li><a href="/main">Begin Training</a></li>
-                    <li><a href="/steno.html">What is Stenography?</a></li>
-                    <li><a href="/about.html">About</a> </li>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 
-                </ul>
-			</nav>
-			<a href="/home.html" class="home_link_img"><img src="assets/emblem.png" alt="Plover Dojo" height="100px"></a>
-		</header>
-		<main>
-			{{ content | safe }}
-		</main>
-		<footer>
-		</footer>
-	</body>
+    <script src="js/lib/foundation.min.js"></script>
+    <script src="js/lib/custom.modernizr.js"></script>
+
+
+</head>
+<body>
+<header id="static_header">
+    <nav class="top-bar">
+        <ul class="title-area">
+            <li class="name"> </li>
+            <li class="toggle-topbar menu-icon">
+
+            </li>
+        </ul>
+        <section class="top-bar-section">
+            <ul class="left">
+                <li><a href="/main">Begin Training</a></li>
+                <li><a href="/steno.html">What is Stenography?</a></li>
+                <li><a href="/about.html">About</a></li>
+
+            </ul>
+            <ul class="right">
+                <li>
+                    <a href="{{ logout_url }}" class="logout_link">Logout</a></li>
+            </ul>
+    </nav>
+
+</header>
+<main>
+    {{ content | safe }}
+</main>
+<footer>
+</footer>
+</body>
 </html>

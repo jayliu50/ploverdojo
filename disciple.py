@@ -157,6 +157,30 @@ class Mastery(Profile):
             disciple.update_mastery(json.loads(self.request.get('update_mastery')))
             
             disciple.put()
+            
+
+class Settings(Profile):
+    """Manages the user's settings"""
+    def __init__(self, request=None, response=None):
+        Profile.__init__(self, request, response)
+        
+    def get(self):
+        disciple = check_user(self)
+        if disciple:
+            values = {}
+            values['quiz_size'] = disciple.quiz_size;
+            self.response.out.write(json.dumps(values))
+
+    def post(self):
+        disciple = check_user(self)
+        if disciple and self.request.body:
+            values = json.loads(self.request.body)
+            
+            if values:
+                disciple.quiz_size = int(values['quiz_size'])
+            
+                disciple.put()
+            
 
 class Debug(BaseHandler):
     def __init__(self, request=None, response=None):
@@ -170,6 +194,7 @@ class Debug(BaseHandler):
 
 app = webapp2.WSGIApplication([
                                ('/disciple/profile/?', Profile),
+                               ('/disciple/profile/settings/?', Settings),                               
                                ('/disciple/profile/mastery/?', Mastery),
                                ('/disciple/profile/history/filters?', FilterHistory),
                                ('/disciple/profile/history/words?', WordHistory),

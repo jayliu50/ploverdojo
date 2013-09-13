@@ -43,7 +43,7 @@ class TutorPage(BaseHandler):
         user = users.get_current_user()
 
         if user:
-            logout_url = users.create_logout_url(self.request.uri)
+            logout_url = users.create_logout_url('home.html')
 
             disciple = Disciple.get_current(user)
 
@@ -52,7 +52,6 @@ class TutorPage(BaseHandler):
             }
 
             self.set_cookie('current_lesson', str(disciple.tutor_current_lesson))
-            self.set_cookie('max_lesson', str(disciple.tutor_max_lesson))
             self.write_template('tutor.html', **template_values)
         else:
             loginURL = users.create_login_url(self.request.uri)

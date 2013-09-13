@@ -1,19 +1,19 @@
 .toggle-state-0 {
-    /* Color */
+    /* Color normal */
     color: #679c9f;
-    background-color: white;
+    background-color: #FFFEFD;
 }
 
 .toggle-state-1 {
-    /* Color */
-    color: white;
-    background: green;
+    /* Color include */
+    color: #FFFEFD;
+    background: #83B5A7; /* Green */
 }
 
 .toggle-state-2 {
-    /* Color */
-    color: white;
-    background: #000000;
+    /* Color require*/
+    color: #FFFEFD;
+    background: #F6A354; /* Orange */
 }
 
 .wordlist {
@@ -25,15 +25,6 @@
 
 .wordlist span:before {
     content: ' ';
-}
-
-.mastery-0 {
-
-}
-
-.mastery-100 {
-    background: green;
-    color: white;
 }
 
 .controls {

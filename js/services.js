@@ -63,13 +63,13 @@ angular.module('ploverdojo.services', [])
 
         };
 
-        wordService.populateWordsFromFilter = function (queryString, sc) {
+        wordService.populateWordsFromFilter = function (queryString, success) {
             // not sure if I should be using the sc (scope) in here, but I didn't know what else I could do
 
             http({method: 'GET', url: 'disciple/dictionary?' + queryString }).
                 success(function (data, status, headers, config) {
                     appendAttributes(data);
-                    sc.words = data;
+                    success(data);
                 }).
                 error(function (data, status, headers, config) {
                     // called asynchronously if an error occurs
@@ -81,8 +81,6 @@ angular.module('ploverdojo.services', [])
 
         wordService.populateWordsFromRecent = function (sc) {
             // not sure if I should be using the sc (scope) in here, but I didn't know what else I could do
-
-            sc.busy = true;
 
             http({method: 'GET', url: '/disciple/profile/history/words?' }).
                 success(function (data, status, headers, config) {
@@ -135,19 +133,22 @@ angular.module('ploverdojo.services', [])
 
             var result = [];
 
-            if (filterTags) {
-                filterTags = filterTags.split(' ');
-                for (var i = 0; i < lessonData.length; i++) {
-                    for (var j = 0; j < filterTags.length; j++) {
-                        if (lessonData[i].tags.indexOf(filterTags[j]) > -1) {
-                            result.push(lessonData[i]);
-                            break;
+            if (lessonData) {
+
+                if (filterTags) {
+                    filterTags = filterTags.split(' ');
+                    for (var i = 0; i < lessonData.length; i++) {
+                        for (var j = 0; j < filterTags.length; j++) {
+                            if (lessonData[i].tags.indexOf(filterTags[j]) > -1) {
+                                result.push(lessonData[i]);
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            else {
-                result = data;
+                else {
+                    result = lessonData;
+                }
             }
 
 
@@ -159,7 +160,37 @@ angular.module('ploverdojo.services', [])
 
     .factory('UserDataService', ['$http', function (http) {
 
+
         var userDataService = {};
+
+
+
+        userDataService.getSettings = function (success, error) {
+
+            http({method: 'GET', url: '/disciple/profile/settings'})
+                .success(success)
+                .error(function (data, status, headers, config) {
+                    console.error('getting settings failed');
+                });
+
+
+        };
+
+        userDataService.updateSettings = function (settings) {
+
+            http({
+                method: 'POST',
+                url: 'disciple/profile/settings',
+                data: JSON.stringify(settings)
+            })
+                .success(function (data, status, headers, config) {
+                })
+                .error(function (data, status, headers, config) {
+                    // not sure why but this was always erroring, even when a 200 is passed back
+                    //console.error('posting filter history failed');
+                });
+
+        };
 
         userDataService.updateFilterHistory = function (filter) {
 
@@ -182,16 +213,10 @@ angular.module('ploverdojo.services', [])
 
         userDataService.getFilterHistory = function (sc) {
 
-            // previous implementation: was able to actually return something, by setting a local variable as empty array, returning it, and then asynchronously pushing data into it
-
-//            var filterData = [];
+            var filterData = [];
             http({method: 'GET', url: 'disciple/profile/history/filters?timestamp=' + new Date().getTime() })
                 .success(function (data, status, headers, config) {
 
-                    sc.history = [];
-
-                    var maxFilter = null;
-                    var maxTimeStamp = 0;
 
                     for (var i in data) {
                         var newFilterData = {};
@@ -202,24 +227,14 @@ angular.module('ploverdojo.services', [])
                         var timestamp = parseInt(data[i].timestamp, 10) * 1000;
                         newFilterData.timestamp = new Date(timestamp).toLocaleString();
 
-                        sc.history.push(newFilterData);
-
-                        if (timestamp > maxTimeStamp) {
-                            maxFilter = newFilterData;
-                        }
-
-//                        filterData.push(newFilterData);
-                    }
-
-                    if (maxFilter) {
-                        sc.loadFilter(maxFilter);
+                        filterData.push(newFilterData);
                     }
                 })
                 .error(function (data, status, headers, config) {
                     console.error('getting filter history failed');
                 });
 
-//            return filterData;
+            return filterData;
 //
 //            filterData.sort(function(a, b) {
 //                return a.timestamp - b.timestamp;

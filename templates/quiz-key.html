@@ -9,6 +9,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 
     <!-- import style sheets -->
+    <link rel="stylesheet" href="css/vendor/normalize.css"/>
     <link rel="stylesheet" type="text/css" href="css/webfonts.css">
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="css/quiz-key.css">
@@ -18,7 +19,6 @@
   </head>
   <body>
     <div id="header">
-      <a href="/" id="header-logo"><img src="assets/logo.png" alt="Plover Dojo" height="71px"></a>
       <a href="{{ login_href }}" id="header-login">{{ login_content }}</a>
     </div>
     
@@ -28,7 +28,9 @@
       <p>Your quiz starts in ... </p>
       <div id="countdown"></div>
     </div>
-    
+    <div id="finished-dialog-modal" title="Finished!" style="display: none">
+      <p>GOOD JOB!</p>
+    </div>
       <h1 id="content-title">Quiz #{{ current_lesson }} {% if is_review and current_lesson != 1 %}(REVIEW) {% endif %}</h1>  
       
       <div id="quiz-prompt">
@@ -167,7 +169,6 @@
     
     <!-- do the steno thing! -->
     <script type="text/javascript" src="js/quiz-key.js"></script>
-    
-    <p id='debug-advance-quiz'>next!</p>
+
   </body>
 </html>

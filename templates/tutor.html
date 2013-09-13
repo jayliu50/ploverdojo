@@ -1,32 +1,114 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <title>Plover Dojo - Tutor</title>
 
-    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="css/vendor/normalize.css"/>
+    <link rel="stylesheet" href="css/vendor/foundation.css"/>
     <link rel="stylesheet" type="text/css" href="css/webfonts.css">
+
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/tutor.css">
     <link rel="stylesheet" type="text/css" href="css/tutorKeyboard.css">
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <script src="js/tutor.js"></script>
-  </head>
-  <body>
-  	<nav>
-  		<ul>
-  			<li>hey</li>
-  			<li>there</li>
-  		</ul>
-  	</nav>
-    <div id="content">
-      <div id="header">
-      </div>
-      <div id="html">
-      </div>
-      <div id="keyboard">
-      </div>
+</head>
+<body>
+<nav class="top-bar">
+    <ul class="title-area">
+        <li class="name"></li>
+        <li class="toggle-topbar menu-icon">
+            <a href>
+                <span>Menu</span>
+            </a>
+        </li>
+    </ul>
+
+    <section class="top-bar-section">
+        <ul class="left" ng-model="selectedItem">
+            <li>
+                <a href="main">Back to Main</a>
+            </li>
+        </ul>
+        <ul class="left" ng-model="selectedItem">
+            <li class="has-dropdown not-click">
+                <a href="#">Steno Keyboard</a>
+                <ul class="dropdown">
+                    <li><a href="#" onclick="showSlide(0,0)">Thumbs</a></li>
+                    <li><a href="#" onclick="showSlide(1,0)">First Finger</a></li>
+                    <li><a href="#" onclick="showSlide(2,0)">Second Finger</a></li>
+                    <li><a href="#" onclick="showSlide(3,0)">Third Finger</a></li>
+                    <li><a href="#" onclick="showSlide(4,0)">Fourth Finger</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="left" ng-model="selectedItem">
+            <li class="has-dropdown not-click">
+                <a href>Drills</a>
+                <ul class="dropdown">
+                    <li><a href="/quiz?mode=key&unit=0">Thumbs</a></li>
+                    <li><a href="/quiz?mode=key&unit=1">First Finger</a></li>
+                    <li><a href="/quiz?mode=key&unit=1&stage=review">First Finger and All Previous</a></li>
+                    <li><a href="/quiz?mode=key&unit=2">Second Finger</a></li>
+                    <li><a href="/quiz?mode=key&unit=2&stage=review">Second Finger and All Previous</a></li>
+                    <li><a href="/quiz?mode=key&unit=3">Third Finger</a></li>
+                    <li><a href="/quiz?mode=key&unit=3&stage=review">Third Finger and All Previous</a></li>
+                    <li><a href="/quiz?mode=key&unit=4">Fourth Finger</a></li>
+                    <li><a href="/quiz?mode=key&unit=4&stage=review">Fourth Finger and All Previous</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul class="right">
+            <li class="has-dropdown not-click">
+                <a href></a>
+                <ui class="dropdown">
+                    <li><a href="{{ logout_url }}" class="logout_link">Logout</a></li>
+                </ui>
+            </li>
+        </ul>
+    </section>
+</nav>
+<div id="content">
+    <div class="row">
+        <h1 id="header">
+        </h1>
     </div>
-  </body>
+    <div class="row">
+        <div id="html" class="large-8 centered columns">
+        </div>
+    </div>
+    <div class="row">
+        <div id="keyboard">
+
+        </div>
+    </div>
+    <footer>
+        <div class="row">
+
+            <div id="legend" class="large-4 columns"><span class="label round orange">Qwerty Key</span><span
+                    class="label round gray">Steno Key</span></div>
+            <div class="pagination-centered large-4 columns">
+                <ul id="slideNav" class="pagination">
+                    <!--          <li class="arrow unavailable"><a href="">&laquo;</a></li>
+          <li class="current"><a href="">1</a></li>
+          <li><a href="">2</a></li>
+          <li><a href="">3</a></li>
+          <li><a href="">4</a></li>
+          <li class="unavailable"><a href="">&hellip;</a></li>
+          <li><a href="">12</a></li>
+          <li><a href="">13</a></li>
+          <li class="arrow"><a href="">&raquo;</a></li>-->
+                </ul>
+            </div>
+            <div class="large-4 columns">
+                <div>Arrow RIGHT to continue</div>
+                <div>Arrow LEFT to go back</div>
+            </div>
+        </div>
+    </footer>
+</body>
 </html>

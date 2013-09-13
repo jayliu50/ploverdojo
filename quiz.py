@@ -114,8 +114,6 @@ class QuizPage(BaseHandler):
                         current_lesson = 1
                 else:
                     disciple = Disciple.get_current(user)
-                    if(disciple and hasattr(disciple, 'tutor_max_lesson') and disciple.tutor_max_lesson):
-                        current_lesson = int(disciple.tutor_max_lesson)
                         
                 isReview = (stage == 'review' or current_lesson == 1)
                 

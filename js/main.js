@@ -33,13 +33,24 @@ angular.module('ploverdojo.directives', [])
     })
 ;
 
-angular.module('ploverdojo.controllers', ['ploverdojo.wordexplorer', 'ploverdojo.lessonbrowser', 'ngCookies'])
+angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ngCookies'])
     .controller('MainCtrl', ['$scope', '$cookies', '$route', '$location', 'ControllerSyncService', 'UserDataService', 'WordService',
         function (sc, cookies, route, location, controllerSyncService, userDataService, wordService) {
 
             sc.filter = {};
 
+
+            sc.init = function() {
+               var stuff = userDataService.getSettings(function (data, status, headers, config) {
+                   sc.limit = data.quiz_size;
+               });
+            };
+
             sc.busy = false;
+
+            sc.saveSettings = function() {
+                userDataService.updateSettings({ quiz_size: sc.limit });
+            };
 
             sc.words = []; //  {'word': 'my word', 'stroke': 'STROKE', 'mastery': 0}
 
@@ -71,9 +82,10 @@ angular.module('ploverdojo.controllers', ['ploverdojo.wordexplorer', 'ploverdojo
                 sc.words = [];
 
                 sc.filter = controllerSyncService.currentFilter;
-                wordService.populateWordsFromFilter(queryString(controllerSyncService.currentFilter), sc);
-
-                sc.busy = false;
+                wordService.populateWordsFromFilter(queryString(controllerSyncService.currentFilter), function(data) {
+                    sc.words = data;
+                    sc.busy = false;
+                } );
 
             });
 
@@ -148,11 +160,11 @@ angular.module('ploverdojo.controllers', ['ploverdojo.wordexplorer', 'ploverdojo
 
                 var send = testdata.splice(0, sc.limit);
                 send.forEach(function(element) {
-                    delete element[2];
+                    element.splice(2, 1);
                 });
                 cookies.testdata = JSON.stringify(send);
                 cookies.quiz_mode = 'WORD';
-
+                cookies.currentFilter = JSON.stringify(controllerSyncService.currentFilter);
 
                 window.location.href = '/quiz?mode=word';
             };

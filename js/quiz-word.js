@@ -589,8 +589,8 @@
         isSteno = true;
 
         // Clear keyboard colors
-        $('.standard-key').css('background-color', '#FFFFFF');
-        $('.steno-key').css('background-color', '#FFFFFF');
+        $('.standard-key').css('background-color', '#FFFEFD');
+        $('.steno-key').css('background-color', '#FFFEFD');
 
         // Clear user input
         $('#user-response').hide();
@@ -651,7 +651,6 @@
     function getReadyDialog(message) {
 
         $('#countdown-dialog-modal').dialog({
-            height: 140,
             modal: true,
             resizable: false,
             closeOnEscape: false,
@@ -680,8 +679,7 @@
 
                 $('#progress').html(innerHtml);
 
-                // center
-
+                // center prompt
                 $('#quiz-prompt').css("left", Math.max(0, (($(window).width() - $('#quiz-prompt').outerWidth()) / 2) +
                     $(window).scrollLeft()) + "px").css('display', 'block');
             }
@@ -1474,7 +1472,7 @@
         delete downKeys[key]; // remove key from the list of keys currently being pressed down
 
         // Update the display
-        $('.standard-key.code-' + event.which).css('background-color', '#FFFFFF'); // color the qwerty keyboard
+        $('.standard-key.code-' + event.which).css('background-color', '#FFFEFD'); // color the qwerty keyboard
 
         if (isSteno) {
             // Check to see if this is the end of the stroke.

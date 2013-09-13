@@ -10,11 +10,9 @@
   width: 348px;
   height: 174px;
   padding: 10px;
-  border: 6px solid white;
+  border: 3px solid #FFFEFD;
   margin: 0px;
 
-  /* Colors */
-  background-color: #679c9f;
 }
 
 .steno-number-bar {
@@ -71,7 +69,7 @@
 
   /* Color */  
   color: #679c9f;
-  background-color: white;
+  background-color: #FFFEFD;
 
   /* Text */
   font-family: sans-serif;
@@ -92,12 +90,11 @@
   border: 0;
   margin: 0 1.25% 0 1.25%;
 
-  /* Color */	
-  color: #679c9f;
-  background-color: white;
+  /* Color */
+  color: #749490; /* Dark Blue Green */
+  background-color: #FFFEFD;
 
   /* Text */
-  font-family: sans-serif;
   font-size: 20px;
   text-align: center;
   line-height: 41px;	

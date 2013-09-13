@@ -81,7 +81,7 @@ class Main(BaseHandler):
 ### ROUTER
 
 app = webapp2.WSGIApplication([
-                               ('/main', Main),
+                               ('/main(.*)', Main),
                                ('/?', Introduction), 
                                ('/(.+)', Introduction)],
                               debug=True)

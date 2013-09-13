@@ -20,6 +20,10 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
 
             var filter = {};
 
+            sc.init = function() {
+                updateFilter();
+            }
+
             sc.buildParamStrings = function () {
                 filter.include = '';
                 filter.require = '';
@@ -83,11 +87,12 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
                 }
 
                 filter.title = "Custom";
+                delete filter.index;
 
                 controllerSyncService.updateCurrentFilter(filter);
             };
 
-            sc.$on('updateFilter', function () {
+            var updateFilter = function () {
                 filter = controllerSyncService.currentFilter;
 
                 // update UI keyboard
@@ -103,16 +108,14 @@ angular.module('ploverdojo.wordexplorer', ['ploverdojo.services'])
                 for (var j = 0; j < keys.length; j++) {
                     sc.wordFilter[keys[j]] = KeyStateEnum.Required;
                 }
-            });
+            };
 
-            sc.customMode = true;
+            sc.$on('updateFilter', updateFilter);
+
+            sc.customMode = false;
             sc.asterisk = false;
 
             sc.toggle = function (code) {
-
-                if (!sc.customMode) {
-                    return;
-                }
 
                 if (sc.wordFilter.hasOwnProperty(code)) {
                     switch (sc.wordFilter[code]) {

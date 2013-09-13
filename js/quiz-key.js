@@ -146,10 +146,17 @@
     for (var i = 0; i < cookies.length; i++) {
         var cookieName = cookies[i].split('=')[0].trim();
         var cookieValue = cookies[i].split('=')[1].trim();
-        if (cookieName === 'testdata') {
-            testdata = JSON.parse(cookieValue);
+        if (cookieName === 'quiz_config') {
+            $.ajax({
+                url: 'quiz/data' + cookies[i].substring(cookies[i].indexOf("=") + 1).trim(),
+                async: false,
+                dataType: 'json',
+                success: function (data) {
+                    testdata = data;
+                }
+            });
         }
-        if (cookieName === 'is_review') {
+        else if (cookieName === 'is_review') {
             isReview = cookieValue;
         }
         if (cookieName === 'current_lesson') {
@@ -163,8 +170,8 @@
 
     for (var key in testdata) {
         if (testdata.hasOwnProperty(key)) {
-            tdArray.push(key);
-            responseLog[key] = [];
+            tdArray.push(testdata[key]);
+            responseLog[testdata[key]] = [];
         }
     }
 
@@ -593,8 +600,8 @@
         isSteno = true;
 
         // Clear keyboard colors
-        $('.standard-key').css('background-color', '#FFFFFF');
-        $('.steno-key').css('background-color', '#FFFFFF');
+        $('.standard-key').css('background-color', '#FFFEFD');
+        $('.steno-key').css('background-color', '#FFFEFD');
 
         // Clear user input
         $('#user-response').hide();
@@ -655,7 +662,6 @@
     function getReadyDialog(message) {
 
         $('#dialog-modal').dialog({
-            height: 140,
             modal: true,
             resizable: false,
             closeOnEscape: false,
@@ -665,7 +671,7 @@
         });
 
         timer(
-            5000,
+            3000,
             function (timeLeft) {
                 $('#countdown').html(timeLeft + 1);
             },
@@ -692,11 +698,11 @@
 
         var newQuestion = tdArray[currentQuizIndex];  // random question, has to be a different one than the one before
 
-        if (testdata[newQuestion] === "binary") {
-            quizChord = new Chord();
-            quizChord.fromBinary(newQuestion);
-            console.log("quizChord is " + quizChord.toBinary());
-        }
+        // if (testdata[newQuestion] === "binary") {
+        quizChord = new Chord();
+        quizChord.fromBinary(newQuestion);
+        console.log("quizChord is " + quizChord.toBinary());
+        //}
         console.log("newQuestion is " + newQuestion);
         //$('#quiz-prompt-text').html(quizChord.toHTMLTable());
         $('#quiz-prompt-text').html(quizChord.toRTFCRE());
@@ -769,15 +775,17 @@
             link += "&stage=" + ((isReview == 'False') ? 'review' : 'quiz');
         }
 
-        link = "/";
+        link = "/tutor";
 
-        $.ajax({
-            type: "POST",
-            url: '/quiz',
-            data: {
-                'current_lesson': currentLesson,
-                'stage': isReview ? 'review' : 'quiz'},
-            success: function () {
+        $('#finished-dialog-modal').dialog({
+            height: 140,
+            modal: true,
+            resizable: false,
+            closeOnEscape: true,
+            open: function (event, ui) {
+            },
+            close: function () {
+                link = "/tutor";
                 window.location.href = link;
             }
         });
@@ -1391,7 +1399,7 @@
         delete downKeys[key]; // remove key from the list of keys currently being pressed down
 
         // Update the display
-        $('.standard-key.code-' + event.which).css('background-color', '#FFFFFF'); // color the qwerty keyboard
+        $('.standard-key.code-' + event.which).css('background-color', '#FFFEFD'); // color the qwerty keyboard
 
         if (isSteno) {
             // Check to see if this is the end of the stroke.
