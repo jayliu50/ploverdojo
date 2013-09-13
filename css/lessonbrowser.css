@@ -4,9 +4,6 @@
     width: auto;
 }
 
-.word-area {
-}
-
 .word-list {
     columns:100px 5;
     -webkit-columns:100px 5; /* Safari and Chrome */
