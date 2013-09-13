@@ -9,12 +9,28 @@ $(document).ready(function () {
 
 });
 
+
+angular.module('foundation.ng',[]).directive('foundation', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            $(document).foundation();
+        }
+    };
+
+});
+
+
 // Declare app level module which depends on filters, and services
-angular.module('ploverdojo', ['ploverdojo.controllers', 'ploverdojo.services', 'ploverdojo.directives', 'ngCookies', 'joyride.ng'])
+angular.module('ploverdojo', ['ploverdojo.controllers', 'ploverdojo.services', 'ploverdojo.directives', 'ngCookies', 'foundation.ng'])
     .config(function ($interpolateProvider) {
         $interpolateProvider.startSymbol('~{');
         $interpolateProvider.endSymbol('}~');
         //$routeProvider.when("/filter",  {controller:MainCtrl});
+    })
+    .run(function($rootScope) {
+        $rootScope.$on('$viewContentLoaded', function () {
+        });
     });
 
 angular.module('ploverdojo.directives', [])
@@ -39,10 +55,16 @@ angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ploverdoj
 
             sc.filter = {};
 
-
             sc.init = function () {
+
                 var stuff = userDataService.getSettings(function (data, status, headers, config) {
                     sc.limit = data.quiz_size;
+                    if(data.new_user){
+
+                        // yeah apparently I shouldn't call this in my controller. Couldn't get it any other way, including creating a class directive and setting it
+                        $(document).foundation('joyride', 'start');
+                        userDataService.updateSettings({new_user: false});
+                    }
                 });
             };
 
@@ -101,9 +123,6 @@ angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ploverdoj
                 sc.wordSource = WordSourceEnum.History;
             };
 
-
-            sc.limit = 10;
-
             sc.practice = function () {
 
                 var testdata = [];
@@ -119,11 +138,11 @@ angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ploverdoj
                     sc.words.forEach(function (thisWord) {
 
                         var d = [];
-                        d[0] = thisWord.word;
-                        d[1] = thisWord.stroke;
-                        d[2] = thisWord.ranking;
+                            d[0] = thisWord.word;
+                            d[1] = thisWord.stroke;
+                            d[2] = thisWord.ranking;
 
-                        if (thisWord.mastery === 100) {
+                            if (thisWord.mastery === 100) {
                             masteredTestData.push(d);
                         }
                         else {
@@ -174,10 +193,5 @@ angular.module('ploverdojo.controllers', ['ploverdojo.lessonbrowser', 'ploverdoj
             sc.$on('updateWordList', function () {
                 sc.words = controllerSyncService.words;
             });
-
-            sc.joyride = function () {
-
-                return 'data-joyride';
-            };
 
         }]);

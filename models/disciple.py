@@ -24,6 +24,8 @@ class Disciple(db.Model):
     
     # holds how big the quiz sizes should be
     quiz_size = db.IntegerProperty(None, None, 10)
+    
+    new_user = db.BooleanProperty(None, None, True)
 
     @staticmethod
     def get_current(user):

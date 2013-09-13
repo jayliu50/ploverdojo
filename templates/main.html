@@ -2,18 +2,17 @@
 <html>
 <head>
     <title>Word Explorer</title>
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-cookies.js"></script>
     <script src="js/lib/custom.modernizr.js"></script>
     <script src="js/lib/zepto.js"></script>
     <script src="js/lib/foundation.js"></script>
     <script src="js/lib/foundation.forms.js"></script>
-    <script src="js/lib/foundation.joyride.js"></script>
     <script src="js/lib/foundation.reveal.js"></script>
     <script src="js/lib/foundation.topbar.js"></script>
+    <script src="js/lib/foundation.joyride.js"></script>
 
-    <script src="js/ng-joyride.js"></script>
     <script src="js/lessonbrowser.js"></script>
     <script src="js/services.js"></script>
     <script src="js/wordexplorer.js"></script>
@@ -28,7 +27,7 @@
     <link rel="stylesheet" href="css/lessonbrowser.css"/>
     <link rel="stylesheet" href="css/wordexplorer.css">
 <body ng-app="ploverdojo">
-<div ng-controller="MainCtrl" ng-init="init()">
+<div ng-controller="MainCtrl" ng-init="init()" foundation>
 
 <div ng-controller="LessonBrowserCtrl" ng-init="init()">
     <nav class="top-bar">
@@ -94,47 +93,58 @@
     <div class="row">
         <div ng-controller="WordExplorerCtrl" ng-init="init()" class="filter large-4 columns">
 
+
+
              <div>
-	<div id="steno-keyboard">
-                <div class="steno-number-bar">
-                    <div class="steno-key number-bar code-48 code-49 code-50 code-51 code-52 code-53 code-54 code-55 code-56 code-57" id="steno-key-number-bar"></div>
-                </div>
-                <div class="steno-upper-bank">
-                    <a href="" ng-click="toggle('S-')"><div class="steno-key square code-81 code-65 toggle-state-~{ wordFilter('S-') }~" title="~{ title('S-') }~" id="steno-key-s-1">S</div></a>
-                    <a href="" ng-click="toggle('T-')"><div class="steno-key square code-87 toggle-state-~{ class('T-') }~" title="~{ title('T-') }~" id="steno-key-t-">T</div></a>
-                    <a href="" ng-click="toggle('P-')"><div class="steno-key square code-69 toggle-state-~{ class('P-') }~" title="~{ title('P-') }~" id="steno-key-p-">P</div></a>
-                    <a href="" ng-click="toggle('H-')"><div class="steno-key square code-82 toggle-state-~{ class('H-') }~" title="~{ title('H-') }~" id="steno-key-h-">H</div></a>
-                    <a href="" ng-click="toggle('*')"><div class="steno-key square code-71 code-72 code-84 code-89 toggle-state-~{ class('*') }~" title="~{ title('*') }~" id="steno-key-asterisk-1">*</div></a>
-                    <a href="" ng-click="toggle('-F')"><div class="steno-key square code-85 toggle-state-~{ class('-F') }~" title="~{ title('-F') }~" id="steno-key--f">F</div></a>
-                    <a href="" ng-click="toggle('-P')"><div class="steno-key square code-73 toggle-state-~{ class('-P') }~" title="~{ title('-P') }~" id="steno-key--p">P</div></a>
-                    <a href="" ng-click="toggle('-L')"><div class="steno-key square code-79 toggle-state-~{ class('-L') }~" title="~{ title('-L') }~" id="steno-key--l">L</div></a>
-                    <a href="" ng-click="toggle('-T')"><div class="steno-key square code-80 toggle-state-~{ class('-T') }~" title="~{ title('-T') }~" id="steno-key--t">T</div></a>
-                    <a href="" ng-click="toggle('-D')"><div class="steno-key square code-219 toggle-state-~{ class('-D') }~" title="~{ title('-D') }~" id="steno-key--d">D</div></a>
-                </div>
-                <div class="steno-lower-bank">
-                    <a href="" ng-click="toggle('S-')"><div class="steno-key rounded code-81 code-65 toggle-state-~{ class('S-') }~" title="~{ title('S-') }~" id="steno-key-s-2">S</div></a>
-                    <a href="" ng-click="toggle('K-')"><div class="steno-key rounded code-83 toggle-state-~{ class('K-') }~" title="~{ title('K-') }~" id="steno-key-k-">K</div></a>
-                    <a href="" ng-click="toggle('W-')"><div class="steno-key rounded code-68 toggle-state-~{ class('W-') }~" title="~{ title('W-') }~" id="steno-key-w-">W</div></a>
-                    <a href="" ng-click="toggle('R-')"><div class="steno-key rounded code-70 toggle-state-~{ class('R-') }~" title="~{ title('R-') }~" id="steno-key-r-">R</div></a>
-                    <a href="" ng-click="toggle('*')"><div class="steno-key rounded code-71 code-72 code-84 code-89 toggle-state-~{ class('*') }~" title="~{ title('*') }~" title="~{ title('-D') }~" id="steno-key-asterisk-2">*</div></a>
-                    <a href="" ng-click="toggle('-R')"><div class="steno-key rounded code-74 toggle-state-~{ class('-R') }~" title="~{ title('-R') }~" id="steno-key--r">R</div></a>
-                    <a href="" ng-click="toggle('-B')"><div class="steno-key rounded code-75 toggle-state-~{ class('-B') }~" title="~{ title('-B') }~" id="steno-key--b">B</div></a>
-                    <a href="" ng-click="toggle('-G')"><div class="steno-key rounded code-76 toggle-state-~{ class('-G') }~" title="~{ title('-G') }~" id="steno-key--g">G</div></a>
-                    <a href="" ng-click="toggle('-S')"><div class="steno-key rounded code-59 code-186 toggle-state-~{ class('-S') }~" title="~{ title('-S') }~" id="steno-key--s">S</div></a>
-                    <a href="" ng-click="toggle('-Z')"><div class="steno-key rounded code-222 toggle-state-~{ class('-Z') }~" title="~{ title('-Z') }~" id="steno-key--z">Z</div></a>
-                </div>
-                <div class="steno-vowel-keys">
-                    <a href="" ng-click="toggle('A-')"><div class="steno-key rounded code-67 toggle-state-~{ class('A-') }~" title="~{ title('A-') }~" id="steno-key-a-">A</div></a>
-                    <a href="" ng-click="toggle('O-')"><div class="steno-key rounded code-86 toggle-state-~{ class('O-') }~" title="~{ title('O-') }~" id="steno-key-o-">O</div></a>
-                    <a href="" ng-click="toggle('-E')"><div class="steno-key rounded code-78 toggle-state-~{ class('-E') }~" title="~{ title('-E') }~" id="steno-key--e">E</div></a>
-                    <a href="" ng-click="toggle('-U')"><div class="steno-key rounded code-77 toggle-state-~{ class('-U') }~" title="~{ title('-U') }~" id="steno-key--u">U</div></a>
-                </div>
-            </div>
+                     <div id="steno-keyboard">
+                         <div class="steno-number-bar">
+                             <div class="steno-key number-bar code-48 code-49 code-50 code-51 code-52 code-53 code-54 code-55 code-56 code-57" id="steno-key-number-bar"></div>
+                         </div>
+                         <div class="steno-upper-bank">
+                             <a href="" ng-click="toggle('S-')"><div class="steno-key square code-81 code-65 toggle-state-~{ class('S-') }~" title="~{ title('S-') }~" id="steno-key-s-1">S</div></a>
+                             <a href="" ng-click="toggle('T-')"><div class="steno-key square code-87 toggle-state-~{ class('T-') }~" title="~{ title('T-') }~" id="steno-key-t-">T</div></a>
+                             <a href="" ng-click="toggle('P-')"><div class="steno-key square code-69 toggle-state-~{ class('P-') }~" title="~{ title('P-') }~" id="steno-key-p-">P</div></a>
+                             <a href="" ng-click="toggle('H-')"><div class="steno-key square code-82 toggle-state-~{ class('H-') }~" title="~{ title('H-') }~" id="steno-key-h-">H</div></a>
+                             <a href="" ng-click="toggle('*')"><div class="steno-key square code-71 code-72 code-84 code-89 toggle-state-~{ class('*') }~" title="~{ title('*') }~" id="steno-key-asterisk-1">*</div></a>
+                             <a href="" ng-click="toggle('-F')"><div class="steno-key square code-85 toggle-state-~{ class('-F') }~" title="~{ title('-F') }~" id="steno-key--f">F</div></a>
+                             <a href="" ng-click="toggle('-P')"><div class="steno-key square code-73 toggle-state-~{ class('-P') }~" title="~{ title('-P') }~" id="steno-key--p">P</div></a>
+                             <a href="" ng-click="toggle('-L')"><div class="steno-key square code-79 toggle-state-~{ class('-L') }~" title="~{ title('-L') }~" id="steno-key--l">L</div></a>
+                             <a href="" ng-click="toggle('-T')"><div class="steno-key square code-80 toggle-state-~{ class('-T') }~" title="~{ title('-T') }~" id="steno-key--t">T</div></a>
+                             <a href="" ng-click="toggle('-D')"><div class="steno-key square code-219 toggle-state-~{ class('-D') }~" title="~{ title('-D') }~" id="steno-key--d">D</div></a>
+                         </div>
+                         <div class="steno-lower-bank">
+                             <a href="" ng-click="toggle('S-')"><div class="steno-key rounded code-81 code-65 toggle-state-~{ class('S-') }~" title="~{ title('S-') }~" id="steno-key-s-2">S</div></a>
+                             <a href="" ng-click="toggle('K-')"><div class="steno-key rounded code-83 toggle-state-~{ class('K-') }~" title="~{ title('K-') }~" id="steno-key-k-">K</div></a>
+                             <a href="" ng-click="toggle('W-')"><div class="steno-key rounded code-68 toggle-state-~{ class('W-') }~" title="~{ title('W-') }~" id="steno-key-w-">W</div></a>
+                             <a href="" ng-click="toggle('R-')"><div class="steno-key rounded code-70 toggle-state-~{ class('R-') }~" title="~{ title('R-') }~" id="steno-key-r-">R</div></a>
+                             <a href="" ng-click="toggle('*')"><div class="steno-key rounded code-71 code-72 code-84 code-89 toggle-state-~{ class('*') }~" title="~{ title('*') }~" title="~{ title('-D') }~" id="steno-key-asterisk-2">*</div></a>
+                             <a href="" ng-click="toggle('-R')"><div class="steno-key rounded code-74 toggle-state-~{ class('-R') }~" title="~{ title('-R') }~" id="steno-key--r">R</div></a>
+                             <a href="" ng-click="toggle('-B')"><div class="steno-key rounded code-75 toggle-state-~{ class('-B') }~" title="~{ title('-B') }~" id="steno-key--b">B</div></a>
+                             <a href="" ng-click="toggle('-G')"><div class="steno-key rounded code-76 toggle-state-~{ class('-G') }~" title="~{ title('-G') }~" id="steno-key--g">G</div></a>
+                             <a href="" ng-click="toggle('-S')"><div class="steno-key rounded code-59 code-186 toggle-state-~{ class('-S') }~" title="~{ title('-S') }~" id="steno-key--s">S</div></a>
+                             <a href="" ng-click="toggle('-Z')"><div class="steno-key rounded code-222 toggle-state-~{ class('-Z') }~" title="~{ title('-Z') }~" id="steno-key--z">Z</div></a>
+                         </div>
+                         <div class="steno-vowel-keys">
+                             <a href="" ng-click="toggle('A-')"><div class="steno-key rounded code-67 toggle-state-~{ class('A-') }~" title="~{ title('A-') }~" id="steno-key-a-">A</div></a>
+                             <a href="" ng-click="toggle('O-')"><div class="steno-key rounded code-86 toggle-state-~{ class('O-') }~" title="~{ title('O-') }~" id="steno-key-o-">O</div></a>
+                             <a href="" ng-click="toggle('-E')"><div class="steno-key rounded code-78 toggle-state-~{ class('-E') }~" title="~{ title('-E') }~" id="steno-key--e">E</div></a>
+                             <a href="" ng-click="toggle('-U')"><div class="steno-key rounded code-77 toggle-state-~{ class('-U') }~" title="~{ title('-U') }~" id="steno-key--u">U</div></a>
+                         </div>
+                     </div>
+
+
+                 <div class="row">
+                     <div class="large-12 columns"><small>Click the keys above to change the filter:</small></div>
+                 </div>
+                 <div class="row">
+                     <div class="large-6 columns"><small><span class="orange">require all of these</span></small> </div>
+                     <div class="large-6 columns"><small><span class="bluegreen">include these</span></small> </div>
+                 </div>
         </div>
 
             <div ng-click="customMode = !customMode">
-                <div ng-hide="customMode"><a href>Show Advanced</a></div>
-                <div ng-show="customMode"><a href>Hide Advanced</a></div>
+                <div ng-hide="customMode"><a href><small>Show Advanced</small></a></div>
+                <div ng-show="customMode"><a href><small>Hide</small></a></div>
             </div>
             <div class="custom" ng-show="customMode">
                 <div class="button-group right">
@@ -198,18 +208,16 @@
     </form>
     <a class="close-reveal-modal" ng-click="saveSettings()"><i class="foundicon-remove"> </i></a>
 </div>
-</div>
 
-
-<ol class="joyride-list" joyride>
+<ol class="joyride-list" ng-class="{true: 'startjoyride'}[newUser]" data-joyride>
     <li data-button="Next">
         <h4>Hello, aspiring stenographer.</h4>
-        <p>Welcome to inside the Dojo. I'll show you around.</p>
+        <p>Welcome to the Plover Dojo. I'll show you around.</p>
     </li>
     <li data-id="lessons" data-text="Next">
         <h4>Much to learn...</h4>
         <p>Here is where all the lessons go.</p>
-        <p>Those that haven't typed in "steno mode" will want to check out the "Steno Keyboard Basics" for getting familiar with the steno keyboard.</p>
+        <p>Those that haven't typed "steno style" will want to check out the "Steno Keyboard Basics" for getting familiar with the steno keyboard.</p>
     </li>
     <li data-id="lessons" data-text="Next">
         <h4>To dive right in,...</h4>
@@ -225,19 +233,17 @@
     </li>
     <li data-id="practice-btn" data-button="Next" data-options="tipLocation:bottom">
         <h4>Practice</h4>
-        <p>If those words look good, then hit this button to practice</p>
+        <p>If words in the list look good, click here to start practicing</p>
     </li>
     <li data-id="steno-keyboard" data-button="Next">
         <h4>Tweak</h4>
-        <p>You can always fiddle around with your word filter. To adjust your challenge. Good luck!</p>
+        <p>You can always fiddle around with your word filter to adjust your challenge. Good luck! Remember, for best results, have an NKRO keyboard.</p>
     </li>
 </ol>
 
-<script>
-    $(document).foundation();
+</div>
 
-    // $(document).foundation('joyride', 'start');
-</script>
+
 
 </body>
 </html>

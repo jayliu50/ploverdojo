@@ -168,7 +168,8 @@ class Settings(Profile):
         disciple = check_user(self)
         if disciple:
             values = {}
-            values['quiz_size'] = disciple.quiz_size;
+            values['quiz_size'] = disciple.quiz_size
+            values['new_user'] = disciple.new_user
             self.response.out.write(json.dumps(values))
 
     def post(self):
@@ -177,7 +178,11 @@ class Settings(Profile):
             values = json.loads(self.request.body)
             
             if values:
-                disciple.quiz_size = int(values['quiz_size'])
+                if 'quiz_size' in values:
+                    disciple.quiz_size = int(values['quiz_size'])
+                
+                if 'new_user' in values:
+                    disciple.new_user = values['new_user'] in ['true', 'True']
             
                 disciple.put()
             
