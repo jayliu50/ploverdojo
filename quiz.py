@@ -173,7 +173,7 @@ class QuizData(BaseHandler):
             
                 self.response.out.write(json.dumps(material))    
             elif self.request.get('unit'):
-                material = self.get_material(int(self.request.get('unit')) - 1, self.request.get('stage') == 'review')
+                material = self.get_material(int(self.request.get('unit')), self.request.get('stage') == 'review')
                 self.response.out.write(material)
             elif self.request.get('recent'):
                 disciple = Disciple.get_current(user)
